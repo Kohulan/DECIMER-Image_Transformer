@@ -62,7 +62,7 @@ doi = "10.26434/chemrxiv.12464420.v1"
 ## Author:
 - [Kohulan](github.com/Kohulan)
 
-![GitHub Logo](https://github.com/Kohulan/DECIMER-Image-to-SMILES/blob/master/assets/DECIMER_logo.png)
+[![GitHub Logo](https://github.com/Kohulan/DECIMER-Image-to-SMILES/raw/master/assets/DECIMER.gif)](https://kohulan.github.io/Decimer-Official-Site/)
 
 ## Project Website
 - [DECIMER](https://kohulan.github.io/Decimer-Official-Site/)
