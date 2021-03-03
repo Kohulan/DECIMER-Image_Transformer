@@ -4,10 +4,12 @@ import os
 from datetime import datetime
 import pickle
 
+from sklearn.model_selection import train_test_split
+
 print (datetime.now().strftime('%Y/%m/%d %H:%M:%S'),"Process started", flush=True)
 
 # Initial Setup for GPU
-os.environ["CUDA_VISIBLE_DEVICES"]="0"
+os.environ["CUDA_VISIBLE_DEVICES"]="1"
 
 gpus = tf.config.experimental.list_physical_devices('GPU')
 for gpu in gpus:
@@ -15,13 +17,14 @@ for gpu in gpus:
 
 def main():
 
-	Smiles_Path = "39_million_SELFIES.txt"
+	Smiles_Path = "SELFIES_"
 	#Images_Path = "Train_Images/"
 
-	img_name_vector,cap_vector,tokenizer,max_length = data_loader(Smiles_Path)
+	img_name_vector,cap_vector,tokenizer,max_length,img_name_val = data_loader(Smiles_Path)
 
 	print("Tokens: ",tokenizer,flush=True)
 	print("Max length of attention weights: ",max_length,flush=True)
+	print("Total train files:",len(img_name_vector),flush=True)
 
 	with open("tokenizer.pkl","wb") as file:
 		pickle.dump(tokenizer,file)
@@ -32,21 +35,25 @@ def main():
 	
 
 	start = 0
-	end = 1048576
-	for i in range(40):
+	end = 81920
+	start_x = 0
+	#end_x = 1
+	#e = 92160
+	for i in range(int(len(img_name_vector)/end)):
 		imgs_path = img_name_vector[start:(start+end)]
 		caps_path = cap_vector[start:(start+end)]
 
-		with open("Images_Path_"+str(start)+"_"+str(start+end)+".pkl","wb") as file:
+		with open("Images_Path_"+str(start_x)+"_"+str(start_x)+".pkl","wb") as file:
 			pickle.dump(imgs_path,file)
 
-		with open("Capts_Path_"+str(start)+"_"+str(start+end)+".pkl","wb") as file:
+		with open("Capts_Path_"+str(start_x)+"_"+str(start_x)+".pkl","wb") as file:
 			pickle.dump(caps_path,file)
 
 		print("Total Train_Images: ",len(imgs_path),flush=True)
 		print("Total SELFIES_Images: ",len(caps_path),flush=True)
 
 		start = start+len(imgs_path)
+		start_x = start_x+1
 
 
 	print (datetime.now().strftime('%Y/%m/%d %H:%M:%S'),"Process completed", flush=True)
@@ -100,8 +107,12 @@ def data_loader(Smiles_Path):
 
 	# calculating the max_length used to store the attention weights
 	max_length = calc_max_length(train_seqs)
+	#Data_Split
+	img_name_train, cap_train, img_name_val, cap_val = img_name_vector[0:1638400],cap_vector[0:1638400],img_name_vector[1638400:2030454],cap_vector[1638400:2030454]
 
-	return img_name_vector,cap_vector,tokenizer,max_length
+	print(str(len(img_name_train)),str(len(img_name_val)))
+
+	return img_name_train,cap_train,tokenizer,max_length,img_name_val
 
 if __name__ == '__main__':
 	main()
