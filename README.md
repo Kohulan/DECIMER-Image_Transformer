@@ -1,4 +1,8 @@
 # DECIMER-TPU
+[![License](https://img.shields.io/badge/License-MIT%202.0-blue.svg)](https://opensource.org/licenses/MIT)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-blue.svg)](https://GitHub.com/Kohulan/DECIMER-TPU/graphs/commit-activity)
+[![GitHub issues](https://img.shields.io/github/issues/Kohulan/DECIMER-TPU.svg)](https://GitHub.com/Kohulan/DECIMER-TPU/issues/)
+[![GitHub contributors](https://img.shields.io/github/contributors/Kohulan/DECIMER-TPU.svg)](https://GitHub.com/Kohulan/DECIMER-TPU/graphs/contributors/)
 
 - The original implementation of DECIMER using GPU does take a longer training time when we use a bigger dataset of images of more than 1 million. To overcome these longer training times, many implement the training script to work on multiple GPUs. But we tried to step up and implemented our code to use Google's Machine Learning hardware [TPU(Tensor Processing Unit)](https://en.wikipedia.org/wiki/Tensor_Processing_Unit). You can learn more about the hardware [here](https://en.wikipedia.org/wiki/Tensor_Processing_Unit).
 
