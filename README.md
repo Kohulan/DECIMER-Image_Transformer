@@ -20,7 +20,7 @@
   +   ├ ─ TPU_Trainer_Image2Smiles.py             # Main training script - We can modify this according to our hardware
   +   └ ─ I2S_Model.py                            # Main Model
   +    
-  ├── Utils/                                      # Utilities used to generate the data
+  ├── TF_RecordUtils/                                      # Utilities used to generate the data
   +   ├ ─ Create_TF_Record.py                     # Original script for creating TFRecords
   +   ├ ─ Create_TFrecord_From_Vectors.py         # Can be used to create multiple TFRecords same time
   +   ├ ─ Create_tokenizer.py                     # Can be used to create the tokenizer and the multiple path files which can be later used in creating TfRecords and Evaluation.
