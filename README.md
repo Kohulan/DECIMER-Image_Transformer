@@ -56,12 +56,12 @@ $ conda create --name DECIMER python=3.7.9
 $ conda activate DECIMER
 $ conda install pip
 $ python -m pip install -U pip #Upgrade pip
-$ pip install tensorflow-gpu==2.3.0 selfies matplotlib 
+$ pip install tensorflow-gpu==2.3.0 selfies matplotlib efficientnet
 ```
 ### Install tensorflow==2.3.0 if you do not have an nVidia GPU (On Mac OS)
 
 ```
-$ pip install tensorflow==2.3.0 selfies matplotlib unicodedata2
+$ pip install tensorflow==2.3.0 selfies matplotlib efficientnet
 $ python DECIMER_V1.0.py --help #Use for help
 ```
 - When you run the program for the first time the models will get automatically downloaded(Note: total size is ~ 1GB). Also, you can manually download the models from [here](https://storage.googleapis.com/iupac_models_trained/DECIMER_transformer_models/DECIMER_trained_models_v1.0.zip)
