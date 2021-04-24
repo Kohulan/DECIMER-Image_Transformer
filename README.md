@@ -66,8 +66,6 @@ $ python DECIMER_V1.0.py --help #Use for help
 ```
 - When you run the program for the first time the models will get automatically downloaded(Note: total size is ~ 1GB). Also, you can manually download the models from [here](https://storage.googleapis.com/iupac_models_trained/DECIMER_transformer_models/DECIMER_trained_models_v1.0.zip)
 e.g.: 
-
-# Always write the SMILES or IUPAC name inside quotes ''/"".
 ```
 python DECIMER_V1.0.py --model Canonical --image caffeine.png       # Predict SMILES for a single image.
 python DECIMER_V1.0.py --model Isomeric --dir Sample_Images         # Predict SMILES for all the Images inside a folder.
