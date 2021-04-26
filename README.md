@@ -15,7 +15,7 @@
 
 ## Method and model changes
  - The DECIMER now uses EfficientNet-B3[3],[4] for Image feature extraction and a transformer model[5] for predicting the SMILES.
- - The SMILES[6] are encoded to SELFIES[7] during training and predictions
+ - The SMILES[6] are encoded to [SELFIES](https://github.com/aspuru-guzik-group/selfies)[7] during training and predictions
 
 ### Changes in training method
 
