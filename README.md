@@ -105,13 +105,11 @@ Rajan, K., Zielesny, A. & Steinbeck, C. DECIMER: towards deep learning for chemi
 7. Krenn M, Häse F, Nigam A, Friederich P, Aspuru-Guzik A (2020) Self-referencing embedded strings (SELFIES): A 100% robust molecular string representation. Mach Learn: Sci Technol 1:045024
 
 
-## Author:
-- [Kohulan](https://kohulanr.com)
+## Author: [Kohulan](https://kohulanr.com)
 
-[![GitHub Logo](https://github.com/Kohulan/DECIMER-Image-to-SMILES/raw/master/assets/DECIMER.gif)](https://kohulan.github.io/Decimer-Official-Site/)
+[[![GitHub Logo](https://github.com/Kohulan/DECIMER-Image-to-SMILES/raw/master/assets/DECIMER.gif)](https://kohulan.github.io/Decimer-Official-Site/)](https://decimer.ai)
 
-## Project Website
-- [DECIMER](https://kohulan.github.io/Decimer-Official-Site/)
+## Project Website: [DECIMER](https://decimer.ai)
 
 ## Research Group
 [![GitHub Logo](https://github.com/Kohulan/DECIMER-Image-to-SMILES/blob/master/assets/CheminfGit.png)](https://cheminf.uni-jena.de)
