@@ -106,7 +106,7 @@ Rajan, K., Zielesny, A. & Steinbeck, C. DECIMER: towards deep learning for chemi
 
 
 ## Author:
-- [Kohulan](github.com/Kohulan)
+- [Kohulan](https://kohulanr.com)
 
 [![GitHub Logo](https://github.com/Kohulan/DECIMER-Image-to-SMILES/raw/master/assets/DECIMER.gif)](https://kohulan.github.io/Decimer-Official-Site/)
 
