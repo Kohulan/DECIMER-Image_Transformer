@@ -6,16 +6,16 @@
 
 ## Abstract
 
-- The DECIMER (Deep lEarning for Chemical ImagE Recognition) project[1] was launched to address the OCSR problem with the latest computational intelligence methods to provide an automated open-source software solution. Various current deep learning approaches were explored to seek a best-fitting solution to the problem. In a preliminary communication, we outlined the prospect of being able to predict SMILES encodings of chemical structure depictions with about 90% accuracy using a dataset of 50-100 million molecules. In this article, the new DECIMER model is presented, a transformer-based network, which can predict SMILES with above 96% accuracy from depictions of chemical structures without stereochemical information and above 89% accuracy for depictions with stereochemical information.
+- The DECIMER (Deep lEarning for Chemical ImagE Recognition) project [1] was launched to address the OCSR problem with the latest computational intelligence methods to provide an automated open-source software solution. Various current deep learning approaches were explored to seek a best-fitting solution to the problem. In a preliminary communication, we outlined the prospect of being able to predict SMILES encodings of chemical structure depictions with about 90% accuracy using a dataset of 50-100 million molecules. In this article, the new DECIMER model is presented, a transformer-based network, which can predict SMILES with above 96% accuracy from depictions of chemical structures without stereochemical information and above 89% accuracy for depictions with stereochemical information.
 
 
-- The original implementation of DECIMER[1] using GPU does take a longer training time when we use a bigger dataset of images of more than 1 million. To overcome these longer training times, many implement the training script to work on multiple GPUs. But we tried to step up and implemented our code to use Google's Machine Learning hardware [TPU(Tensor Processing Unit)](https://en.wikipedia.org/wiki/Tensor_Processing_Unit)[2]. You can learn more about the hardware [here](https://en.wikipedia.org/wiki/Tensor_Processing_Unit).
+- The original implementation of DECIMER[1] using GPU does take a longer training time when we use a bigger dataset of images of more than 1 million. To overcome these longer training times, many implement the training script to work on multiple GPUs. But we tried to step up and implemented our code to use Google's Machine Learning hardware [TPU(Tensor Processing Unit)](https://en.wikipedia.org/wiki/Tensor_Processing_Unit) [2]. You can learn more about the hardware [here](https://en.wikipedia.org/wiki/Tensor_Processing_Unit).
 
 [![GitHub Logo](https://github.com/Kohulan/DECIMER-Image_Transformer/blob/master/DECIMER_8K_Red_.png?raw=true)](https://github.com/Kohulan/Smiles-TO-iUpac-Translator)
 
 ## Method and model changes
- - The DECIMER now uses EfficientNet-B3[3],[4] for Image feature extraction and a transformer model[5] for predicting the SMILES.
- - The SMILES[6] are encoded to [SELFIES](https://github.com/aspuru-guzik-group/selfies)[7] during training and predictions
+ - The DECIMER now uses EfficientNet-B3 [3],[4] for Image feature extraction and a transformer model [5] for predicting the SMILES.
+ - The SMILES [6] are encoded to [SELFIES](https://github.com/aspuru-guzik-group/selfies) [7] during training and predictions
 
 ### Changes in training method
 
