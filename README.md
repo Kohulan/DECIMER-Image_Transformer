@@ -50,26 +50,41 @@ $ bash Miniconda3-latest-Linux-x86_64.sh
 ```
 $ sudo apt update
 $ sudo apt install default-jdk # Incase if you do not have Java already installed
-$ sudo apt install unzip
-$ git clone https://github.com/Kohulan/DECIMER-Image_Transformer.git
-$ cd DECIMER-Image_Transformer
-$ conda create --name DECIMER python=3.7.9
-$ conda activate DECIMER
-$ conda install pip
-$ python -m pip install -U pip #Upgrade pip
-$ pip install tensorflow-gpu==2.3.0 selfies matplotlib efficientnet
 ```
+
+### Python Package Installation
+
+Install the latest code from GitHub with:
+
+```shell
+$ pip install git+https://github.com/Kohulan/DECIMER-Image_Transformer.git
+```
+
+Install in development mode with:
+
+```shell
+$ git clone https://github.com/Kohulan/DECIMER-Image_Transformer.git decimer
+$ cd decimer/
+$ pip install -e .
+```
+
+where `-e` means "editable" mode.
+
 ### Install tensorflow==2.3.0 if you do not have an nVidia GPU (On Mac OS)
 
+### CLI Usage
+
+The Python package automatically installs the `decimer` command line tool.
+
+```shell
+$ decimer --help  # Use for help
 ```
-$ pip install tensorflow==2.3.0 selfies matplotlib efficientnet
-$ python DECIMER_V1.0.py --help #Use for help
-```
+
 - When you run the program for the first time the models will get automatically downloaded(Note: total size is ~ 1GB). Also, you can manually download the models from [here](https://storage.googleapis.com/iupac_models_trained/DECIMER_transformer_models/DECIMER_trained_models_v1.0.zip)
 e.g.: 
-```
-python DECIMER_V1.0.py --model Canonical --image caffeine.png       # Predict SMILES for a single image.
-python DECIMER_V1.0.py --model Isomeric --dir Sample_Images         # Predict SMILES for all the Images inside a folder.
+```shell
+$ decimer --model Canonical --image Sample_Images/caffeine.png       # Predict SMILES for a single image.
+$ decimer --model Isomeric --dir Sample_Images         # Predict SMILES for all the Images inside a folder.
 ```
 #### DECIMER automatically selects the Canonical model, but you can choose one of the following models
 
@@ -78,15 +93,6 @@ Available Models:
  - Isomeric : Model trained on images depicted using isomeric SMILES, which includes stereochemical information + ions
  - Augmented: Model trained on images depicted using isomeric SMILES with augmentations 
 
-
-### Requirements
-  - tensorflow 2.0 of higher
-  - matplotlib
-  - pillow
-  - selfies
-  - urlib
-  - unzip
-  
 ## License:
 - This project is licensed under the MIT License - see the [LICENSE](https://raw.githubusercontent.com/Kohulan/DECIMER-Image_Transformer/master/LICENSE?token=AHKLIF3EULMCUKCFUHIPBMDARSMDO) file for details
 

@@ -1,12 +1,15 @@
 # -*- coding: UTF-8 -*-
 # © Kohulan Rajan - 2020
+
+"""Decimer CLI."""
+
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import tensorflow as tf
 import sys
 import pickle
 from selfies import decoder
-from Network import helper
+from .Network import helper
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 gpus = tf.config.experimental.list_physical_devices('GPU')
@@ -126,7 +129,7 @@ def predict_SMILES(image_path):
 # Batch predicted helper function
 def predict_batches(dir_path):
     dirlist = os.listdir(dir_path)
-    file_out = open("Predicted_SMILES.txt", "w")
+    file_out = open("../../Predicted_SMILES.txt", "w")
     for file in dirlist:
         predicted_SMILES = predict_SMILES(dir_path + '/' + file)
         file_out.write(file + "\t" + predicted_SMILES + "\n")
