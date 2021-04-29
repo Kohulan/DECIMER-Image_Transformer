@@ -127,3 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Trained model downloads
+Trained_Models/
+DECIMER_trained_models_v1.0.zip
