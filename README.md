@@ -91,9 +91,9 @@ Available Models:
 - This project is licensed under the MIT License - see the [LICENSE](https://raw.githubusercontent.com/Kohulan/DECIMER-Image_Transformer/master/LICENSE?token=AHKLIF3EULMCUKCFUHIPBMDARSMDO) file for details
 
 ## Citation
-```
-Rajan, K., Zielesny, A. & Steinbeck, C. DECIMER: towards deep learning for chemical image recognition. J Cheminform 12, 65 (2020). https://doi.org/10.1186/s13321-020-00469-w
-```
+
+- Rajan, Kohulan; Zielesny, Achim; Steinbeck, Christoph (2021): DECIMER 1.0: Deep Learning for Chemical Image Recognition using Transformers. ChemRxiv. Preprint. https://doi.org/10.26434/chemrxiv.14479287.v1 
+
 
 ## References
 
