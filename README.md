@@ -2,8 +2,8 @@
 
 [![License](https://img.shields.io/badge/License-MIT%202.0-blue.svg)](https://opensource.org/licenses/MIT)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-blue.svg)](https://GitHub.com/Kohulan/DECIMER-Image_Transformer/graphs/commit-activity)
-[![GitHub issues](https://img.shields.io/github/issues/Kohulan/DECIMER-TPU.svg)](https://GitHub.com/Kohulan/DECIMER-Image_Transformer/issues/)
-[![GitHub contributors](https://img.shields.io/github/contributors/Kohulan/DECIMER-TPU.svg)](https://GitHub.com/Kohulan/DECIMER-Image_Transformer/graphs/contributors/)
+[![GitHub issues](https://img.shields.io/github/issues/Kohulan/DECIMER-Image_Transformer.svg)](https://GitHub.com/Kohulan/DECIMER-Image_Transformer/issues/)
+[![GitHub contributors](https://img.shields.io/github/contributors/Kohulan/DECIMER-Image_Transformer.svg)](https://GitHub.com/Kohulan/DECIMER-Image_Transformer/graphs/contributors/)
 
 ## Abstract
 
