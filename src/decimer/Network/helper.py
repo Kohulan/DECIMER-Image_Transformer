@@ -2,7 +2,7 @@
 # © Kohulan Rajan - 2020
 # helper functions for the predictions
 import pickle
-from Network.Transformer import I2S_Model_Transformer
+from .Transformer import I2S_Model_Transformer
 import efficientnet.tfkeras as efn
 import tensorflow as tf
 import subprocess
