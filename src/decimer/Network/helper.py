@@ -8,6 +8,7 @@ import tensorflow as tf
 import subprocess
 import urllib.request
 from ..assets import HERE
+from typing import Tuple, Union
 
 
 # load tokenizer and max length
@@ -19,7 +20,16 @@ def load_assets(model_id):
 
 
 # load parameters for the model
-def load_transformer(vocabulary, get_type):
+def load_transformer(
+    vocabulary: str,
+    get_type,
+) -> Tuple[I2S_Model_Transformer.Transformer, Tuple[int, int, int]]:
+    """Load a transformer with given vocabulary and tokenizer.
+
+    :param vocabulary:
+    :param get_type:
+    :return:
+    """
     if vocabulary == "SELFIES_tokenizer":
         target_vocab_size = len(get_type.word_index) + 1
     else:
