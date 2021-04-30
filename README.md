@@ -6,6 +6,8 @@
 [![GitHub contributors](https://img.shields.io/github/contributors/Kohulan/DECIMER-Image_Transformer.svg)](https://GitHub.com/Kohulan/DECIMER-Image_Transformer/graphs/contributors/)
 [![DOI](https://zenodo.org/badge/293572361.svg)](https://zenodo.org/badge/latestdoi/293572361)
 [![Documentation Status](https://readthedocs.org/projects/decimer-image-transformer/badge/?version=latest)](https://decimer-image-transformer.readthedocs.io/en/latest/?badge=latest)
+[![GitHub release](https://img.shields.io/github/release/Kohulan/DECIMER-Image_Transformer.svg)](https://GitHub.com/Kohulan/DECIMER-Image_Transformer/releases/)
+[![PyPI version fury.io](https://badge.fury.io/py/decimer.svg)](https://pypi.python.org/pypi/decimer/)
 
 ## Abstract
 
