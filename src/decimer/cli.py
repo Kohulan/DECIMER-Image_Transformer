@@ -11,6 +11,14 @@ import pickle
 from selfies import decoder
 from .Network import helper
 
+__all__ = [
+    'main',
+    'load_trained_model',
+    'evaluate',
+    'predict_SMILES',
+    'predict_batches',
+]
+
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 gpus = tf.config.experimental.list_physical_devices('GPU')
 for gpu in gpus:
@@ -64,7 +72,14 @@ def main():
         print("\nSee help using python DECIMER_V1.py --help")
 
 
-def load_trained_model(model_id):
+def load_trained_model(model_id: str):
+    """Load a pre-trained model included with :mod:`decimer`.
+
+    :param model_id: The name of the model. Should be one of: "Augmented", "Canonical", or "Isomeric"
+    :returns: A quadruple of an image feature extractor that comes from
+        :func:`decimer.Network.helper.load_image_features_extract_model`, a transformer from
+        :func:`decimer.Network.helper.load_transformer`, the max length, and a tokenizer.
+    """
     # load important assets
     SELFIES_tokenizer, max_length = helper.load_assets(model_id)
     if model_id == "Canonical":
