@@ -1,7 +1,7 @@
 import tensorflow as tf
 import matplotlib as mpl
 
-mpl.use('Agg')
+mpl.use("Agg")
 import matplotlib.pyplot as plt
 
 import re
@@ -11,21 +11,21 @@ import pickle
 import I2S_Model_Transformer
 from datetime import datetime
 
-tpu = tf.distribute.cluster_resolver.TPUClusterResolver(tpu='node-blur')
-print('Running on TPU ', tpu.master())
+tpu = tf.distribute.cluster_resolver.TPUClusterResolver(tpu="node-blur")
+print("Running on TPU ", tpu.master())
 
 tf.config.experimental_connect_to_cluster(tpu)
 tf.tpu.experimental.initialize_tpu_system(tpu)
 strategy = tf.distribute.TPUStrategy(tpu)
 
-f = open('Training_Report.txt', 'w')
-print('Number of devices: {}'.format(strategy.num_replicas_in_sync), flush=True)
+f = open("Training_Report.txt", "w")
+print("Number of devices: {}".format(strategy.num_replicas_in_sync), flush=True)
 sys.stdout = f
 print("REPLICAS: ", strategy.num_replicas_in_sync, flush=True)
-print(datetime.now().strftime('%Y/%m/%d %H:%M:%S'), "Network Started", flush=True)
+print(datetime.now().strftime("%Y/%m/%d %H:%M:%S"), "Network Started", flush=True)
 
 # Load the Data
-total_data =  ... # Number of total train datasize
+total_data = ...  # Number of total train datasize
 
 tokenizer = pickle.load(open("tokenizer.pkl", "rb"))
 max_length = pickle.load(open("max_length.pkl", "rb"))
@@ -53,22 +53,22 @@ AUTO = tf.data.experimental.AUTOTUNE
 
 def read_tfrecord(example):
     feature = {
-        'image_raw': tf.io.FixedLenFeature([], tf.string),
-        'caption': tf.io.FixedLenFeature([], tf.string),
+        "image_raw": tf.io.FixedLenFeature([], tf.string),
+        "caption": tf.io.FixedLenFeature([], tf.string),
     }
 
     # decode the TFRecord
     example = tf.io.parse_single_example(example, feature)
 
-    img = tf.io.decode_raw(example['image_raw'], tf.float32)
+    img = tf.io.decode_raw(example["image_raw"], tf.float32)
     img_tensor = tf.reshape(img, [100, 1536])
-    caption = tf.io.decode_raw(example['caption'], tf.int32)
+    caption = tf.io.decode_raw(example["caption"], tf.int32)
     # caption = tf.reshape(capt, [42,])
 
     return img_tensor, caption
 
 
-numbers = re.compile(r'(\d+)')
+numbers = re.compile(r"(\d+)")
 
 
 def numericalSort(value):
@@ -79,18 +79,20 @@ def numericalSort(value):
 
 def get_training_dataset(batch_size=BATCH_SIZE, buffered_size=BUFFER_SIZE):
     options = tf.data.Options()
-    filenames = sorted(tf.io.gfile.glob("path/to/TFRecord/*.tfrecord"), key=numericalSort)
+    filenames = sorted(
+        tf.io.gfile.glob("path/to/TFRecord/*.tfrecord"), key=numericalSort
+    )
     # print(len(filenames))
 
     dataset_img = tf.data.TFRecordDataset(filenames, num_parallel_reads=AUTO)
 
     train_dataset = (
-        dataset_img
-            .with_options(options)
-            .map(read_tfrecord, num_parallel_calls=AUTO)
-            .repeat()
-            .shuffle(buffered_size).batch(batch_size, drop_remainder=True)
-            .prefetch(buffer_size=AUTO)
+        dataset_img.with_options(options)
+        .map(read_tfrecord, num_parallel_calls=AUTO)
+        .repeat()
+        .shuffle(buffered_size)
+        .batch(batch_size, drop_remainder=True)
+        .prefetch(buffer_size=AUTO)
     )
     return train_dataset
 
@@ -131,9 +133,12 @@ def create_masks_decoder(tar):
 with strategy.scope():
     # Network Parameters
     learning_rate = CustomSchedule(d_model)
-    optimizer = tf.keras.optimizers.Adam(learning_rate, beta_1=0.9, beta_2=0.98, epsilon=1e-9)
-    loss_object = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True, reduction='none')
-
+    optimizer = tf.keras.optimizers.Adam(
+        learning_rate, beta_1=0.9, beta_2=0.98, epsilon=1e-9
+    )
+    loss_object = tf.keras.losses.SparseCategoricalCrossentropy(
+        from_logits=True, reduction="none"
+    )
 
     def loss_function(real, pred):
         mask = tf.math.logical_not(tf.math.equal(real, 0))
@@ -144,14 +149,23 @@ with strategy.scope():
 
         return tf.reduce_mean(loss_)
 
-
-    train_loss = tf.keras.metrics.Mean(name='train_loss', dtype=tf.float32)
-    train_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='train_accuracy', dtype=tf.float32)
+    train_loss = tf.keras.metrics.Mean(name="train_loss", dtype=tf.float32)
+    train_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(
+        name="train_accuracy", dtype=tf.float32
+    )
 
     # Initialize Transformer
-    transformer = I2S_Model_Transformer.Transformer(num_layer, d_model, num_heads, dff, row_size, col_size,
-                                                    target_vocab_size, max_pos_encoding=target_vocab_size,
-                                                    rate=dropout_rate)
+    transformer = I2S_Model_Transformer.Transformer(
+        num_layer,
+        d_model,
+        num_heads,
+        dff,
+        row_size,
+        col_size,
+        target_vocab_size,
+        max_pos_encoding=target_vocab_size,
+        rate=dropout_rate,
+    )
 
 checkpoint_path = "path/to/checkpoint"
 ckpt = tf.train.Checkpoint(transformer=transformer, optimizer=optimizer)
@@ -160,7 +174,7 @@ ckpt_manager = tf.train.CheckpointManager(ckpt, checkpoint_path, max_to_keep=50)
 start_epoch = 0
 if ckpt_manager.latest_checkpoint:
     ckpt.restore(tf.train.latest_checkpoint(checkpoint_path))
-    start_epoch = int(ckpt_manager.latest_checkpoint.split('-')[-1])
+    start_epoch = int(ckpt_manager.latest_checkpoint.split("-")[-1])
 
 per_replica_batch_size = BATCH_SIZE // strategy.num_replicas_in_sync
 
@@ -189,7 +203,7 @@ def train_step(iterator):
             predictions, _ = transformer(img_tensor, tar_inp, True, dec_mask)
             loss = loss_function(tar_real, predictions)
 
-        total_loss = (loss / int(target.shape[1]))
+        total_loss = loss / int(target.shape[1])
 
         gradients = tape.gradient(loss, transformer.trainable_variables)
 
@@ -201,11 +215,14 @@ def train_step(iterator):
         return loss, total_loss
 
     per_replica_losses, l_loss = strategy.run(step_fn, args=(iterator,))
-    return strategy.reduce(tf.distribute.ReduceOp.MEAN, per_replica_losses, axis=None), strategy.reduce(
-        tf.distribute.ReduceOp.MEAN, l_loss, axis=None)
+    return strategy.reduce(
+        tf.distribute.ReduceOp.MEAN, per_replica_losses, axis=None
+    ), strategy.reduce(tf.distribute.ReduceOp.MEAN, l_loss, axis=None)
 
 
-print(datetime.now().strftime('%Y/%m/%d %H:%M:%S'), "Actual Training Started", flush=True)
+print(
+    datetime.now().strftime("%Y/%m/%d %H:%M:%S"), "Actual Training Started", flush=True
+)
 
 train_iterator = iter(train_dataset)
 
@@ -224,35 +241,48 @@ for epoch in range(start_epoch, EPOCHS):
         batch += 1
 
         if batch % 100 == 0:
-            print('Epoch {} Batch {} Loss {:.4f} Updated_Loss {:.4f} Accuracy {:.4f}'.format(epoch + 1, batch,
-                                                                                             batch_loss.numpy() / BATCH_SIZE,
-                                                                                             train_loss.result(),
-                                                                                             train_accuracy.result()),
-                  flush=True)
+            print(
+                "Epoch {} Batch {} Loss {:.4f} Updated_Loss {:.4f} Accuracy {:.4f}".format(
+                    epoch + 1,
+                    batch,
+                    batch_loss.numpy() / BATCH_SIZE,
+                    train_loss.result(),
+                    train_accuracy.result(),
+                ),
+                flush=True,
+            )
         # storing the epoch end loss value to plot later
 
         if batch == num_steps:
             loss_plot.append(total_loss / num_steps)
             ckpt_manager.save()
 
-            print('Epoch {} Loss {:.6f} Updated_Loss {:.4f} Accuracy {:.4f}'.format(epoch + 1, total_loss / num_steps,
-                                                                                    train_loss.result(),
-                                                                                    train_accuracy.result()),
-                  flush=True)
-            print(datetime.now().strftime('%Y/%m/%d %H:%M:%S'),
-                  'Time taken for 1 epoch {} sec\n'.format(time.time() - start), flush=True)
+            print(
+                "Epoch {} Loss {:.6f} Updated_Loss {:.4f} Accuracy {:.4f}".format(
+                    epoch + 1,
+                    total_loss / num_steps,
+                    train_loss.result(),
+                    train_accuracy.result(),
+                ),
+                flush=True,
+            )
+            print(
+                datetime.now().strftime("%Y/%m/%d %H:%M:%S"),
+                "Time taken for 1 epoch {} sec\n".format(time.time() - start),
+                flush=True,
+            )
             # transformer.save_weights('Epoch_'+str(epoch+1)+'_weights.h5')
 
             break
 
-plt.plot(loss_plot, '-o', label="Loss value")
-plt.title('Training Loss')
-plt.xlabel('Epochs')
-plt.ylabel('Loss')
+plt.plot(loss_plot, "-o", label="Loss value")
+plt.title("Training Loss")
+plt.xlabel("Epochs")
+plt.ylabel("Loss")
 # plt.show()
 plt.gcf().set_size_inches(20, 20)
 plt.savefig("Lossplot_.jpg")
 plt.close()
 
-print(datetime.now().strftime('%Y/%m/%d %H:%M:%S'), "Network Completed", flush=True)
+print(datetime.now().strftime("%Y/%m/%d %H:%M:%S"), "Network Completed", flush=True)
 f.close()

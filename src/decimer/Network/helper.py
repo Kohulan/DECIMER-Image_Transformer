@@ -13,8 +13,12 @@ from typing import Tuple, Union
 
 # load tokenizer and max length
 def load_assets(model_id):
-    tokenizer = pickle.load(open(HERE.joinpath(model_id, "SELFIES_tokenizer.pkl"), "rb"))
-    max_length = pickle.load(open(HERE.joinpath(model_id, "SELFIES_max_length.pkl"), "rb"))
+    tokenizer = pickle.load(
+        open(HERE.joinpath(model_id, "SELFIES_tokenizer.pkl"), "rb")
+    )
+    max_length = pickle.load(
+        open(HERE.joinpath(model_id, "SELFIES_max_length.pkl"), "rb")
+    )
 
     return tokenizer, max_length
 
@@ -43,9 +47,17 @@ def load_transformer(
     dropout_rate = 0.1
     target_size = (299, 299, 3)
 
-    transformer = I2S_Model_Transformer.Transformer(num_layer, d_model, num_heads, dff, row_size, col_size,
-                                                    target_vocab_size, max_pos_encoding=target_vocab_size,
-                                                    rate=dropout_rate)
+    transformer = I2S_Model_Transformer.Transformer(
+        num_layer,
+        d_model,
+        num_heads,
+        dff,
+        row_size,
+        col_size,
+        target_vocab_size,
+        max_pos_encoding=target_vocab_size,
+        rate=dropout_rate,
+    )
 
     return transformer, target_size
 
@@ -61,7 +73,9 @@ def load_image(image_path):
 
 def load_image_features_extract_model(target_size):
     # Using EfficientnetB3 and using the pretrained Imagenet weights
-    image_model = efn.EfficientNetB3(weights='noisy-student', input_shape=target_size, include_top=False)
+    image_model = efn.EfficientNetB3(
+        weights="noisy-student", input_shape=target_size, include_top=False
+    )
 
     new_input = image_model.input
     hidden_layer = image_model.layers[-1].output
