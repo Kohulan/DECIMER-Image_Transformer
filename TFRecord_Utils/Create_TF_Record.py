@@ -1,12 +1,10 @@
 # -*- coding: UTF-8 -*-
 # © Kohulan Rajan - 2020
 import tensorflow as tf
-import json
-import nltk
 import os
-import numpy as np
 import I2S_Data
 import pickle
+import efficientnet.tfkeras as efn
 
 # Initial Setup for GPU
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
@@ -28,7 +26,7 @@ def load_image(image_path):
     img = tf.io.read_file(image_path)
     img = tf.image.decode_png(img, channels=3)
     img = tf.image.resize(img, (299, 299))
-    img = tf.keras.applications.inception_v3.preprocess_input(img)
+    img = efn.preprocess_input(img)
     return img, image_path
 
 
@@ -69,7 +67,7 @@ def get_train_tfrecord(imgs_dir_path, captions_path, num_shards):
     train_captions = train_captions[:num_examples]
     img_name_vector = img_name_vector[:num_examples]
 
-    # Get Tokenizer from acaptions file
+    # Get Tokenizer from a captions file
     (
         cap_train,
         tokenizer,
