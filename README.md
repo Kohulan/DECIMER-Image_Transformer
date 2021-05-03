@@ -54,7 +54,26 @@ $ sed -i 's/\]\[/\] \[/g' Generated_SELFIES.txt
 ```
 #### 3. Create TFRecords.
 ```
-#ToDo
+# Use the Create_tokenizer.py to create tokens and the file paths for image files, Her the input will be the Generated_SELFIES.txt file.
+# This generates multiple files with tokenized SELFIES and Image paths. Also this genertes the final tokenizer.pkl and max_length.pkl which can be used later for training.
+
+# Use the Create_TFrecord_From_Vectors.py to generate TF records. 
+$ python3 Create_TFrecord_From_Vectors.py 1 
+```
+
+#### 4. Move the TFRecords to Google CLOUD Storage
+```
+$ gsutil -m cp -r path/to/tfrecords/ path/to/cloud/storage
+```
+
+#### 5. Train on Google Cloud TPUs.
+
+```
+Create a VM and a TPU node in the same location as your google cloud storage bucket and modify the TFRecord path, tokenizer.pkl and max_length.pkl paths.
+
+Change the TPU node name.
+
+Once the TPU is ready on your Virtual machine console execute : python3 TPU_Trainer_Image2Smiles_transformer.py
 ```
 
 ## How to use DECIMER?
