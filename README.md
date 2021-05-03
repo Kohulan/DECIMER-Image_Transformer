@@ -108,6 +108,11 @@ $ cd decimer/
 $ pip install -e .
 ```
 
+Install from PyPi
+```shell
+$ pips install decimer
+```
+
 where `-e` means "editable" mode.
 
 ### Install tensorflow==2.3.0 if you do not have an nVidia GPU (On Mac OS)
