@@ -34,13 +34,28 @@
 
 ## Usage:
 
-### Deployment of VMs to train using TPUs
-- We have to deploy VMs using [ctpu](https://cloud.google.com/tpu/docs/ctpu-reference) commands to launch VMs to work with TPUs.
-- To launch VMs, type the following code on the Google cloud console shell environment.check the reference for more details.
+### How to re-train the models
+
+#### 1. Generate the image data and SMILES data using the provided Java files. Input files should be in SMILES format.
 ```
-ctpu up --vm-only --zone=europe-west4-a --name=tpu-test --machine-type=n1-highmem-8 --disk-size-gb=100 --project PROJECT_NAME
+# Filter only the compounds fits to DECIMER Ruleset.
+$ java -cp cdk-2.3.jar:. Pubchemfilter Input_SMILES.txt
+
+# Generate images and save them into folders.
+$ java -cp cdk-2.3.jar:. Smilesdepictor filtered_SMILES.txt
+
 ```
-- TPUs can be launched by simply selecting the TPus hardware in Compute Engine in Google Cloud console.
+#### 2. Generate SELFIES and split them.
+```
+$ python3 Smiles2SELFIES.py Generated_SMILES.txt
+
+# Use sed command on linux to split the SELFIES into tokens using the square brackets.
+$ sed -i 's/\]\[/\] \[/g' Generated_SELFIES.txt
+```
+#### 3. Create TFRecords.
+```
+#ToDo
+```
 
 ## How to use DECIMER?
 
