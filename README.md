@@ -35,7 +35,7 @@ The original implementation of DECIMER[1] using GPU takes a longer training time
 ### Datasets
 
 The [datasets](https://doi.org/10.5281/zenodo.4766251) are available in SMILES and SELFIES format. To generate the images, please refer to the code below.
-Download the datasets from Zenodo: https://doi.org/10.5281/zenodo.4766251
+Download the datasets from Zenodo: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4766252.svg)](https://doi.org/10.5281/zenodo.4766252)
 ```
 $ java -cp cdk-2.3.jar:. Smilesdepictor filtered_SMILES.txt
 ```
