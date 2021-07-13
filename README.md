@@ -118,7 +118,7 @@ $ pip install -e.
 
 Install from PyPi
 ```shell
-$ pips install decimer
+$ pip install decimer
 ```
 
 
