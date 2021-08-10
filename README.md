@@ -120,7 +120,14 @@ Install from PyPi
 ```shell
 $ pip install decimer
 ```
-
+### How to use inside your own python script
+```python
+import src.decimer.DECIMER as decimer
+model_name = “Isomeric"
+img_path = “caffeine.png”
+caffeine_smiles = decimer.predict_SMILES(img_path,model_name)
+print(caffeine_smiles)
+```
 
 ### Install tensorflow==2.3.0 if you do not have an Nvidia GPU (On Mac OS)
 
