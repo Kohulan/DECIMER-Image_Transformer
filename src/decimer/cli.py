@@ -10,7 +10,7 @@ import tensorflow as tf
 import sys
 import pickle
 from selfies import decoder
-from .Network import helper
+from Network import helper
 
 __all__ = [
     "main",
