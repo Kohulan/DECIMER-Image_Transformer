@@ -4,7 +4,7 @@ import pickle
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import tensorflow as tf
 from selfies import decoder
-from Network import helper
+from .Network import helper
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 gpus = tf.config.experimental.list_physical_devices('GPU')
