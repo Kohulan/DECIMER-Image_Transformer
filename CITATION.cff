@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+message: If you use this software, please cite both the article from preferred-citation and the software itself.
+title: DECIMER 1.0: Deep Learning for Chemical Image Recognition using Transformers
+abstract: The amount of data available on chemical structures and their properties has increased steadily over the past decades. In particular, articles published before the mid-1990 are available only in printed or scanned form. The extraction and storage of data from those articles in a publicly accessible database are desirable, but doing this manually is a slow and error-prone process. In order to extract chemical structure depictions and convert them into a computer-readable format, Optical Chemical Structure Recognition (OCSR) tools were developed where the best performing OCSR tools are mostly rule-based. The DECIMER (Deep lEarning for Chemical ImagE Recognition) project was launched to address the OCSR problem with the latest computational intelligence methods to provide an automated open-source software solution. Various current deep learning approaches were explored to seek a best-fitting solution to the problem. In a preliminary communication, we outlined the prospect of being able to predict SMILES encodings of chemical structure depictions with about 90% accuracy using a dataset of 50–100 million molecules. In this article, the new DECIMER model is presented, a transformer-based network, which can predict SMILES with above 96% accuracy from depictions of chemical structures without stereochemical information and above 89% accuracy for depictions with stereochemical information.
+authors:
+  - family-names: Rajan
+    given-names: Kohulan
+    orcid: "https://orcid.org/0000-0003-1066-7792"
+  - family-names: Zielesny
+    given-names: Achim
+    orcid: "https://orcid.org/0000-0003-0722-4229"
+  - family-names: Steinbeck
+    given-names: Christoph
+    orcid: "https://orcid.org/0000-0001-6966-0814"    
+version: 1.0
+date-released: "2021-08-17"
+identifiers:
+  - description: This is the scientific publication which describes the software
+    type: doi
+    value: "10.1186/s13321-021-00538-8"
+  - description: This is the archived snapshot of version 1.0.0 of DECIMER
+    type: doi
+    value: "10.5281/zenodo.4730515"
+  - description: This is the data required by DECIMER V1.0 available in SMILES format
+    type: doi
+    value: "10.5281/zenodo.4766251."
+license: MIT
+repository-code: "https://github.com/Kohulan/DECIMER-Image_Transformer"
