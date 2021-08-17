@@ -157,7 +157,7 @@ Available Models:
 
 ## Citation
 
-- Rajan, Kohulan; Zielesny, Achim; Steinbeck, Christoph (2021): DECIMER 1.0: Deep Learning for Chemical Image Recognition using Transformers. ChemRxiv. Preprint. https://doi.org/10.26434/chemrxiv.14479287.v1 
+- Rajan, K., Zielesny, A. & Steinbeck, C. DECIMER 1.0: deep learning for chemical image recognition using transformers. J Cheminform 13, 61 (2021). https://doi.org/10.1186/s13321-021-00538-8
 
 
 ## References
