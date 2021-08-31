@@ -4,13 +4,16 @@
 """Decimer CLI."""
 
 import os
+import pathlib
 
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
 import tensorflow as tf
 import sys
 import pickle
 from selfies import decoder
-from Network import helper
+from .Network import helper
+
+HERE = pathlib.Path(__file__).resolve().parent.joinpath("")
 
 __all__ = [
     "main",
@@ -31,8 +34,8 @@ def main():
 
     if len(sys.argv) < 3 or sys.argv[1] == "--help" or sys.argv[1] == "--h":
         print(
-            "\nDefault Usage:\n python DECIMER_V1.0.py --image Image.png\n",
-            "e.g. python DECIMER_V1.0.py --image Image.pngSample_Images/caffeine.png\n",
+            "\nDefault Usage:\ndecimer --image Image.png\n",
+            "e.g. decimer --image Image.pngSample_Images/caffeine.png\n",
             "Note: The default model is set to predict Canonical SMILES\n",
             "\nAvailable Models:\n",
             "- Canonical : Model trained on images depicted using canonical SMILES\n",
@@ -115,7 +118,8 @@ def load_trained_model(model_id: str):
     image_features_extracter = helper.load_image_features_extract_model(target_size)
 
     # restoring the latest checkpoint in checkpoint_dir
-    checkpoint_path = "Trained_Models/" + model_id + "/"
+    checkpoint_path = HERE.joinpath("Trained_Models/" + model_id + "/")
+    # print(checkpoint_path)
     model_url = "https://storage.googleapis.com/iupac_models_trained/DECIMER_transformer_models/DECIMER_trained_models_v1.0.zip"
     if not os.path.exists(checkpoint_path):
         helper.download_trained_weights(model_url, checkpoint_path)

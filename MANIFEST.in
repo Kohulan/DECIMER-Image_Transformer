@@ -1,0 +1,4 @@
+include src/decimer/assets/*
+include src/decimer/assets/Isomeric/*.pkl
+include src/decimer/assets/Canonical/*.pkl
+include src/decimer/assets/Augmented/*.pkl
