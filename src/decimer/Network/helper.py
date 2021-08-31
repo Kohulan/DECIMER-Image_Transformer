@@ -89,12 +89,23 @@ def load_image_features_extract_model(target_size):
 def download_trained_weights(model_url, model_path, verbose=1):
     # Download trained models
     if verbose > 0:
-        print("Downloading trained model to "+str(model_path))
-        model_download_path = str(pathlib.Path(__file__).resolve().parent.joinpath(""))[:-7]
-        urllib.request.urlretrieve(model_url,model_download_path+"DECIMER_trained_models_v1.0.zip")
+        print("Downloading trained model to " + str(model_path))
+        model_download_path = str(pathlib.Path(__file__).resolve().parent.joinpath(""))[
+            :-7
+        ]
+        urllib.request.urlretrieve(
+            model_url, model_download_path + "DECIMER_trained_models_v1.0.zip"
+        )
     if verbose > 0:
         print("... done downloading trained model!")
-        subprocess.run(["unzip", model_download_path+"DECIMER_trained_models_v1.0.zip","-d",model_download_path])
+        subprocess.run(
+            [
+                "unzip",
+                model_download_path + "DECIMER_trained_models_v1.0.zip",
+                "-d",
+                model_download_path,
+            ]
+        )
 
 
 def create_padding_mask(seq):

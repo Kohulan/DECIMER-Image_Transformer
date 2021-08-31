@@ -23,7 +23,7 @@ def main():
     # Images_Path = "Train_Images/"
 
     img_name_vector, cap_vector, tokenizer, max_length, img_name_val = data_loader(
-        Selfies_Path,train_test_split
+        Selfies_Path, train_test_split
     )
 
     print("Tokens: ", tokenizer, flush=True)
@@ -64,7 +64,7 @@ def main():
     print(datetime.now().strftime("%Y/%m/%d %H:%M:%S"), "Process completed", flush=True)
 
 
-def data_loader(Smiles_Path,train_test_split=0.1):
+def data_loader(Smiles_Path, train_test_split=0.1):
 
     # read the Captions file
     with open(Smiles_Path, "r") as txt_file:
@@ -119,10 +119,12 @@ def data_loader(Smiles_Path,train_test_split=0.1):
     max_length = calc_max_length(train_seqs)
     # Data_Split
     img_name_train, cap_train, img_name_val, cap_val = (
-        img_name_vector[0:len(train_captions)*(1-train_test_split)],
-        cap_vector[0:len(train_captions)*(1-train_test_split)],
-        img_name_vector[len(train_captions)*(1-train_test_split):len(train_captions)],
-        cap_vector[len(train_captions)*(1-train_test_split):len(train_captions)],
+        img_name_vector[0 : len(train_captions) * (1 - train_test_split)],
+        cap_vector[0 : len(train_captions) * (1 - train_test_split)],
+        img_name_vector[
+            len(train_captions) * (1 - train_test_split) : len(train_captions)
+        ],
+        cap_vector[len(train_captions) * (1 - train_test_split) : len(train_captions)],
     )
 
     print(str(len(img_name_train)), str(len(img_name_val)))

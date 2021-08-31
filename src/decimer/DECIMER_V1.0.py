@@ -1,7 +1,9 @@
 # -*- coding: UTF-8 -*-
 # © Kohulan Rajan - 2020
+"""DECIMER original code"""
 import os
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
 import tensorflow as tf
 import sys
 import pickle
@@ -9,7 +11,7 @@ from selfies import decoder
 from Network import helper
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-gpus = tf.config.experimental.list_physical_devices('GPU')
+gpus = tf.config.experimental.list_physical_devices("GPU")
 for gpu in gpus:
     tf.config.experimental.set_memory_growth(gpu, True)
 
@@ -18,43 +20,65 @@ def main():
     global image_features_extracter, transformer, max_length, SELFIES_tokenizer
 
     if len(sys.argv) < 3 or sys.argv[1] == "--help" or sys.argv[1] == "--h":
-        print("\nDefault Usage:\n python DECIMER_V1.0.py --image Image.png\n",
-              "e.g. python DECIMER_V1.0.py --image Image.pngSample_Images/caffeine.png\n",
-              "Note: The default model is set to predict Canonical SMILES\n",
-              "\nAvailable Models:\n",
-              "- Canonical : Model trained on images depicted using canonical SMILES\n",
-              "- Isomeric : Model trained on images depicted using isomeric SMILES, which includes stereochemical information + ions\n",
-              "- Augmented: Model trained on images depicted using isomeric SMILES with augmentations",
-              "\n\nUsage for single image:\n python DECIMER_V1.0.py --model Canonical --image Image.png\n",
-              "\nUsage for folder containing multiple images:\npython DECIMER_V1.0.py --model Canonical --dir path/to/folder\n")
+        print(
+            "\nDefault Usage:\n python DECIMER_V1.0.py --image Image.png\n",
+            "e.g. python DECIMER_V1.0.py --image Image.pngSample_Images/caffeine.png\n",
+            "Note: The default model is set to predict Canonical SMILES\n",
+            "\nAvailable Models:\n",
+            "- Canonical : Model trained on images depicted using canonical SMILES\n",
+            "- Isomeric : Model trained on images depicted using isomeric SMILES, which includes stereochemical information + ions\n",
+            "- Augmented: Model trained on images depicted using isomeric SMILES with augmentations",
+            "\n\nUsage for single image:\n python DECIMER_V1.0.py --model Canonical --image Image.png\n",
+            "\nUsage for folder containing multiple images:\npython DECIMER_V1.0.py --model Canonical --dir path/to/folder\n",
+        )
         sys.exit()
 
     # Argument to run DECIMER for a given Image
-    elif (len(sys.argv) == 3 and sys.argv[1] == '--image'):
+    elif len(sys.argv) == 3 and sys.argv[1] == "--image":
         model_id = "Canonical"
 
-        image_features_extracter, transformer, max_length, SELFIES_tokenizer = load_trained_model(model_id)
+        (
+            image_features_extracter,
+            transformer,
+            max_length,
+            SELFIES_tokenizer,
+        ) = load_trained_model(model_id)
 
         get_SMILES = predict_SMILES(sys.argv[2])
         print("Predicted SMILES for " + sys.argv[2] + " :" + get_SMILES)
 
-
-    elif (len(sys.argv) == 5 and sys.argv[3] == '--image'):
+    elif len(sys.argv) == 5 and sys.argv[3] == "--image":
         model_id = sys.argv[2]
 
-        image_features_extracter, transformer, max_length, SELFIES_tokenizer = load_trained_model(model_id)
+        (
+            image_features_extracter,
+            transformer,
+            max_length,
+            SELFIES_tokenizer,
+        ) = load_trained_model(model_id)
 
         get_SMILES = predict_SMILES(sys.argv[4])
         print("Predicted SMILES for " + sys.argv[4] + " :" + get_SMILES)
 
-    elif (len(sys.argv) == 5 and sys.argv[3] == '--dir'):
+    elif len(sys.argv) == 5 and sys.argv[3] == "--dir":
         model_id = sys.argv[2]
 
-        image_features_extracter, transformer, max_length, SELFIES_tokenizer = load_trained_model(model_id)
+        (
+            image_features_extracter,
+            transformer,
+            max_length,
+            SELFIES_tokenizer,
+        ) = load_trained_model(model_id)
 
         file_name = predict_batches(sys.argv[4])
 
-        print("Predicted SMILES for images in the folder " + sys.argv[4] + "is in the " + file_name + " file\n")
+        print(
+            "Predicted SMILES for images in the folder "
+            + sys.argv[4]
+            + "is in the "
+            + file_name
+            + " file\n"
+        )
     # Call help, if the user arguments did not satisfy the rules.
     else:
         # print(len(sys.argv))
@@ -74,8 +98,8 @@ def load_trained_model(model_id):
     image_features_extracter = helper.load_image_features_extract_model(target_size)
 
     # restoring the latest checkpoint in checkpoint_dir
-    checkpoint_path = 'Trained_Models/' + model_id + '/'
-    model_url = 'https://storage.googleapis.com/iupac_models_trained/DECIMER_transformer_models/DECIMER_trained_models_v1.0.zip'
+    checkpoint_path = "Trained_Models/" + model_id + "/"
+    model_url = "https://storage.googleapis.com/iupac_models_trained/DECIMER_transformer_models/DECIMER_trained_models_v1.0.zip"
     if not os.path.exists(checkpoint_path):
         helper.download_trained_weights(model_url, checkpoint_path)
 
@@ -91,11 +115,13 @@ def load_trained_model(model_id):
 def evaluate(image):
     temp_input = tf.expand_dims(helper.load_image(image)[0], 0)
     img_tensor_val = image_features_extracter(temp_input)
-    img_tensor_val = tf.reshape(img_tensor_val, (img_tensor_val.shape[0], -1, img_tensor_val.shape[3]))
+    img_tensor_val = tf.reshape(
+        img_tensor_val, (img_tensor_val.shape[0], -1, img_tensor_val.shape[3])
+    )
 
-    output = tf.expand_dims([SELFIES_tokenizer.word_index['<start>']], 0)
+    output = tf.expand_dims([SELFIES_tokenizer.word_index["<start>"]], 0)
     result = []
-    end_token = SELFIES_tokenizer.word_index['<end>']
+    end_token = SELFIES_tokenizer.word_index["<end>"]
 
     for i in range(max_length):
         dec_mask = helper.create_masks_decoder(output)
@@ -117,8 +143,10 @@ def evaluate(image):
 def predict_SMILES(image_path):
     predicted_SELFIES = evaluate(image_path)
 
-    predicted_SMILES = decoder(''.join(predicted_SELFIES).replace("<start>", "").replace("<end>", ""),
-                               constraints='hypervalent')
+    predicted_SMILES = decoder(
+        "".join(predicted_SELFIES).replace("<start>", "").replace("<end>", ""),
+        constraints="hypervalent",
+    )
 
     return predicted_SMILES
 
@@ -128,12 +156,12 @@ def predict_batches(dir_path):
     dirlist = os.listdir(dir_path)
     file_out = open("Predicted_SMILES.txt", "w")
     for file in dirlist:
-        predicted_SMILES = predict_SMILES(dir_path + '/' + file)
+        predicted_SMILES = predict_SMILES(dir_path + "/" + file)
         file_out.write(file + "\t" + predicted_SMILES + "\n")
     file_out.close()
 
     return "Predicted_SMILES.txt"
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
