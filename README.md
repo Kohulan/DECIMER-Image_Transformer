@@ -122,7 +122,7 @@ $ pip install decimer
 ```
 ### How to use inside your own python script
 ```python
-import src.decimer.DECIMER as decimer
+from decimer import DECIMER
 model_name = “Isomeric"
 img_path = “caffeine.png”
 caffeine_smiles = decimer.predict_SMILES(img_path,model_name)
