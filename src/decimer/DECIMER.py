@@ -1,6 +1,7 @@
 import os
 import sys
 import pickle
+import pystow
 
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
 import tensorflow as tf
@@ -34,7 +35,8 @@ def load_trained_model(model_id):
     image_features_extracter = helper.load_image_features_extract_model(target_size)
 
     # restoring the latest checkpoint in checkpoint_dir
-    checkpoint_path = "Trained_Models/" + model_id + "/"
+    model_default_path = pystow.join("decimer","Trained_Models")
+    checkpoint_path = (str(model_default_path)+"/"+ model_id +"/")
     model_url = "https://storage.googleapis.com/iupac_models_trained/DECIMER_transformer_models/DECIMER_trained_models_v1.0.zip"
     if not os.path.exists(checkpoint_path):
         helper.download_trained_weights(model_url, checkpoint_path)

@@ -92,6 +92,7 @@ def download_trained_weights(model_url, model_path, verbose=1):
     if verbose > 0:
         print("Downloading trained model to " + str(model_path))
         model_path = pystow.ensure("decimer", url=model_url)
+        print(model_path)
     if verbose > 0:
         print("... done downloading trained model!")
         subprocess.run(

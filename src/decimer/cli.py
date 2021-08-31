@@ -10,6 +10,7 @@ os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
 import tensorflow as tf
 import sys
 import pickle
+import pystow
 from selfies import decoder
 from .Network import helper
 
@@ -41,8 +42,8 @@ def main():
             "- Canonical : Model trained on images depicted using canonical SMILES\n",
             "- Isomeric : Model trained on images depicted using isomeric SMILES, which includes stereochemical information + ions\n",
             "- Augmented: Model trained on images depicted using isomeric SMILES with augmentations",
-            "\n\nUsage for single image:\n python DECIMER_V1.0.py --model Canonical --image Image.png\n",
-            "\nUsage for folder containing multiple images:\npython DECIMER_V1.0.py --model Canonical --dir path/to/folder\n",
+            "\n\nUsage for single image:\ndecimer --model Canonical --image Image.png\n",
+            "\nUsage for folder containing multiple images:\ndecimer --model Canonical --dir path/to/folder\n",
         )
         sys.exit()
 
@@ -118,7 +119,8 @@ def load_trained_model(model_id: str):
     image_features_extracter = helper.load_image_features_extract_model(target_size)
 
     # restoring the latest checkpoint in checkpoint_dir
-    checkpoint_path = HERE.joinpath("Trained_Models/" + model_id + "/")
+    model_default_path = pystow.join("decimer","Trained_Models")
+    checkpoint_path = (str(model_default_path)+"/"+ model_id +"/")
     # print(checkpoint_path)
     model_url = "https://storage.googleapis.com/iupac_models_trained/DECIMER_transformer_models/DECIMER_trained_models_v1.0.zip"
     if not os.path.exists(checkpoint_path):
