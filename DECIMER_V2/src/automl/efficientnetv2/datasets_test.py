@@ -18,50 +18,50 @@ from brain_automl.efficientnetv2 import datasets
 
 
 class ImagenetInputTest(tf.test.TestCase):
+    def test_imagenet(self):
+        ds_class = datasets.get_dataset_class("imagenet")
+        ds = ds_class(
+            is_training=False,
+            data_dir="null",
+            cache=False,
+            image_size=224,
+            image_dtype=None,
+            augname=None,
+            mixup_alpha=0,
+            ra_num_layers=2,
+            ra_magnitude=20,
+        )
+        params = {"batch_size": 2}
+        for _, labels in ds.input_fn(params):
+            label = labels["label"]
+            self.assertAllClose(label[:, 0:4], [[0, 0, 0, 0], [0, 0, 0, 0]])
+            break
 
-  def test_imagenet(self):
-    ds_class = datasets.get_dataset_class('imagenet')
-    ds = ds_class(
-        is_training=False,
-        data_dir='null',
-        cache=False,
-        image_size=224,
-        image_dtype=None,
-        augname=None,
-        mixup_alpha=0,
-        ra_num_layers=2,
-        ra_magnitude=20)
-    params = {'batch_size': 2}
-    for _, labels in ds.input_fn(params):
-      label = labels['label']
-      self.assertAllClose(label[:, 0:4], [[0, 0, 0, 0], [0, 0, 0, 0]])
-      break
-
-  def test_imagenet21k(self):
-    ds_class = datasets.get_dataset_class('imagenet21k')
-    ds = ds_class(
-        is_training=False,
-        data_dir='null',
-        cache=False,
-        image_size=224,
-        image_dtype=None,
-        augname=None,
-        mixup_alpha=0,
-        ra_num_layers=2,
-        ra_magnitude=20)
-    params = {'batch_size': 2}
-    for _, labels in ds.input_fn(params):
-      label = labels['label']
-      self.assertAllClose(label[:, 0:4], [[0, 0, 1, 1], [0, 0, 1, 1]])
-      break
+    def test_imagenet21k(self):
+        ds_class = datasets.get_dataset_class("imagenet21k")
+        ds = ds_class(
+            is_training=False,
+            data_dir="null",
+            cache=False,
+            image_size=224,
+            image_dtype=None,
+            augname=None,
+            mixup_alpha=0,
+            ra_num_layers=2,
+            ra_magnitude=20,
+        )
+        params = {"batch_size": 2}
+        for _, labels in ds.input_fn(params):
+            label = labels["label"]
+            self.assertAllClose(label[:, 0:4], [[0, 0, 1, 1], [0, 0, 1, 1]])
+            break
 
 
 class DatasetConfigTest(tf.test.TestCase):
+    def test_dataset_config(self):
+        cfg = datasets.get_dataset_config("cifar10ft")
+        self.assertEqual(cfg.data.ds_name, "cifar10")
 
-  def test_dataset_config(self):
-    cfg = datasets.get_dataset_config('cifar10ft')
-    self.assertEqual(cfg.data.ds_name, 'cifar10')
 
-
-if __name__ == '__main__':
-  tf.test.main()
+if __name__ == "__main__":
+    tf.test.main()

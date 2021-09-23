@@ -21,20 +21,23 @@ from keras import util_keras
 
 
 class KerasUtilTest(tf.test.TestCase, parameterized.TestCase):
+    @parameterized.named_parameters(
+        ("train_local", True, ""),
+        ("eval_local", False, ""),
+        ("train_tpu", True, "tpu"),
+        ("eval_tpu", False, "tpu"),
+    )
+    def test_batch_norm(self, is_training, strategy):
+        inputs = tf.random.uniform([8, 40, 40, 3])
+        expect_results = utils.batch_norm_act(
+            inputs, is_training, None, strategy=strategy
+        )
 
-  @parameterized.named_parameters(
-      ('train_local', True, ''), ('eval_local', False, ''),
-      ('train_tpu', True, 'tpu'), ('eval_tpu', False, 'tpu'))
-  def test_batch_norm(self, is_training, strategy):
-    inputs = tf.random.uniform([8, 40, 40, 3])
-    expect_results = utils.batch_norm_act(
-        inputs, is_training, None, strategy=strategy)
-
-    # Call batch norm layer with is_training parameter.
-    bn_layer = util_keras.build_batch_norm(is_training, strategy=strategy)
-    self.assertAllClose(expect_results, bn_layer(inputs, is_training))
+        # Call batch norm layer with is_training parameter.
+        bn_layer = util_keras.build_batch_norm(is_training, strategy=strategy)
+        self.assertAllClose(expect_results, bn_layer(inputs, is_training))
 
 
-if __name__ == '__main__':
-  logging.set_verbosity(logging.WARNING)
-  tf.test.main()
+if __name__ == "__main__":
+    logging.set_verbosity(logging.WARNING)
+    tf.test.main()

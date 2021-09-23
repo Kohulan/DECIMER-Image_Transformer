@@ -24,22 +24,22 @@ from brain_automl.efficientnetv2 import autoaugment
 
 
 class AutoaugmentTest(tf.test.TestCase):
+    def test_autoaugment(self):
+        """Smoke test to be sure no syntax errors."""
+        image = tf.zeros((224, 224, 3), dtype=tf.uint8)
+        aug_image = autoaugment.distort_image_with_autoaugment(image, "v0")
+        self.assertEqual((224, 224, 3), aug_image.shape)
 
-  def test_autoaugment(self):
-    """Smoke test to be sure no syntax errors."""
-    image = tf.zeros((224, 224, 3), dtype=tf.uint8)
-    aug_image = autoaugment.distort_image_with_autoaugment(image, 'v0')
-    self.assertEqual((224, 224, 3), aug_image.shape)
-
-  def test_randaug(self):
-    """Smoke test to be sure no syntax errors."""
-    num_layers = 2
-    magnitude = 15
-    image = tf.zeros((224, 224, 3), dtype=tf.uint8)
-    aug_image = autoaugment.distort_image_with_randaugment(
-        image, num_layers, magnitude)
-    self.assertEqual((224, 224, 3), aug_image.shape)
+    def test_randaug(self):
+        """Smoke test to be sure no syntax errors."""
+        num_layers = 2
+        magnitude = 15
+        image = tf.zeros((224, 224, 3), dtype=tf.uint8)
+        aug_image = autoaugment.distort_image_with_randaugment(
+            image, num_layers, magnitude
+        )
+        self.assertEqual((224, 224, 3), aug_image.shape)
 
 
-if __name__ == '__main__':
-  tf.test.main()
+if __name__ == "__main__":
+    tf.test.main()

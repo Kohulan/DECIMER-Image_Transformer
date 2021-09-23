@@ -23,78 +23,80 @@ from keras import efficientdet_keras
 
 
 def create_mask(pred_mask):
-  pred_mask = tf.argmax(pred_mask, axis=-1)
-  pred_mask = pred_mask[..., tf.newaxis]
-  return pred_mask[0]
+    pred_mask = tf.argmax(pred_mask, axis=-1)
+    pred_mask = pred_mask[..., tf.newaxis]
+    return pred_mask[0]
 
 
 def normalize(input_image, input_mask):
-  input_image = tf.cast(input_image, tf.float32) / 255.0
-  input_mask -= 1
-  return input_image, input_mask
+    input_image = tf.cast(input_image, tf.float32) / 255.0
+    input_mask -= 1
+    return input_image, input_mask
 
 
 def load_image_train(datapoint):
-  """Load images for training."""
-  input_image = tf.image.resize(datapoint['image'], (512, 512))
-  input_mask = tf.image.resize(datapoint['segmentation_mask'], (128, 128))
+    """Load images for training."""
+    input_image = tf.image.resize(datapoint["image"], (512, 512))
+    input_mask = tf.image.resize(datapoint["segmentation_mask"], (128, 128))
 
-  if tf.random.uniform(()) > 0.5:
-    input_image = tf.image.flip_left_right(input_image)
-    input_mask = tf.image.flip_left_right(input_mask)
+    if tf.random.uniform(()) > 0.5:
+        input_image = tf.image.flip_left_right(input_image)
+        input_mask = tf.image.flip_left_right(input_mask)
 
-  input_image, input_mask = normalize(input_image, input_mask)
+    input_image, input_mask = normalize(input_image, input_mask)
 
-  return input_image, input_mask
+    return input_image, input_mask
 
 
 def load_image_test(datapoint):
-  input_image = tf.image.resize(datapoint['image'], (512, 512))
-  input_mask = tf.image.resize(datapoint['segmentation_mask'], (128, 128))
+    input_image = tf.image.resize(datapoint["image"], (512, 512))
+    input_mask = tf.image.resize(datapoint["segmentation_mask"], (128, 128))
 
-  input_image, input_mask = normalize(input_image, input_mask)
+    input_image, input_mask = normalize(input_image, input_mask)
 
-  return input_image, input_mask
+    return input_image, input_mask
 
 
 def main(_):
-  dataset, info = tfds.load('oxford_iiit_pet:3.*.*', with_info=True)
-  train_examples = info.splits['train'].num_examples
-  batch_size = 8
-  steps_per_epoch = train_examples // batch_size
+    dataset, info = tfds.load("oxford_iiit_pet:3.*.*", with_info=True)
+    train_examples = info.splits["train"].num_examples
+    batch_size = 8
+    steps_per_epoch = train_examples // batch_size
 
-  train = dataset['train'].map(
-      load_image_train, num_parallel_calls=tf.data.experimental.AUTOTUNE)
-  test = dataset['test'].map(load_image_test)
+    train = dataset["train"].map(
+        load_image_train, num_parallel_calls=tf.data.experimental.AUTOTUNE
+    )
+    test = dataset["test"].map(load_image_test)
 
-  train_dataset = train.cache().shuffle(1000).batch(batch_size).repeat()
-  train_dataset = train_dataset.prefetch(
-      buffer_size=tf.data.experimental.AUTOTUNE)
-  test_dataset = test.batch(batch_size)
-  config = hparams_config.get_efficientdet_config('efficientdet-d0')
-  config.heads = ['segmentation']
-  model = efficientdet_keras.EfficientDetNet(config=config)
-  model.build((1, 512, 512, 3))
-  model.compile(
-      optimizer='adam',
-      loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
-      metrics=['accuracy'])
+    train_dataset = train.cache().shuffle(1000).batch(batch_size).repeat()
+    train_dataset = train_dataset.prefetch(buffer_size=tf.data.experimental.AUTOTUNE)
+    test_dataset = test.batch(batch_size)
+    config = hparams_config.get_efficientdet_config("efficientdet-d0")
+    config.heads = ["segmentation"]
+    model = efficientdet_keras.EfficientDetNet(config=config)
+    model.build((1, 512, 512, 3))
+    model.compile(
+        optimizer="adam",
+        loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+        metrics=["accuracy"],
+    )
 
-  val_subsplits = 5
-  val_steps = info.splits['test'].num_examples // batch_size // val_subsplits
-  model.fit(
-      train_dataset,
-      epochs=20,
-      steps_per_epoch=steps_per_epoch,
-      validation_steps=val_steps,
-      validation_data=test_dataset,
-      callbacks=[])
+    val_subsplits = 5
+    val_steps = info.splits["test"].num_examples // batch_size // val_subsplits
+    model.fit(
+        train_dataset,
+        epochs=20,
+        steps_per_epoch=steps_per_epoch,
+        validation_steps=val_steps,
+        validation_data=test_dataset,
+        callbacks=[],
+    )
 
-  model.save_weights('./testdata/segmentation')
+    model.save_weights("./testdata/segmentation")
 
-  print(create_mask(model(tf.ones((1, 512, 512, 3)), False)))
+    print(create_mask(model(tf.ones((1, 512, 512, 3)), False)))
 
 
-if __name__ == '__main__':
-  logging.set_verbosity(logging.WARNING)
-  app.run(main)
+if __name__ == "__main__":
+    logging.set_verbosity(logging.WARNING)
+    app.run(main)

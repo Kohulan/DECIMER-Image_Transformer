@@ -19,16 +19,14 @@ from brain_automl.efficientnetv2 import effnetv2_configs
 
 
 class EffnetV2ConfigsTest(tf.test.TestCase):
+    def test_model_config(self):
+        cfg = effnetv2_configs.get_model_config("efficientnet-b0")
+        self.assertEqual(cfg.model.model_name, "efficientnet-b0")
 
-  def test_model_config(self):
-    cfg = effnetv2_configs.get_model_config('efficientnet-b0')
-    self.assertEqual(cfg.model.model_name, 'efficientnet-b0')
-
-    cfg = effnetv2_configs.get_model_config('efficientnetv2-s')
-    self.assertEqual(cfg.model.model_name, 'efficientnetv2-s')
+        cfg = effnetv2_configs.get_model_config("efficientnetv2-s")
+        self.assertEqual(cfg.model.model_name, "efficientnetv2-s")
 
 
-if __name__ == '__main__':
-  logging.set_verbosity(logging.WARNING)
-  tf.test.main()
-
+if __name__ == "__main__":
+    logging.set_verbosity(logging.WARNING)
+    tf.test.main()

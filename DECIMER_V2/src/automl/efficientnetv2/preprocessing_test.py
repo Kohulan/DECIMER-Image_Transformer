@@ -20,22 +20,21 @@ from brain_automl.efficientnetv2 import preprocessing
 
 
 class PreprocessingTest(tf.test.TestCase, parameterized.TestCase):
+    @parameterized.parameters("effnetv1_autoaug", "effnetv1_randaug", None)
+    def test_preprocessing_legacy(self, augname):
+        image = tf.zeros((300, 300, 3), dtype=tf.float32)
+        try:
+            preprocessing.preprocess_image(image, 224, False, None, augname)
+        except tf.errors.InvalidArgumentError as e:
+            if "ExtractJpegShape" not in str(e):
+                raise e
 
-  @parameterized.parameters('effnetv1_autoaug', 'effnetv1_randaug', None)
-  def test_preprocessing_legacy(self, augname):
-    image = tf.zeros((300, 300, 3), dtype=tf.float32)
-    try:
-      preprocessing.preprocess_image(image, 224, False, None, augname)
-    except tf.errors.InvalidArgumentError as e:
-      if 'ExtractJpegShape' not in str(e):
-        raise e
-
-  @parameterized.parameters('autoaug', 'randaug', 'ft', 'ft_autoaug', None)
-  def test_preprocessing(self, augname):
-    image = tf.zeros((300, 300, 3), dtype=tf.float32)
-    preprocessing.preprocess_image(image, 224, True, None, augname)
+    @parameterized.parameters("autoaug", "randaug", "ft", "ft_autoaug", None)
+    def test_preprocessing(self, augname):
+        image = tf.zeros((300, 300, 3), dtype=tf.float32)
+        preprocessing.preprocess_image(image, 224, True, None, augname)
 
 
-if __name__ == '__main__':
-  logging.set_verbosity(logging.WARNING)
-  tf.test.main()
+if __name__ == "__main__":
+    logging.set_verbosity(logging.WARNING)
+    tf.test.main()

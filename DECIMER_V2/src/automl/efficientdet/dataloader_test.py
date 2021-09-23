@@ -25,26 +25,28 @@ from object_detection import tf_example_decoder
 
 
 class DataloaderTest(tf.test.TestCase):
+    def test_parser(self):
+        tf.random.set_seed(111111)
+        params = hparams_config.get_detection_config("efficientdet-d0").as_dict()
+        input_anchors = anchors.Anchors(
+            params["min_level"],
+            params["max_level"],
+            params["num_scales"],
+            params["aspect_ratios"],
+            params["anchor_scale"],
+            params["image_size"],
+        )
+        anchor_labeler = anchors.AnchorLabeler(input_anchors, params["num_classes"])
+        example_decoder = tf_example_decoder.TfExampleDecoder(
+            regenerate_source_id=params["regenerate_source_id"]
+        )
+        tfrecord_path = test_util.make_fake_tfrecord(self.get_temp_dir())
+        dataset = tf.data.TFRecordDataset([tfrecord_path])
+        value = next(iter(dataset))
+        reader = dataloader.InputReader(tfrecord_path, True)
+        result = reader.dataset_parser(value, example_decoder, anchor_labeler, params)
+        self.assertEqual(len(result), 11)
 
-  def test_parser(self):
-    tf.random.set_seed(111111)
-    params = hparams_config.get_detection_config('efficientdet-d0').as_dict()
-    input_anchors = anchors.Anchors(params['min_level'], params['max_level'],
-                                    params['num_scales'],
-                                    params['aspect_ratios'],
-                                    params['anchor_scale'],
-                                    params['image_size'])
-    anchor_labeler = anchors.AnchorLabeler(input_anchors, params['num_classes'])
-    example_decoder = tf_example_decoder.TfExampleDecoder(
-        regenerate_source_id=params['regenerate_source_id'])
-    tfrecord_path = test_util.make_fake_tfrecord(self.get_temp_dir())
-    dataset = tf.data.TFRecordDataset([tfrecord_path])
-    value = next(iter(dataset))
-    reader = dataloader.InputReader(tfrecord_path, True)
-    result = reader.dataset_parser(value, example_decoder, anchor_labeler,
-                                   params)
-    self.assertEqual(len(result), 11)
 
-
-if __name__ == '__main__':
-  tf.test.main()
+if __name__ == "__main__":
+    tf.test.main()
