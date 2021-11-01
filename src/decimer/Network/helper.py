@@ -122,7 +122,9 @@ def create_masks_decoder(tar):
     combined_mask = tf.maximum(dec_target_padding_mask, look_ahead_mask)
     return combined_mask
 
+
 # Generate a random quote for whimsical fun!
+
 
 def random_line(file_name):
     line = next(file_name)
@@ -132,10 +134,7 @@ def random_line(file_name):
         line = aline
     return line
 
+
 def get_quote():
-<<<<<<< HEAD
-    quote = random_line(open((HERE.joinpath('Quotes_database')),'r'))
-=======
-    quote = random_line(open(HERE.joinpath('Quotes_database','r')))
->>>>>>> aa6655ca07f4c04edde332125169a5a50a8cf13d
+    quote = random_line(open((HERE.joinpath("Quotes_database")), "r"))
     return quote

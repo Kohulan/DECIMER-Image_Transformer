@@ -49,7 +49,7 @@ def main():
 
         get_SMILES = predict_SMILES(sys.argv[2])
         print("Predicted SMILES for " + sys.argv[2] + " :" + get_SMILES)
-        print("\n\n"+get_QUOTE)
+        print("\n\n" + get_QUOTE)
 
     elif len(sys.argv) == 5 and sys.argv[3] == "--image":
         model_id = sys.argv[2]
@@ -63,7 +63,7 @@ def main():
 
         get_SMILES = predict_SMILES(sys.argv[4])
         print("Predicted SMILES for " + sys.argv[4] + " :" + get_SMILES)
-        print("\n\n"+get_QUOTE)
+        print("\n\n" + get_QUOTE)
 
     elif len(sys.argv) == 5 and sys.argv[3] == "--dir":
         model_id = sys.argv[2]
@@ -84,8 +84,8 @@ def main():
             + file_name
             + " file\n"
         )
-        print("\n\n"+get_QUOTE)
-                
+        print("\n\n" + get_QUOTE)
+
     # Call help, if the user arguments did not satisfy the rules.
     else:
         # print(len(sys.argv))
@@ -105,8 +105,8 @@ def load_trained_model(model_id):
     image_features_extracter = helper.load_image_features_extract_model(target_size)
 
     # restoring the latest checkpoint in checkpoint_dir
-    model_default_path = pystow.join("decimer","Trained_Models")
-    checkpoint_path = (str(model_default_path)+"/"+ model_id +"/")
+    model_default_path = pystow.join("decimer", "Trained_Models")
+    checkpoint_path = str(model_default_path) + "/" + model_id + "/"
     model_url = "https://storage.googleapis.com/iupac_models_trained/DECIMER_transformer_models/DECIMER_trained_models_v1.0.zip"
     if not os.path.exists(checkpoint_path):
         helper.download_trained_weights(model_url, checkpoint_path)

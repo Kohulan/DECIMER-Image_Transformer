@@ -43,11 +43,7 @@ def main():
             "- Isomeric : Model trained on images depicted using isomeric SMILES, which includes stereochemical information + ions\n",
             "- Augmented: Model trained on images depicted using isomeric SMILES with augmentations",
             "\n\nUsage for single image:\ndecimer --model Canonical --image Image.png\n",
-<<<<<<< HEAD
             "\nUsage for folder containing multiple images:\ndecimer --model Canonical --dir path/to/folder\n\n\n",
-=======
-            "\nUsage for folder containing multiple images:\ndecimer --model Canonical --dir path/to/folder\n",
->>>>>>> aa6655ca07f4c04edde332125169a5a50a8cf13d
             get_QUOTE,
         )
         sys.exit()
@@ -64,14 +60,9 @@ def main():
         ) = load_trained_model(model_id)
 
         get_SMILES = predict_SMILES(sys.argv[2])
-<<<<<<< HEAD
-=======
-
         print("Predicted SMILES for " + sys.argv[2] + " :" + get_SMILES)
->>>>>>> aa6655ca07f4c04edde332125169a5a50a8cf13d
+        print("\n\n" + get_QUOTE)
 
-        print("Predicted SMILES for " + sys.argv[2] + " :" + get_SMILES)
-        print("\n\n"+get_QUOTE)
     elif len(sys.argv) == 5 and sys.argv[3] == "--image":
         model_id = sys.argv[2]
 
@@ -84,7 +75,8 @@ def main():
 
         get_SMILES = predict_SMILES(sys.argv[4])
         print("Predicted SMILES for " + sys.argv[4] + " :" + get_SMILES)
-        print("\n\n"+get_QUOTE)
+        print("\n\n" + get_QUOTE)
+
     elif len(sys.argv) == 5 and sys.argv[3] == "--dir":
         model_id = sys.argv[2]
 
@@ -104,12 +96,12 @@ def main():
             + file_name
             + " file\n"
         )
-        print("\n\n"+get_QUOTE)
+        print("\n\n" + get_QUOTE)
     # Call help, if the user arguments did not satisfy the rules.
     else:
         # print(len(sys.argv))
         print("\nSee help using python DECIMER_V1.py --help")
-        print("\n\n"+get_QUOTE)
+        print("\n\n" + get_QUOTE)
 
 
 def load_trained_model(model_id: str):
@@ -132,8 +124,8 @@ def load_trained_model(model_id: str):
     image_features_extracter = helper.load_image_features_extract_model(target_size)
 
     # restoring the latest checkpoint in checkpoint_dir
-    model_default_path = pystow.join("decimer","Trained_Models")
-    checkpoint_path = (str(model_default_path)+"/"+ model_id +"/")
+    model_default_path = pystow.join("decimer", "Trained_Models")
+    checkpoint_path = str(model_default_path) + "/" + model_id + "/"
     # print(checkpoint_path)
     model_url = "https://storage.googleapis.com/iupac_models_trained/DECIMER_transformer_models/DECIMER_trained_models_v1.0.zip"
     if not os.path.exists(checkpoint_path):
