@@ -32,7 +32,7 @@ for gpu in gpus:
 
 def main():
     global image_features_extracter, transformer, max_length, SELFIES_tokenizer
-
+    get_QUOTE = helper.get_quote()
     if len(sys.argv) < 3 or sys.argv[1] == "--help" or sys.argv[1] == "--h":
         print(
             "\nDefault Usage:\ndecimer --image Image.png\n",
@@ -44,6 +44,7 @@ def main():
             "- Augmented: Model trained on images depicted using isomeric SMILES with augmentations",
             "\n\nUsage for single image:\ndecimer --model Canonical --image Image.png\n",
             "\nUsage for folder containing multiple images:\ndecimer --model Canonical --dir path/to/folder\n",
+            get_QUOTE,
         )
         sys.exit()
 
@@ -59,6 +60,7 @@ def main():
         ) = load_trained_model(model_id)
 
         get_SMILES = predict_SMILES(sys.argv[2])
+
         print("Predicted SMILES for " + sys.argv[2] + " :" + get_SMILES)
 
     elif len(sys.argv) == 5 and sys.argv[3] == "--image":

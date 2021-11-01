@@ -11,6 +11,7 @@ import urllib.request
 import pystow
 from ..assets import HERE
 from typing import Tuple, Union
+import random
 
 # load tokenizer and max length
 def load_assets(model_id):
@@ -120,3 +121,17 @@ def create_masks_decoder(tar):
     dec_target_padding_mask = create_padding_mask(tar)
     combined_mask = tf.maximum(dec_target_padding_mask, look_ahead_mask)
     return combined_mask
+
+# Generate a random quote for whimsical fun!
+
+def random_line(file_name):
+    line = next(file_name)
+    for num, aline in enumerate(file_name, 2):
+        if random.randrange(num):
+            continue
+        line = aline
+    return line
+
+def get_quote():
+    quote = random_line(open(HERE.joinpath('Quotes_database','r')))
+    return quote
