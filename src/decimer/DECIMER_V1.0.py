@@ -19,6 +19,7 @@ for gpu in gpus:
 
 def main():
     global image_features_extracter, transformer, max_length, SELFIES_tokenizer
+    get_QUOTE = helper.get_quote()
 
     if len(sys.argv) < 3 or sys.argv[1] == "--help" or sys.argv[1] == "--h":
         print(
@@ -30,7 +31,8 @@ def main():
             "- Isomeric : Model trained on images depicted using isomeric SMILES, which includes stereochemical information + ions\n",
             "- Augmented: Model trained on images depicted using isomeric SMILES with augmentations",
             "\n\nUsage for single image:\n python DECIMER_V1.0.py --model Canonical --image Image.png\n",
-            "\nUsage for folder containing multiple images:\npython DECIMER_V1.0.py --model Canonical --dir path/to/folder\n",
+            "\nUsage for folder containing multiple images:\ndecimer --model Canonical --dir path/to/folder\n\n\n",
+            get_QUOTE,
         )
         sys.exit()
 
@@ -47,6 +49,7 @@ def main():
 
         get_SMILES = predict_SMILES(sys.argv[2])
         print("Predicted SMILES for " + sys.argv[2] + " :" + get_SMILES)
+        print("\n\n"+get_QUOTE)
 
     elif len(sys.argv) == 5 and sys.argv[3] == "--image":
         model_id = sys.argv[2]
@@ -60,6 +63,7 @@ def main():
 
         get_SMILES = predict_SMILES(sys.argv[4])
         print("Predicted SMILES for " + sys.argv[4] + " :" + get_SMILES)
+        print("\n\n"+get_QUOTE)
 
     elif len(sys.argv) == 5 and sys.argv[3] == "--dir":
         model_id = sys.argv[2]
@@ -80,6 +84,8 @@ def main():
             + file_name
             + " file\n"
         )
+        print("\n\n"+get_QUOTE)
+                
     # Call help, if the user arguments did not satisfy the rules.
     else:
         # print(len(sys.argv))
