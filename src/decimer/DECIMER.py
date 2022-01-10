@@ -8,6 +8,9 @@ import tensorflow as tf
 from selfies import decoder
 from .Network import helper
 
+# Enable eager execution
+tf.compat.v1.enable_eager_execution()
+
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 gpus = tf.config.experimental.list_physical_devices("GPU")
 for gpu in gpus:
