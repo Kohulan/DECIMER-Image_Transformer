@@ -132,8 +132,8 @@ def predict_SMILES(image_path):
     predicted_SELFIES = evaluate(image_path)
 
     predicted_SMILES = decoder(
-        "".join(predicted_SELFIES).replace("<start>", "").replace("<end>", ""),
-        constraints="hypervalent",
+        "".join(predicted_SELFIES).replace("<start>", "").replace("<end>", "")
+        #,constraints="hypervalent",
     )
 
     return predicted_SMILES
