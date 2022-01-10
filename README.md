@@ -123,9 +123,9 @@ $ pip install decimer
 ### How to use inside your own python script
 ```python
 from decimer import DECIMER
-model_name = “Isomeric"
-img_path = “caffeine.png”
-caffeine_smiles = decimer.predict_SMILES(img_path,model_name)
+model_name = "Isomeric"
+img_path = "caffeine.png"
+caffeine_smiles = DECIMER.predict_SMILES(img_path,model_name)
 print(caffeine_smiles)
 ```
 
