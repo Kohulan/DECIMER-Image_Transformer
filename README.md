@@ -125,7 +125,7 @@ $ pip install decimer
 from decimer import DECIMER
 model_name = “Isomeric"
 img_path = “caffeine.png”
-caffeine_smiles = decimer.predict_SMILES(img_path,model_name)
+caffeine_smiles = DECIMER.predict_SMILES(img_path,model_name)
 print(caffeine_smiles)
 ```
 
