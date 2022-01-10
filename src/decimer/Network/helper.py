@@ -119,14 +119,14 @@ def PIL_im_to_BytesIO(im):
 
 
 # Resize image and decode
-def load_image(image_path):
-    """[summary]
-
+def load_image(image_path: str):
+    """
+    Loads and preprocesses an image
     Args:
-        image_path ([type]): [description]
+        image_path (str): path of input image
 
     Returns:
-        [type]: [description]
+        Processed image
     """
     img = Image.open(image_path)
     img = delete_empty_borders(img)
