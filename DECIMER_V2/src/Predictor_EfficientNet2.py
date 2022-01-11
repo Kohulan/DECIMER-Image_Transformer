@@ -78,7 +78,7 @@ optimizer, encoder, transformer = config.prepare_models(
 )
 
 # Load trained model checkpoint
-checkpoint_path = "checkpoints_"
+checkpoint_path = os.path.join(HERE, "checkpoints_")
 ckpt = tf.train.Checkpoint(
     encoder=encoder, transformer=transformer, optimizer=optimizer
 )
