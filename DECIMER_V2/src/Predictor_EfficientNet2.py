@@ -16,8 +16,9 @@ for gpu in gpus:
     tf.config.experimental.set_memory_growth(gpu, True)
 
 # load assets
-tokenizer = pickle.load(open("tokenizer_Isomeric_SELFIES.pkl", "rb"))
-max_length = pickle.load(open("max_length_Isomeric_SELFIES.pkl", "rb"))
+HERE = os.path.dirname(os.path.abspath(__file__))
+tokenizer = pickle.load(open(os.path.join(HERE, "tokenizer_Isomeric_SELFIES.pkl"), "rb"))
+max_length = pickle.load(open(os.path.join(HERE, "max_length_Isomeric_SELFIES.pkl"), "rb"))
 
 # Image partameters
 IMG_EMB_DIM = (10, 10, 232)
