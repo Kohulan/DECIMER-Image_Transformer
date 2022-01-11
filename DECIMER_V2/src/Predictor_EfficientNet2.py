@@ -16,8 +16,8 @@ for gpu in gpus:
     tf.config.experimental.set_memory_growth(gpu, True)
 
 # load assets
-tokenizer = pickle.load(open("tokenizer_TPU_Stereo.pkl", "rb"))
-max_length = pickle.load(open("max_length_TPU_Stereo.pkl", "rb"))
+tokenizer = pickle.load(open("tokenizer_Isomeric_SELFIES.pkl", "rb"))
+max_length = pickle.load(open("max_length_Isomeric_SELFIES.pkl", "rb"))
 
 # Image partameters
 IMG_EMB_DIM = (10, 10, 232)
@@ -68,7 +68,6 @@ testing_config.initialize_transformer_config(
 # print(f"Encoder config:\n\t -> {testing_config.encoder_config}\n")
 # print(f"Transformer config:\n\t -> {testing_config.transformer_config}\n")
 
-
 # Prepare model
 optimizer, encoder, transformer = config.prepare_models(
     encoder_config=testing_config.encoder_config,
@@ -78,7 +77,7 @@ optimizer, encoder, transformer = config.prepare_models(
 )
 
 # Load trained model checkpoint
-checkpoint_path = "/mnt/raid_drive/DECIMER_V1_Revision/EfficientNetV2_development/Test_networks/Efficient_Net_2"
+checkpoint_path = "checkpoints_"
 ckpt = tf.train.Checkpoint(
     encoder=encoder, transformer=transformer, optimizer=optimizer
 )
@@ -92,19 +91,26 @@ if ckpt_manager.latest_checkpoint:
 
 def main():
     if len(sys.argv) != 2:
-        print("Enter a valid image path.")
+        print("Usage: {} $image_path".format(sys.argv[0]))
     else:
         SMILES = predict_SMILES(sys.argv[1])
         print(SMILES)
 
 
-# Evaluator
-def evaluate(image):
-    sample = config.decode_image(image)
+def evaluate(image_path: str):
+    """
+    This function takes an image path (str) and returns the SELFIES 
+    representation of the depicted molecule (str).
+
+    Args:
+        image_path (str): Path of chemical structure depiction image
+
+    Returns:
+        (str): SELFIES representation of the molecule in the input image
+    """
+    sample = config.decode_image(image_path)
     _image_batch = tf.expand_dims(sample, 0)
-    # print(_image_batch)
     _image_embedding = encoder(_image_batch, training=False)
-    transformer_pred_batch = tf.ones((REPLICA_BATCH_SIZE, 1), dtype=tf.uint8)
     output = tf.expand_dims([tokenizer.word_index["<start>"]], 0)
     result = []
     end_token = tokenizer.word_index["<end>"]
@@ -127,13 +133,20 @@ def evaluate(image):
     return result
 
 
-# Predictor helper function
-def predict_SMILES(image_path):
-    predicted_SELFIES = evaluate(image_path)
+def predict_SMILES(image_path: str):
+    """
+    This function takes an image path (str) and returns the SMILES 
+    representation of the depicted molecule (str).
 
+    Args:
+        image_path (str): Path of chemical structure depiction image
+
+    Returns:
+        (str): SMILES representation of the molecule in the input image
+    """
+    predicted_SELFIES = evaluate(image_path)    
     predicted_SMILES = decoder(
         "".join(predicted_SELFIES).replace("<start>", "").replace("<end>", "")
-        #,constraints="hypervalent",
     )
 
     return predicted_SMILES
