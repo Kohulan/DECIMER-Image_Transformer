@@ -1,0 +1,3 @@
+DECIMER_test_0.png	C1=CC=C(C=C1)CC2=C(C3=CC=C(C=C3)OS(=O)(=O)C(F)(F)F)C4=C(C=CC=C4)O2
+DECIMER_test_1.png	CCCCC1=CC=CC=C1
+github_issue_test.png	CC(CC1=CC2=C(C=C1)OCO2)NC
