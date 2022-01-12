@@ -42,16 +42,17 @@ def main():
 	output_dir = os.path.abspath(sys.argv[2])
 	if not os.path.exists(output_dir):
 		os.mkdir(output_dir)
-	dirlist = os.listdir(input_dir)
-	# Edit white_filling and no_resizing according to desired output
-	white_filling = True
-	no_resizing = False
-	starmap_iterable = [(os.path.join(input_dir, image_name), os.path.join(output_dir, image_name), white_filling, no_resizing) for image_name in dirlist if image_name[-3:].lower() == 'png']
+	starmap_iterable = [
+     	(os.path.join(input_dir, image_name), os.path.join(output_dir, image_name)) 
+    	for image_name 
+        in os.listdir(input_dir)
+        if image_name[-3:].lower() == 'png'
+        ]
 	with Pool(5) as p:
 		_ = p.starmap(distort_image, starmap_iterable)
 
 if __name__ == '__main__':
 	if len(sys.argv) != 3:
-		print('Usage: ' + sys.argv[0] + 'input_dir output_dir')
+		print('Usage: {} input_dir output_dir'.format(sys.argv[0]))
 	else:
 		main()
