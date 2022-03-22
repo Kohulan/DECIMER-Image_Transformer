@@ -7,13 +7,13 @@ from PIL import Image
 import numpy as np
 import io
 
-
 TARGET_DTYPE = tf.float32
+
 
 def central_square_image(im):
     """
-    This function takes a Pillow Image object and will add white padding 
-    so that the image has a square shape with the width/height of the longest side 
+    This function takes a Pillow Image object and will add white padding
+    so that the image has a square shape with the width/height of the longest side
     of the original image.
     ___
     im: PIL.Image
@@ -26,7 +26,8 @@ def central_square_image(im):
     if max_wh < 299:
         max_wh = 299
     new_im = Image.new(im.mode, (max_wh, max_wh), "white")
-    paste_pos = (int((new_im.size[0]-im.size[0])/2), int((new_im.size[1]-im.size[1])/2))
+    paste_pos = (int((new_im.size[0]-im.size[0])/2),
+                 int((new_im.size[1]-im.size[1])/2))
     new_im.paste(im, paste_pos)
     return new_im
 
@@ -83,6 +84,7 @@ class Config:
     """
     Configuration class
     """
+
     def __init__(
         self,
     ):
@@ -99,6 +101,17 @@ class Config:
         do_permute=False,
         pretrained_weights=None,
     ):
+        """This functions initializes the Efficient-Net V2 encoder with user defined
+        configurations.
+
+        Args:
+            image_embedding_dim (int): Embedding dimention of the input image
+            preprocessing_fn (method): Efficient Net preprocessing function for input image
+            backbone_fn (method): Calls Efficient-Net V2 as backbone for encoder
+            image_shape (int): Shape of the input image
+            do_permute (bool, optional): . Defaults to False.
+            pretrained_weights (keras weights, optional): Use pretrainined efficient net weights or not. Defaults to None.
+        """
         self.encoder_config = dict(
             image_embedding_dim=image_embedding_dim,
             preprocessing_fn=preprocessing_fn,
@@ -118,6 +131,19 @@ class Config:
         image_embedding_dim,
         dropout_rate=0.1,
     ):
+        """This functions initializes the Transformer model as decoder with user defined
+        configurations.
+
+
+        Args:
+            vocab_len (int): Total number of words in the input vocabulary
+            max_len (int): Maximum length of the string found on the training dataset
+            n_transformer_layers (int): Number of layers present in the transformer model
+            transformer_d_dff (int): Transformer feed forward upwards projection size
+            transformer_n_heads (int): Number of heads present in the transformer model
+            image_embedding_dim (int): Total number of dimension the image gets embeddeded
+            dropout_rate (float, optional): Fraction of the input units to drop. Defaults to 0.1.
+        """
         self.transformer_config = dict(
             num_layers=n_transformer_layers,
             d_model=image_embedding_dim[-1],
@@ -130,6 +156,12 @@ class Config:
         )
 
     def initialize_lr_config(self, warm_steps, n_epochs):
+        """This function sets the configuration to initialize learning rate
+
+        Args:
+            warm_steps (int): Number of steps The learning rate is increased
+            n_epochs (int): Number of epochs
+        """
         self.lr_config = dict(
             warm_steps=warm_steps,
             n_epochs=n_epochs,
@@ -137,6 +169,12 @@ class Config:
 
 
 class CustomSchedule(tf.keras.optimizers.schedules.LearningRateSchedule):
+    """Custom schedule for learning rate used during training
+
+    Args:
+        tf (_type_): keras learning rate schedule
+    """
+
     def __init__(self, d_model, warmup_steps=4000):
         super(CustomSchedule, self).__init__()
 
@@ -153,6 +191,19 @@ class CustomSchedule(tf.keras.optimizers.schedules.LearningRateSchedule):
 
 
 def prepare_models(encoder_config, transformer_config, replica_batch_size, verbose=0):
+    """This function is used to initiate the Encoder and the Transformer with appropriate
+    configs set by the user. After initiating the models this function returns the Encoder,Transformer
+    and the optimizer.
+
+    Args:
+        encoder_config ([type]): Encoder configuration set by user in the config class.
+        transformer_config ([type]): Transformer configuration set by user in the config class.
+        replica_batch_size ([type]): Per replica batch size set by user(during distributed training).
+        verbose (int, optional): Defaults to 0.
+
+    Returns:
+        [type]: Optimizer, Encoder model and the Transformer
+    """
 
     # Instiate an optimizer
     optimizer = tf.keras.optimizers.Adam(learning_rate=0.00051)

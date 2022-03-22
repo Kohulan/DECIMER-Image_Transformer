@@ -1,14 +1,10 @@
 import os
-import sys
 import tensorflow as tf
 
 import pickle
-from PIL import Image
-from selfies import decoder
 import Transformer_decoder
 import Efficient_Net_encoder
 import config
-import efficientnet.tfkeras as efn
 print(tf.__version__)
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "1"
@@ -18,7 +14,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 gpus = tf.config.experimental.list_physical_devices("GPU")
 for gpu in gpus:
-	tf.config.experimental.set_memory_growth(gpu, True)
+    tf.config.experimental.set_memory_growth(gpu, True)
 
 # load assets
 tokenizer = pickle.load(open("tokenizer_Isomeric_SMILES.pkl", "rb"))
@@ -54,107 +50,138 @@ BB_FN = Efficient_Net_encoder.get_efficientnetv2_backbone
 testing_config = config.Config()
 
 testing_config.initialize_encoder_config(
-	image_embedding_dim=IMG_EMB_DIM,
-	preprocessing_fn=PREPROCESSING_FN,
-	backbone_fn=BB_FN,
-	image_shape=IMG_SHAPE,
-	do_permute=IMG_EMB_DIM[1] < IMG_EMB_DIM[0],
+    image_embedding_dim=IMG_EMB_DIM,
+    preprocessing_fn=PREPROCESSING_FN,
+    backbone_fn=BB_FN,
+    image_shape=IMG_SHAPE,
+    do_permute=IMG_EMB_DIM[1] < IMG_EMB_DIM[0],
 )
 
 testing_config.initialize_transformer_config(
-	vocab_len=VOCAB_LEN,
-	max_len=MAX_LEN,
-	n_transformer_layers=N_LAYERS,
-	transformer_d_dff=D_FF,
-	transformer_n_heads=N_HEADS,
-	image_embedding_dim=IMG_EMB_DIM,
+    vocab_len=VOCAB_LEN,
+    max_len=MAX_LEN,
+    n_transformer_layers=N_LAYERS,
+    transformer_d_dff=D_FF,
+    transformer_n_heads=N_HEADS,
+    image_embedding_dim=IMG_EMB_DIM,
 )
 
 # Prepare model
 optimizer, encoder, transformer = config.prepare_models(
-	encoder_config=testing_config.encoder_config,
-	transformer_config=testing_config.transformer_config,
-	replica_batch_size=REPLICA_BATCH_SIZE,
-	verbose=0,
+    encoder_config=testing_config.encoder_config,
+    transformer_config=testing_config.transformer_config,
+    replica_batch_size=REPLICA_BATCH_SIZE,
+    verbose=0,
 )
 
 # Load trained model checkpoint from directory
-checkpoint_path ="checkpoints_SMILES_TPU32"
+checkpoint_path = "checkpoints_SMILES_TPU32"
 ckpt = tf.train.Checkpoint(
-	encoder=encoder, transformer=transformer, optimizer=optimizer
+    encoder=encoder, transformer=transformer, optimizer=optimizer
 )
-ckpt_manager = tf.train.CheckpointManager(ckpt, checkpoint_path, max_to_keep=50)
+ckpt_manager = tf.train.CheckpointManager(
+    ckpt, checkpoint_path, max_to_keep=50)
 if ckpt_manager.latest_checkpoint:
-	ckpt.restore(tf.train.latest_checkpoint(checkpoint_path))
-	start_epoch = int(ckpt_manager.latest_checkpoint.split("-")[-1])
+    ckpt.restore(tf.train.latest_checkpoint(checkpoint_path))
+    start_epoch = int(ckpt_manager.latest_checkpoint.split("-")[-1])
+
 
 class DECIMER_Predictor(tf.Module):
+    """This is a class which takes care of inference. It loads the saved checkpoint and the necessary
+    tokenizers. The inference begins with the start token (<start>) and ends when the end token(<end>)
+    is met. This class can only work with tf.Tensor objects. The strings shoul gets transformed into np.arrays
+    before feeding them into this class.
+    """
 
-	def __init__(self, encoder, tokenizer, transformer, max_length):
-		self.encoder = encoder
-		self.tokenizer = tokenizer
-		self.transformer = transformer
-		self.max_length = max_length
-		
-	def __call__(self, Decoded_image):
-		assert isinstance(Decoded_image, tf.Tensor)
-		if len(Decoded_image.shape) == 0:
-			sentence = Decoded_image[tf.newaxis]
-			
-		_image_batch = tf.expand_dims(Decoded_image, 0)
-		_image_embedding = encoder(_image_batch, training=False)
+    def __init__(self, encoder, tokenizer, transformer, max_length):
+        """Load the tokenizers, the maximum input and output length and the model.
 
+        Args:
+            encoder (tf.keras.model):  The encoder model
+            tokenizer (tf.keras.tokenizer): Output tokenizer, defines which charater is assigned to what token
+            transformer (tf.keras.model):  The transformer model
+            max_length (int): Maximum length of a string which can get predicted
+        """
+        self.encoder = encoder
+        self.tokenizer = tokenizer
+        self.transformer = transformer
+        self.max_length = max_length
 
-		start_token = tf.cast(tf.convert_to_tensor([tokenizer.word_index["<start>"]]),tf.int32)
-		end_token = tf.cast(tf.convert_to_tensor([tokenizer.word_index["<end>"]]),tf.int32)
-		
-		output_array = tf.TensorArray(dtype=tf.int32, size=0, dynamic_size=True)
-		output_array = output_array.write(0, start_token)
+    def __call__(self, Decoded_image):
+        assert isinstance(Decoded_image, tf.Tensor)
+        if len(Decoded_image.shape) == 0:
+            Decoded_image = Decoded_image[tf.newaxis]
 
-		for t in tf.range(max_length):
-			output = tf.transpose(output_array.stack())
-			combined_mask = Transformer_decoder.create_mask(None, output)
+        _image_batch = tf.expand_dims(Decoded_image, 0)
+        _image_embedding = encoder(_image_batch, training=False)
 
-			# predictions.shape == (batch_size, seq_len, vocab_size)
-			prediction_batch, _ = transformer(
-				_image_embedding, output, training=False, look_ahead_mask=combined_mask)
+        start_token = tf.cast(tf.convert_to_tensor(
+            [tokenizer.word_index["<start>"]]), tf.int32)
+        end_token = tf.cast(tf.convert_to_tensor(
+            [tokenizer.word_index["<end>"]]), tf.int32)
 
-			# select the last word from the seq_len dimension
-			predictions = prediction_batch[:, -1:, :]  # (batch_size, 1, vocab_size)
+        output_array = tf.TensorArray(
+            dtype=tf.int32, size=0, dynamic_size=True)
+        output_array = output_array.write(0, start_token)
 
-			predicted_id = tf.cast(tf.argmax(predictions, axis=-1), tf.int32)
-		
-			output_array = output_array.write(t+1, predicted_id[0])
-			
-			if predicted_id == end_token:
-				break
-		output = tf.transpose(output_array.stack())
+        for t in tf.range(max_length):
+            output = tf.transpose(output_array.stack())
+            combined_mask = Transformer_decoder.create_mask(None, output)
 
+            # predictions.shape == (batch_size, seq_len, vocab_size)
+            prediction_batch, _ = transformer(
+                _image_embedding, output, training=False, look_ahead_mask=combined_mask)
 
-		return output
+            # select the last word from the seq_len dimension
+            # (batch_size, 1, vocab_size)
+            predictions = prediction_batch[:, -1:, :]
+
+            predicted_id = tf.cast(tf.argmax(predictions, axis=-1), tf.int32)
+
+            output_array = output_array.write(t+1, predicted_id[0])
+
+            if predicted_id == end_token:
+                break
+        output = tf.transpose(output_array.stack())
+
+        return output
+
 
 def detokenize_output(predicted_array):
     outputs = [tokenizer.index_word[i] for i in predicted_array[0].numpy()]
-    prediction = ''.join([str(elem) for elem in outputs]).replace("<start>","").replace("<end>","")
-    
+    prediction = ''.join([str(elem) for elem in outputs]).replace(
+        "<start>", "").replace("<end>", "")
+
     return prediction
+
 
 DECIMER = DECIMER_Predictor(encoder, tokenizer, transformer, MAX_LEN)
 
+
 class ExportDECIMERPredictor(tf.Module):
-  def __init__(self, DECIMER):
-    self.DECIMER = DECIMER
+    """This class wraps the inference class into a module into tf.Module sub-class, with a tf.function on the __call__ method.
+    So we could export the model as a tf.saved_model.
+    """
+    def __init__(self, DECIMER):
+        """Import the translator instance."""
+        self.DECIMER = DECIMER
 
-  @tf.function
-  def __call__(self, Decoded_Image):
+    @tf.function
+    def __call__(self, Decoded_Image):
+        """This fucntion calls the __call__function from the translator class.
+        In the tf.function only the output sentence is returned.
+        Thanks to the non-strict execution in tf.function any unnecessary values are never computed.
+        Args:
+            sentence (tf.Tensor[tf.int32]): Input array in tf.Easgertensor format.
+        Returns:
+            tf.Tensor[tf.int64]: predicted output as an array.
+        """
 
-    result = self.DECIMER(Decoded_Image)
+        result = self.DECIMER(Decoded_Image)
 
-    return result
+        return result
+
 
 DECIMER = ExportDECIMERPredictor(DECIMER)
 
 tf.saved_model.save(DECIMER, export_dir='DECIMER_Packed_model')
-
-
-

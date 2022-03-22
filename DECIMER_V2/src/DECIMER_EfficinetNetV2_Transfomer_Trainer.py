@@ -1,21 +1,21 @@
-import tensorflow as tf
-
-# Built In Imports
-from datetime import datetime
-from glob import glob
-import pickle
-import sys
-import os
-import re
-import time
-
-import efficientnet.tfkeras as efn
-
-import Transformer_decoder
-import Efficient_Net_encoder
 import config
+import Efficient_Net_encoder
+import Transformer_decoder
+import efficientnet.tfkeras as efn
+import time
+import re
+import os
+import sys
+import pickle
+from glob import glob
+from datetime import datetime
+import matplotlib.pyplot as plt
+import tensorflow as tf
+import matplotlib as mpl
+mpl.use('Agg')
 
 # Set TPUs
+
 tpu = tf.distribute.cluster_resolver.TPUClusterResolver(tpu="node-name")
 print("Running on TPU ", tpu.master())
 
@@ -25,13 +25,16 @@ strategy = tf.distribute.TPUStrategy(tpu)
 
 print("Number of devices: {}".format(strategy.num_replicas_in_sync), flush=True)
 print("REPLICAS: ", strategy.num_replicas_in_sync, flush=True)
-print(datetime.now().strftime("%Y/%m/%d %H:%M:%S"), "Network Started", flush=True)
+print(datetime.now().strftime("%Y/%m/%d %H:%M:%S"),
+      "Network Started", flush=True)
 
 # Load the Data
 total_data = 1000000  # datasize integer
 
-tokenizer = pickle.load(open("tokenizer_TPU.pkl", "rb"))
-max_length = pickle.load(open("max_length_TPU.pkl", "rb"))
+tokenizer = pickle.load(open("tokenizer_Isomeric_SMILES.pkl", "rb"))
+max_length = pickle.load(open("max_length_Isomeric_SMILES.pkl", "rb"))
+
+PAD_TOKEN = tf.constant(tokenizer.word_index["<pad>"], dtype=tf.int32)
 
 # Image parameters
 IMG_EMB_DIM = (10, 10, 232)
@@ -42,12 +45,14 @@ IMG_SEQ_LEN, IMG_EMB_DEPTH = IMG_EMB_DIM
 D_MODEL = IMG_EMB_DEPTH
 
 # Set Training Epochs
-EPOCHS = 50
+EPOCHS = 40
 REPLICA_BATCH_SIZE = 128
 BATCH_SIZE = REPLICA_BATCH_SIZE * strategy.num_replicas_in_sync
+print(BATCH_SIZE)
 BUFFER_SIZE = 10000
-target_vocab_size = len(tokenizer.word_index)
+target_vocab_size = max_length
 TRAIN_STEPS = total_data // BATCH_SIZE
+validation_steps = 15360 // BATCH_SIZE
 
 # Parameters to train the network
 N_LAYERS = 4
@@ -72,7 +77,19 @@ AUTO = tf.data.experimental.AUTOTUNE
 
 
 def decode_image(image_data):
-    img = tf.image.decode_png(image_data, channels=3)
+    """Preprocess the input image for Efficient-Net and
+    returned the preprocessed image
+
+    Args:
+        image_data (int array): Decoded image in 2D array
+
+    Returns:
+        image (array): Preprocessed image in 2D array
+    """
+    try:
+        img = tf.image.decode_png(image_data, channels=3)
+    except InvalidArgumentError as e:
+        pass
     img = tf.image.resize(img, (299, 299))
     img = efn.preprocess_input(img)
     # img = tf.expand_dims(img, 0)
@@ -81,6 +98,16 @@ def decode_image(image_data):
 
 
 def read_tfrecord(example):
+    """Read a tf record file and decodes the image and text data
+    back into original form.
+
+    Args:
+        example (tf.record): single entry from tf record file
+
+    Returns:
+        img (float array): 2D float array
+        caption: tokenized SMILES string
+    """
     feature = {
         "image_raw": tf.io.FixedLenFeature([], tf.string),
         "caption": tf.io.FixedLenFeature([], tf.string),
@@ -97,22 +124,44 @@ numbers = re.compile(r"(\d+)")
 
 
 def numericalSort(value):
+    """Sorts the filenames numerically
+
+    Args:
+        value (int): numerical value of the file name
+
+    Returns:
+        parts (int): sorted value
+    """
     parts = numbers.split(value)
     parts[1::2] = map(int, parts[1::2])
     return parts
 
 
-def get_training_dataset(batch_size=BATCH_SIZE, buffered_size=BUFFER_SIZE):
+def get_dataset(batch_size=BATCH_SIZE, buffered_size=BUFFER_SIZE, path=""):
+    """Creates a batch of data rom a given dataset
+
+    Args:
+        batch_size (int, optional): number of datapoints per batch. Defaults to BATCH_SIZE.
+        buffered_size (int, optional): number of datapoints to be buffered. Defaults to BUFFER_SIZE.
+        path (str, optional): path to the location of the dataset. Defaults to "".
+
+    Returns:
+        train_dataset (): single batch of datapoints
+    """
     options = tf.data.Options()
-    filenames = sorted(
-        tf.io.gfile.glob("gs://path-to-bucket/*.tfrecord"), key=numericalSort
-    )
+    #filenames = tf.io.gfile.glob(path)
+    filenames = sorted(tf.io.gfile.glob(path), key=numericalSort)
     print(len(filenames))
+    fx = open("filenames", "w")
+    for i in range(len(filenames)):
+        fx.write(filenames[i]+"\n")
+    fx.close()
 
     dataset_img = tf.data.TFRecordDataset(filenames, num_parallel_reads=AUTO)
 
     train_dataset = (
-        dataset_img.with_options(options)
+        dataset_img
+        .with_options(options)
         .map(read_tfrecord, num_parallel_calls=AUTO)
         .repeat()
         .shuffle(buffered_size)
@@ -122,7 +171,12 @@ def get_training_dataset(batch_size=BATCH_SIZE, buffered_size=BUFFER_SIZE):
     return train_dataset
 
 
-train_dataset = strategy.experimental_distribute_dataset(get_training_dataset())
+train_dataset = strategy.experimental_distribute_dataset(
+    get_dataset(path="gs://tpu-test-koh/DECIMER_V2/RanDepict/*.tfrecord"))
+#validation_dataset = strategy.experimental_distribute_dataset(get_dataset(path="gs://tpu-test-koh/DECIMER_V2/RanDepict/Val_data/*.tfrecord"))
+
+
+#validation_dataset = strategy.experimental_distribute_dataset(get_validation_dataset())
 
 training_config = config.Config()
 training_config.initialize_transformer_config(
@@ -153,6 +207,18 @@ print("Training preparation\n")
 
 
 def prepare_for_training(lr_config, encoder_config, transformer_config, verbose=0):
+    """Preparte the model for training. initiate the learning rate, loss object, metrics
+    and optimizer
+
+    Args:
+        lr_config (int): values for learning rate configuration
+        encoder_config (_type_): encoder configuration values
+        transformer_config (_type_): transformer configuration values
+        verbose (int, optional): _description_. Defaults to 0.
+
+    Returns:
+        loss_function, optimizer, model and the metrics
+    """
 
     with strategy.scope():
 
@@ -174,6 +240,10 @@ def prepare_for_training(lr_config, encoder_config, transformer_config, verbose=
         train_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(
             name="train_accuracy", dtype=tf.float32
         )
+        validation_loss = tf.keras.metrics.Mean(
+            name='validation_loss', dtype=tf.float32)
+        validation_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(
+            name='validation_accuracy', dtype=tf.float32)
 
         # Declare the learning rate schedule (try this as actual lr schedule and list...)
         lr_scheduler = config.CustomSchedule(
@@ -241,19 +311,72 @@ def prepare_for_training(lr_config, encoder_config, transformer_config, verbose=
 print("\n Training preparation completed\n")
 
 # Path to checkpoints
-checkpoint_path = "gs://path-to-bucket/gitcheck/"
+checkpoint_path = "gs://tpu-test-koh/DECIMER_V2/checkpoints_SMILES_TPU8/"
 ckpt = tf.train.Checkpoint(
     encoder=encoder, transformer=transformer, optimizer=optimizer
 )
-ckpt_manager = tf.train.CheckpointManager(ckpt, checkpoint_path, max_to_keep=50)
+ckpt_manager = tf.train.CheckpointManager(
+    ckpt, checkpoint_path, max_to_keep=50)
 
 start_epoch = 0
 if ckpt_manager.latest_checkpoint:
     ckpt.restore(tf.train.latest_checkpoint(checkpoint_path))
     start_epoch = int(ckpt_manager.latest_checkpoint.split("-")[-1])
 
+
 # Main training step fucntion
 def train_step(image_batch, selfies_batch):
+    """Main training step function
+
+    Args:
+        image_batch (float array): Input image batch
+        selfies_batch (int array): Input selfies batch tokenized
+    """
+
+    selfies_batch_input = selfies_batch[:, :-1]
+    selfies_batch_target = selfies_batch[:, 1:]
+    combined_mask = Transformer_decoder.create_mask(
+        selfies_batch_input, selfies_batch_target)
+
+    with tf.GradientTape() as tape:
+        image_embedding = encoder(image_batch, training=True)
+        prediction_batch, _ = transformer(
+            image_embedding,
+            selfies_batch_input,
+            training=True,
+            look_ahead_mask=combined_mask,
+        )
+
+        # Update Loss Accumulator
+        batch_loss = loss_fn(selfies_batch_target,
+                             prediction_batch) / (MAX_LEN - 1)
+        train_accuracy.update_state(selfies_batch_target, prediction_batch, sample_weight=tf.where(
+            tf.not_equal(selfies_batch_target, PAD_TOKEN), 1.0, 0.0))
+
+    total_loss = batch_loss / int(selfies_batch.shape[1])
+
+    gradients = tape.gradient(
+        batch_loss, encoder.trainable_variables + transformer.trainable_variables
+    )
+    gradients, _ = tf.clip_by_global_norm(gradients, 10.0)
+    optimizer.apply_gradients(
+        zip(gradients, encoder.trainable_variables +
+            transformer.trainable_variables)
+    )
+
+    train_loss.update_state(batch_loss * strategy.num_replicas_in_sync)
+
+
+@tf.function
+def dist_train_step(image_batch, selfies_batch):
+    strategy.run(
+        train_step, args=(image_batch, selfies_batch)
+    )
+
+
+'''
+# Main validation step fucntion
+def validation_step(image_batch, selfies_batch):
 
     selfies_batch_input = selfies_batch[:, :-1]
     selfies_batch_target = selfies_batch[:, 1:]
@@ -270,6 +393,7 @@ def train_step(image_batch, selfies_batch):
 
         # Update Loss Accumulator
         batch_loss = loss_fn(selfies_batch_target, prediction_batch) / (MAX_LEN - 1)
+        validation_accuracy.update_state(selfies_batch_target, prediction_batch,sample_weight=tf.where(tf.not_equal(selfies_batch_target, PAD_TOKEN), 1.0, 0.0))
 
     total_loss = batch_loss / int(selfies_batch.shape[1])
 
@@ -282,56 +406,52 @@ def train_step(image_batch, selfies_batch):
     )
 
     train_loss.update_state(batch_loss * strategy.num_replicas_in_sync)
-    train_accuracy.update_state(selfies_batch_target, prediction_batch)
-
-    return batch_loss, total_loss
 
 
 @tf.function
-def dist_train_step(image_batch, selfies_batch):
-    per_replica_losses, l_loss = strategy.run(
-        train_step, args=(image_batch, selfies_batch)
-    )
-    return strategy.reduce(
-        tf.distribute.ReduceOp.MEAN, per_replica_losses, axis=None
-    ), strategy.reduce(tf.distribute.ReduceOp.MEAN, l_loss, axis=None)
-
+def dist_validation_step(image_batch, selfies_batch):
+    strategy.run(
+        validation_step, args=(image_batch, selfies_batch)
+    )  
+'''
+loss_plot = []
+accuracy_plot = []
+val_loss_plot = []
+val_acc = []
+f = open('Training_SMILES_TPU8__.txt', 'w')
+sys.stdout = f
 
 # Training loop
 for epoch in range(start_epoch, EPOCHS):
     start = time.time()
-    total_loss = 0
     batch = 0
-    train_loss.reset_states()
-    train_accuracy.reset_states()
+    validation_batch = 0
 
     for x in train_dataset:
-        # print("Im Here")
         img_tensor, target = x
-        batch_loss, t_loss = dist_train_step(img_tensor, target)
-        total_loss += t_loss
+        dist_train_step(img_tensor, target)
         batch += 1
 
         if batch % 100 == 0:
             print(
-                "Epoch {} Batch {} Loss {:.4f} Updated_Loss {:.4f} Accuracy {:.4f}".format(
+                "Epoch {} Batch {} Loss {:.4f} Accuracy {:.4f}".format(
                     epoch + 1,
                     batch,
-                    batch_loss.numpy() / BATCH_SIZE,
                     train_loss.result(),
-                    train_accuracy.result(),
+                    train_accuracy.result()
                 ),
                 flush=True,
             )
         # storing the epoch end loss value to plot later
 
         if batch == TRAIN_STEPS:
+            loss_plot.append(train_loss.result().numpy())
+            accuracy_plot.append(train_accuracy.result().numpy())
             ckpt_manager.save()
 
             print(
-                "Epoch {} Loss {:.6f} Updated_Loss {:.4f} Accuracy {:.4f}".format(
+                "Epoch {} Training_Loss {:.4f} Accuracy {:.4f}".format(
                     epoch + 1,
-                    total_loss / TRAIN_STEPS,
                     train_loss.result(),
                     train_accuracy.result(),
                 ),
@@ -345,3 +465,51 @@ for epoch in range(start_epoch, EPOCHS):
             # transformer.save_weights('Epoch_'+str(epoch+1)+'_weights.h5')
 
             break
+    '''
+    for y in validation_dataset:
+        start_val = time.time()
+        img_tensor, target =y
+        validation_step(y)
+        validation_batch +=1
+
+        if validation_batch == validation_steps:
+
+            print ('Validation_Loss {:.4f} Accuracy {:.4f}'.format(validation_loss.result(), validation_accuracy.result()), flush=True)
+            print (datetime.now().strftime('%Y/%m/%d %H:%M:%S'),'Time taken for validation {} sec\n'.format(time.time() - start_val), flush=True)
+            val_loss_plot.append(validation_loss.result().numpy())
+            val_acc.append(validation_accuracy.result().numpy())
+            break
+    '''
+    train_loss.reset_states()
+    train_accuracy.reset_states()
+    # validation_loss.reset_states()
+    # validation_accuracy.reset_states()
+
+    #epoch = (epoch+1)
+    #batch = 0
+
+plt.plot(loss_plot, '-o', label="Training loss")
+#plt.plot(val_loss_plot , '-o', label= "Validation loss")
+plt.title('Training and Validation Loss')
+plt.xlabel('Epochs')
+plt.ylabel('Loss')
+plt.legend(ncol=2, loc='upper right')
+# plt.show()
+plt.gcf().set_size_inches(20, 20)
+plt.savefig("Lossplot_SMILESTPU8.jpg")
+plt.close()
+
+plt.plot(accuracy_plot, '-o', label="Training accuracy")
+#plt.plot(val_acc , '-o', label= "Validation accuracy")
+plt.title('Training and Validation accuracy')
+plt.xlabel('Epochs')
+plt.ylabel('Loss')
+plt.legend(ncol=2, loc='lower right')
+# plt.show()
+plt.gcf().set_size_inches(20, 20)
+plt.savefig("accuracyplot_SMILESTPU8.jpg")
+plt.close()
+
+print(datetime.now().strftime('%Y/%m/%d %H:%M:%S'),
+      "Network Completed", flush=True)
+f.close()
