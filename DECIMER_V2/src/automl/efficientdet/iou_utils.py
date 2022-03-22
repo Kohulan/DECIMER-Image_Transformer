@@ -40,14 +40,14 @@ def _get_v(
 
         def _grad_v(dv):
             """Grad for eager mode."""
-            gdw = dv * 8 * arctan * height / (math.pi ** 2)
-            gdh = -dv * 8 * arctan * width / (math.pi ** 2)
+            gdw = dv * 8 * arctan * height / (math.pi**2)
+            gdh = -dv * 8 * arctan * width / (math.pi**2)
             return [gdh, gdw]
 
         def _grad_v_graph(dv, variables):
             """Grad for graph mode."""
-            gdw = dv * 8 * arctan * height / (math.pi ** 2)
-            gdh = -dv * 8 * arctan * width / (math.pi ** 2)
+            gdw = dv * 8 * arctan * height / (math.pi**2)
+            gdh = -dv * 8 * arctan * width / (math.pi**2)
             return [gdh, gdw], tf.gradients(v, variables, grad_ys=dv)
 
         if tf.compat.v1.executing_eagerly_outside_functions():
@@ -118,7 +118,7 @@ def _iou_per_anchor(
         tf.stack([enclose_ymax - enclose_ymin, enclose_xmax - enclose_xmin], axis=-1),
         axis=-1,
     )
-    diou_v = iou_v - tf.math.divide_no_nan(euclidean ** 2, diag_length ** 2)
+    diou_v = iou_v - tf.math.divide_no_nan(euclidean**2, diag_length**2)
     if iou_type == "diou":  # diou is the distance iou.
         return diou_v
 

@@ -34,7 +34,7 @@ def srelu_fn(x):
     """Smooth relu: a smooth version of relu."""
     with tf.name_scope("srelu"):
         beta = tf.Variable(20.0, name="srelu_beta", dtype=tf.float32) ** 2
-        beta = tf.cast(beta ** 2, x.dtype)
+        beta = tf.cast(beta**2, x.dtype)
         safe_log = tf.math.log(tf.where(x > 0.0, beta * x + 1.0, tf.ones_like(x)))
         return tf.where((x > 0.0), x - (1.0 / beta) * safe_log, tf.zeros_like(x))
 

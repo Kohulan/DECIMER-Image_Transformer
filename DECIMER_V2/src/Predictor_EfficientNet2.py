@@ -17,8 +17,12 @@ for gpu in gpus:
 
 # load assets
 HERE = os.path.dirname(os.path.abspath(__file__))
-tokenizer = pickle.load(open(os.path.join(HERE, "tokenizer_Isomeric_SELFIES.pkl"), "rb"))
-max_length = pickle.load(open(os.path.join(HERE, "max_length_Isomeric_SELFIES.pkl"), "rb"))
+tokenizer = pickle.load(
+    open(os.path.join(HERE, "tokenizer_Isomeric_SELFIES.pkl"), "rb")
+)
+max_length = pickle.load(
+    open(os.path.join(HERE, "max_length_Isomeric_SELFIES.pkl"), "rb")
+)
 
 # Image partameters
 IMG_EMB_DIM = (10, 10, 232)
@@ -100,7 +104,7 @@ def main():
 
 def evaluate(image_path: str):
     """
-    This function takes an image path (str) and returns the SELFIES 
+    This function takes an image path (str) and returns the SELFIES
     representation of the depicted molecule (str).
 
     Args:
@@ -136,7 +140,7 @@ def evaluate(image_path: str):
 
 def predict_SMILES(image_path: str):
     """
-    This function takes an image path (str) and returns the SMILES 
+    This function takes an image path (str) and returns the SMILES
     representation of the depicted molecule (str).
 
     Args:
@@ -145,7 +149,7 @@ def predict_SMILES(image_path: str):
     Returns:
         (str): SMILES representation of the molecule in the input image
     """
-    predicted_SELFIES = evaluate(image_path)    
+    predicted_SELFIES = evaluate(image_path)
     predicted_SMILES = decoder(
         "".join(predicted_SELFIES).replace("<start>", "").replace("<end>", "")
     )

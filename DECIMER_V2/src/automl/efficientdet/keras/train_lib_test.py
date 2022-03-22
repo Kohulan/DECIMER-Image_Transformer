@@ -110,13 +110,13 @@ class TrainLibTest(tf.test.TestCase):
         config.grad_checkpoint = grad_checkpoint
         x = tf.ones((1, 512, 512, 3))
         labels = {
-            "box_targets_%d" % i: tf.ones((1, 512 // 2 ** i, 512 // 2 ** i, 36))
+            "box_targets_%d" % i: tf.ones((1, 512 // 2**i, 512 // 2**i, 36))
             for i in range(3, 8)
         }
         labels.update(
             {
                 "cls_targets_%d"
-                % i: tf.ones((1, 512 // 2 ** i, 512 // 2 ** i, 9), dtype=tf.int32)
+                % i: tf.ones((1, 512 // 2**i, 512 // 2**i, 9), dtype=tf.int32)
                 for i in range(3, 8)
             }
         )

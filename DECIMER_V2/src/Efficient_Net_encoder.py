@@ -47,6 +47,7 @@ class Encoder(tf.keras.Model):
     Args:
         tf (_type_): tensorflow model module
     """
+
     def __init__(
         self,
         image_embedding_dim,

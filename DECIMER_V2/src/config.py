@@ -26,8 +26,10 @@ def central_square_image(im):
     if max_wh < 299:
         max_wh = 299
     new_im = Image.new(im.mode, (max_wh, max_wh), "white")
-    paste_pos = (int((new_im.size[0]-im.size[0])/2),
-                 int((new_im.size[1]-im.size[1])/2))
+    paste_pos = (
+        int((new_im.size[0] - im.size[0]) / 2),
+        int((new_im.size[1] - im.size[1]) / 2),
+    )
     new_im.paste(im, paste_pos)
     return new_im
 
@@ -40,16 +42,16 @@ def delete_empty_borders(im):
     ___
     output: PIL.Image
     """
-    im = np.asarray(im.convert('L'))
+    im = np.asarray(im.convert("L"))
     mask = im > 200
     rows = np.flatnonzero((~mask).sum(axis=1))
     cols = np.flatnonzero((~mask).sum(axis=0))
-    crop = im[rows.min():rows.max()+1, cols.min():cols.max()+1]
+    crop = im[rows.min() : rows.max() + 1, cols.min() : cols.max() + 1]
     return Image.fromarray(crop)
 
 
 def PIL_im_to_BytesIO(im):
-    """    
+    """
     Convert pillow image to io.BytesIO object
     ___
     im: PIL.Image
@@ -57,7 +59,7 @@ def PIL_im_to_BytesIO(im):
     Output: io.BytesIO object with the image data
     """
     output = io.BytesIO()
-    im.save(output, format='PNG')
+    im.save(output, format="PNG")
     return output
 
 
@@ -185,7 +187,7 @@ class CustomSchedule(tf.keras.optimizers.schedules.LearningRateSchedule):
 
     def __call__(self, step):
         arg1 = tf.math.rsqrt(step)
-        arg2 = step * (self.warmup_steps ** -1.5)
+        arg2 = step * (self.warmup_steps**-1.5)
 
         return tf.math.rsqrt(self.d_model) * tf.math.minimum(arg1, arg2)
 

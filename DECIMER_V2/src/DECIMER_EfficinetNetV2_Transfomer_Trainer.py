@@ -12,7 +12,8 @@ from datetime import datetime
 import matplotlib.pyplot as plt
 import tensorflow as tf
 import matplotlib as mpl
-mpl.use('Agg')
+
+mpl.use("Agg")
 
 # Set TPUs
 
@@ -25,8 +26,7 @@ strategy = tf.distribute.TPUStrategy(tpu)
 
 print("Number of devices: {}".format(strategy.num_replicas_in_sync), flush=True)
 print("REPLICAS: ", strategy.num_replicas_in_sync, flush=True)
-print(datetime.now().strftime("%Y/%m/%d %H:%M:%S"),
-      "Network Started", flush=True)
+print(datetime.now().strftime("%Y/%m/%d %H:%M:%S"), "Network Started", flush=True)
 
 # Load the Data
 total_data = 1000000  # datasize integer
@@ -149,19 +149,18 @@ def get_dataset(batch_size=BATCH_SIZE, buffered_size=BUFFER_SIZE, path=""):
         train_dataset (): single batch of datapoints
     """
     options = tf.data.Options()
-    #filenames = tf.io.gfile.glob(path)
+    # filenames = tf.io.gfile.glob(path)
     filenames = sorted(tf.io.gfile.glob(path), key=numericalSort)
     print(len(filenames))
     fx = open("filenames", "w")
     for i in range(len(filenames)):
-        fx.write(filenames[i]+"\n")
+        fx.write(filenames[i] + "\n")
     fx.close()
 
     dataset_img = tf.data.TFRecordDataset(filenames, num_parallel_reads=AUTO)
 
     train_dataset = (
-        dataset_img
-        .with_options(options)
+        dataset_img.with_options(options)
         .map(read_tfrecord, num_parallel_calls=AUTO)
         .repeat()
         .shuffle(buffered_size)
@@ -172,11 +171,12 @@ def get_dataset(batch_size=BATCH_SIZE, buffered_size=BUFFER_SIZE, path=""):
 
 
 train_dataset = strategy.experimental_distribute_dataset(
-    get_dataset(path="gs://tpu-test-koh/DECIMER_V2/RanDepict/*.tfrecord"))
-#validation_dataset = strategy.experimental_distribute_dataset(get_dataset(path="gs://tpu-test-koh/DECIMER_V2/RanDepict/Val_data/*.tfrecord"))
+    get_dataset(path="gs://tpu-test-koh/DECIMER_V2/RanDepict/*.tfrecord")
+)
+# validation_dataset = strategy.experimental_distribute_dataset(get_dataset(path="gs://tpu-test-koh/DECIMER_V2/RanDepict/Val_data/*.tfrecord"))
 
 
-#validation_dataset = strategy.experimental_distribute_dataset(get_validation_dataset())
+# validation_dataset = strategy.experimental_distribute_dataset(get_validation_dataset())
 
 training_config = config.Config()
 training_config.initialize_transformer_config(
@@ -241,9 +241,11 @@ def prepare_for_training(lr_config, encoder_config, transformer_config, verbose=
             name="train_accuracy", dtype=tf.float32
         )
         validation_loss = tf.keras.metrics.Mean(
-            name='validation_loss', dtype=tf.float32)
+            name="validation_loss", dtype=tf.float32
+        )
         validation_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(
-            name='validation_accuracy', dtype=tf.float32)
+            name="validation_accuracy", dtype=tf.float32
+        )
 
         # Declare the learning rate schedule (try this as actual lr schedule and list...)
         lr_scheduler = config.CustomSchedule(
@@ -315,8 +317,7 @@ checkpoint_path = "gs://tpu-test-koh/DECIMER_V2/checkpoints_SMILES_TPU8/"
 ckpt = tf.train.Checkpoint(
     encoder=encoder, transformer=transformer, optimizer=optimizer
 )
-ckpt_manager = tf.train.CheckpointManager(
-    ckpt, checkpoint_path, max_to_keep=50)
+ckpt_manager = tf.train.CheckpointManager(ckpt, checkpoint_path, max_to_keep=50)
 
 start_epoch = 0
 if ckpt_manager.latest_checkpoint:
@@ -336,7 +337,8 @@ def train_step(image_batch, selfies_batch):
     selfies_batch_input = selfies_batch[:, :-1]
     selfies_batch_target = selfies_batch[:, 1:]
     combined_mask = Transformer_decoder.create_mask(
-        selfies_batch_input, selfies_batch_target)
+        selfies_batch_input, selfies_batch_target
+    )
 
     with tf.GradientTape() as tape:
         image_embedding = encoder(image_batch, training=True)
@@ -348,10 +350,14 @@ def train_step(image_batch, selfies_batch):
         )
 
         # Update Loss Accumulator
-        batch_loss = loss_fn(selfies_batch_target,
-                             prediction_batch) / (MAX_LEN - 1)
-        train_accuracy.update_state(selfies_batch_target, prediction_batch, sample_weight=tf.where(
-            tf.not_equal(selfies_batch_target, PAD_TOKEN), 1.0, 0.0))
+        batch_loss = loss_fn(selfies_batch_target, prediction_batch) / (MAX_LEN - 1)
+        train_accuracy.update_state(
+            selfies_batch_target,
+            prediction_batch,
+            sample_weight=tf.where(
+                tf.not_equal(selfies_batch_target, PAD_TOKEN), 1.0, 0.0
+            ),
+        )
 
     total_loss = batch_loss / int(selfies_batch.shape[1])
 
@@ -360,8 +366,7 @@ def train_step(image_batch, selfies_batch):
     )
     gradients, _ = tf.clip_by_global_norm(gradients, 10.0)
     optimizer.apply_gradients(
-        zip(gradients, encoder.trainable_variables +
-            transformer.trainable_variables)
+        zip(gradients, encoder.trainable_variables + transformer.trainable_variables)
     )
 
     train_loss.update_state(batch_loss * strategy.num_replicas_in_sync)
@@ -369,12 +374,10 @@ def train_step(image_batch, selfies_batch):
 
 @tf.function
 def dist_train_step(image_batch, selfies_batch):
-    strategy.run(
-        train_step, args=(image_batch, selfies_batch)
-    )
+    strategy.run(train_step, args=(image_batch, selfies_batch))
 
 
-'''
+"""
 # Main validation step fucntion
 def validation_step(image_batch, selfies_batch):
 
@@ -413,12 +416,12 @@ def dist_validation_step(image_batch, selfies_batch):
     strategy.run(
         validation_step, args=(image_batch, selfies_batch)
     )  
-'''
+"""
 loss_plot = []
 accuracy_plot = []
 val_loss_plot = []
 val_acc = []
-f = open('Training_SMILES_TPU8__.txt', 'w')
+f = open("Training_SMILES_TPU8__.txt", "w")
 sys.stdout = f
 
 # Training loop
@@ -435,10 +438,7 @@ for epoch in range(start_epoch, EPOCHS):
         if batch % 100 == 0:
             print(
                 "Epoch {} Batch {} Loss {:.4f} Accuracy {:.4f}".format(
-                    epoch + 1,
-                    batch,
-                    train_loss.result(),
-                    train_accuracy.result()
+                    epoch + 1, batch, train_loss.result(), train_accuracy.result()
                 ),
                 flush=True,
             )
@@ -465,7 +465,7 @@ for epoch in range(start_epoch, EPOCHS):
             # transformer.save_weights('Epoch_'+str(epoch+1)+'_weights.h5')
 
             break
-    '''
+    """
     for y in validation_dataset:
         start_val = time.time()
         img_tensor, target =y
@@ -479,37 +479,36 @@ for epoch in range(start_epoch, EPOCHS):
             val_loss_plot.append(validation_loss.result().numpy())
             val_acc.append(validation_accuracy.result().numpy())
             break
-    '''
+    """
     train_loss.reset_states()
     train_accuracy.reset_states()
     # validation_loss.reset_states()
     # validation_accuracy.reset_states()
 
-    #epoch = (epoch+1)
-    #batch = 0
+    # epoch = (epoch+1)
+    # batch = 0
 
-plt.plot(loss_plot, '-o', label="Training loss")
-#plt.plot(val_loss_plot , '-o', label= "Validation loss")
-plt.title('Training and Validation Loss')
-plt.xlabel('Epochs')
-plt.ylabel('Loss')
-plt.legend(ncol=2, loc='upper right')
+plt.plot(loss_plot, "-o", label="Training loss")
+# plt.plot(val_loss_plot , '-o', label= "Validation loss")
+plt.title("Training and Validation Loss")
+plt.xlabel("Epochs")
+plt.ylabel("Loss")
+plt.legend(ncol=2, loc="upper right")
 # plt.show()
 plt.gcf().set_size_inches(20, 20)
 plt.savefig("Lossplot_SMILESTPU8.jpg")
 plt.close()
 
-plt.plot(accuracy_plot, '-o', label="Training accuracy")
-#plt.plot(val_acc , '-o', label= "Validation accuracy")
-plt.title('Training and Validation accuracy')
-plt.xlabel('Epochs')
-plt.ylabel('Loss')
-plt.legend(ncol=2, loc='lower right')
+plt.plot(accuracy_plot, "-o", label="Training accuracy")
+# plt.plot(val_acc , '-o', label= "Validation accuracy")
+plt.title("Training and Validation accuracy")
+plt.xlabel("Epochs")
+plt.ylabel("Loss")
+plt.legend(ncol=2, loc="lower right")
 # plt.show()
 plt.gcf().set_size_inches(20, 20)
 plt.savefig("accuracyplot_SMILESTPU8.jpg")
 plt.close()
 
-print(datetime.now().strftime('%Y/%m/%d %H:%M:%S'),
-      "Network Completed", flush=True)
+print(datetime.now().strftime("%Y/%m/%d %H:%M:%S"), "Network Completed", flush=True)
 f.close()

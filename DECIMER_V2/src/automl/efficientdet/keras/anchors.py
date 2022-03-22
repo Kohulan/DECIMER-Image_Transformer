@@ -145,8 +145,8 @@ class Anchors:
             boxes_level = []
             for config in configs:
                 stride, octave_scale, aspect, anchor_scale = config
-                base_anchor_size_x = anchor_scale * stride[1] * 2 ** octave_scale
-                base_anchor_size_y = anchor_scale * stride[0] * 2 ** octave_scale
+                base_anchor_size_x = anchor_scale * stride[1] * 2**octave_scale
+                base_anchor_size_y = anchor_scale * stride[0] * 2**octave_scale
                 if isinstance(aspect, list):
                     aspect_x, aspect_y = aspect
                 else:
