@@ -43,8 +43,7 @@ def main():
     start = 0
     end = 26800
     start_x = 0
-    # end_x = 1
-    # e = 92160
+
     for i in range(int(len(img_name_vector) / end)):
         imgs_path = img_name_vector[start : (start + end)]
         caps_path = cap_vector[start : (start + end)]
@@ -108,7 +107,7 @@ def data_loader(Smiles_Path):
     # choosing the top 500 words from the vocabulary
     top_k = 500
     tokenizer = tf.keras.preprocessing.text.Tokenizer(
-        num_words=top_k, oov_token="<unk>", lower=False
+        num_words=top_k, oov_token="<unk>", lower=False, filters=''
     )
     tokenizer.fit_on_texts(train_captions)
     train_seqs = tokenizer.texts_to_sequences(train_captions)
