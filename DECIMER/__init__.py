@@ -11,9 +11,6 @@ to provide an automated open-source software solution.
 
 Typical usage example:
 
-On Terminal:
-decimer path/to/imagefile
-
 from decimer import predict_SMILES
 
 # Chemical depiction to SMILES translation

@@ -29,7 +29,7 @@ default_path = pystow.join("DECIMER-V2")
 # model download location
 model_url = "https://storage.googleapis.com/decimer_weights/decimer_v2/models.zip"
 model_path = str(default_path) + "/DECIMER_model/"
-print(model_path)
+
 # download models to a default location
 if not os.path.exists(model_path):
     config.download_trained_weights(model_url, default_path)
