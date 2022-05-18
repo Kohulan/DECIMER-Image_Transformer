@@ -23,7 +23,7 @@ setuptools.setup(
         "opencv-python",
         "pystow",
     ],
-    package_data={"DECIMER": ["automl/*.*", "automl/efficientnetv2/*.*", "Utils/*.*"]},
+    package_data={"DECIMER": ["repack/*.*","automl/*.*", "automl/efficientnetv2/*.*", "Utils/*.*"]},
     classifiers=[
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.5",

@@ -1,10 +1,10 @@
-import config
 import os
 import sys
 import logging
 import pickle
 import pystow
 import tensorflow as tf
+from .repack import config
 
 # Silence tensorflow model loading warnings.
 logging.getLogger("absl").setLevel("ERROR")
