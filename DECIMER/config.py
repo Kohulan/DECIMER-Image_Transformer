@@ -6,6 +6,8 @@ import Transformer_decoder
 from PIL import Image
 import numpy as np
 import io
+import cv2
+import pystow
 
 TARGET_DTYPE = tf.float32
 
@@ -63,6 +65,40 @@ def PIL_im_to_BytesIO(im):
     return output
 
 
+def remove_transparent(image_path: str):
+    """
+    Removes the transparent layer from a PNG image with an alpha channel
+    ___
+    image_path (str): path of input image
+    ___
+    Output: PIL.Image
+    """
+    png = Image.open(image_path).convert("RGBA")
+    background = Image.new("RGBA", png.size, (255, 255, 255))
+
+    alpha_composite = Image.alpha_composite(background, png)
+
+    return alpha_composite
+
+
+def get_bnw_image(image):
+    """
+    converts images to black and white
+    ___
+    image: PIL.Image
+    ___
+    Output: PIL.Image
+    """
+
+    im_np = np.asarray(image)
+    grayscale = cv2.cvtColor(im_np, cv2.COLOR_BGR2GRAY)
+    (thresh, im_bw) = cv2.threshold(
+        grayscale, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU
+    )
+    im_pil = Image.fromarray(im_bw)
+    return im_pil
+
+
 def decode_image(image_path: str):
     """
     Loads and preprocesses an image
@@ -72,7 +108,8 @@ def decode_image(image_path: str):
     Returns:
         Processed image
     """
-    img = Image.open(image_path)
+    img = remove_transparent(image_path)
+    img = get_bnw_image(img)
     img = delete_empty_borders(img)
     img = central_square_image(img)
     img = PIL_im_to_BytesIO(img)
@@ -187,7 +224,7 @@ class CustomSchedule(tf.keras.optimizers.schedules.LearningRateSchedule):
 
     def __call__(self, step):
         arg1 = tf.math.rsqrt(step)
-        arg2 = step * (self.warmup_steps**-1.5)
+        arg2 = step * (self.warmup_steps ** -1.5)
 
         return tf.math.rsqrt(self.d_model) * tf.math.minimum(arg1, arg2)
 
@@ -235,3 +272,31 @@ def prepare_models(encoder_config, transformer_config, replica_batch_size, verbo
         print(transformer.summary())
 
     return optimizer, encoder, transformer
+
+
+# Downloads the model and unzips the file downloaded, if the model is not present on the working directory.
+def download_trained_weights(model_url: str, model_path: str, verbose=1):
+    """This function downloads the trained models and tokenizers to a default location.
+    After downloading the zipped file the function unzips the file automatically.
+    If the model exists on the default location this function will not work.
+    Args:
+        model_url (str): trained model url for downloading.
+        model_path (str): model default path to download.
+    Returns:
+        downloaded model.
+    """
+    # Download trained models
+    if verbose > 0:
+        print("Downloading trained model to " + str(model_path))
+        model_path = pystow.ensure("DECIMER-V2", url=model_url)
+        print(model_path)
+    if verbose > 0:
+        print("... done downloading trained model!")
+        subprocess.run(
+            [
+                "unzip",
+                model_path.as_posix(),
+                "-d",
+                model_path.parent.as_posix(),
+            ]
+        )

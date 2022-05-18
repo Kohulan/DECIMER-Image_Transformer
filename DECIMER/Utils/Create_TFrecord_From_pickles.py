@@ -2,9 +2,7 @@
 # © Kohulan Rajan - 2020
 import tensorflow as tf
 import os
-import numpy as np
 import pickle
-import efficientnet.tfkeras as efn
 import argparse
 
 parser = argparse.ArgumentParser()
@@ -65,7 +63,7 @@ for file_in in args.file:
                 # image_id_ = sub_split_img_id[counter]
                 counter = counter + 1
                 feature = {
-                    #'image_id': _bytes_feature(image_id_.encode('utf8')),
+                    # 'image_id': _bytes_feature(image_id_.encode('utf8')),
                     "image_raw": _bytes_feature(tf.io.read_file(sub_split_img_id[j])),
                     "caption": _bytes_feature(caption_.tostring()),
                 }

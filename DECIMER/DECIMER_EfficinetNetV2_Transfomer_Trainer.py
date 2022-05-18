@@ -4,10 +4,8 @@ import Transformer_decoder
 import efficientnet.tfkeras as efn
 import time
 import re
-import os
 import sys
 import pickle
-from glob import glob
 from datetime import datetime
 import matplotlib.pyplot as plt
 import tensorflow as tf
@@ -89,6 +87,7 @@ def decode_image(image_data):
     try:
         img = tf.image.decode_png(image_data, channels=3)
     except InvalidArgumentError as e:
+        print(e)
         pass
     img = tf.image.resize(img, (299, 299))
     img = efn.preprocess_input(img)
@@ -240,13 +239,14 @@ def prepare_for_training(lr_config, encoder_config, transformer_config, verbose=
         train_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(
             name="train_accuracy", dtype=tf.float32
         )
+        """
         validation_loss = tf.keras.metrics.Mean(
             name="validation_loss", dtype=tf.float32
         )
         validation_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(
             name="validation_accuracy", dtype=tf.float32
         )
-
+        """
         # Declare the learning rate schedule (try this as actual lr schedule and list...)
         lr_scheduler = config.CustomSchedule(
             transformer_config["d_model"], lr_config["warm_steps"]
@@ -359,7 +359,7 @@ def train_step(image_batch, selfies_batch):
             ),
         )
 
-    total_loss = batch_loss / int(selfies_batch.shape[1])
+    # total_loss = batch_loss / int(selfies_batch.shape[1])
 
     gradients = tape.gradient(
         batch_loss, encoder.trainable_variables + transformer.trainable_variables
@@ -415,7 +415,7 @@ def validation_step(image_batch, selfies_batch):
 def dist_validation_step(image_batch, selfies_batch):
     strategy.run(
         validation_step, args=(image_batch, selfies_batch)
-    )  
+    )
 """
 loss_plot = []
 accuracy_plot = []

@@ -7,7 +7,6 @@ from selfies import decoder
 import Transformer_decoder
 import Efficient_Net_encoder
 import config
-import efficientnet.tfkeras as efn
 
 # Set GPU
 os.environ["CUDA_VISIBLE_DEVICES"] = "2"

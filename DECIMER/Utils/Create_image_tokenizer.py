@@ -4,8 +4,6 @@ import os
 from datetime import datetime
 import pickle
 
-from sklearn.model_selection import train_test_split
-
 print(datetime.now().strftime("%Y/%m/%d %H:%M:%S"), "Process started", flush=True)
 
 # Initial Setup for GPU
@@ -24,12 +22,7 @@ def main():
     img_name_vector, cap_vector, tokenizer, max_length, img_name_val = data_loader(
         Smiles_Path
     )
-    """optional
-	with open("Test_names.pkl","wb") as file:
-			pickle.dump(img_name_val,file)
-	with open("Train_names.pkl","wb") as file:
-			pickle.dump(img_name_vector,file)
-	"""
+
     print("Tokens: ", tokenizer, flush=True)
     print("Max length of attention weights: ", max_length, flush=True)
     print("Total train files:", len(img_name_vector), flush=True)
@@ -107,7 +100,7 @@ def data_loader(Smiles_Path):
     # choosing the top 500 words from the vocabulary
     top_k = 500
     tokenizer = tf.keras.preprocessing.text.Tokenizer(
-        num_words=top_k, oov_token="<unk>", lower=False, filters=''
+        num_words=top_k, oov_token="<unk>", lower=False, filters=""
     )
     tokenizer.fit_on_texts(train_captions)
     train_seqs = tokenizer.texts_to_sequences(train_captions)
@@ -130,7 +123,12 @@ def data_loader(Smiles_Path):
         cap_vector[1340000:1440000],
     )
 
-    print(str(len(img_name_train)), str(len(img_name_val)))
+    print(
+        str(len(img_name_train)),
+        str(len(img_name_val)),
+        str(len(cap_train)),
+        str(len(cap_val)),
+    )
 
     return img_name_train, cap_train, tokenizer, max_length, img_name_val
 

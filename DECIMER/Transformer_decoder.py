@@ -1,4 +1,5 @@
 import tensorflow as tf
+import numpy as np
 
 # Set target dtype
 TARGET_DTYPE = tf.float32
@@ -7,8 +8,7 @@ TARGET_DTYPE = tf.float32
 def get_angles(pos, i, d_model):
     angle_rates = tf.constant(1, TARGET_DTYPE) / tf.math.pow(
         tf.constant(10000, TARGET_DTYPE),
-        (tf.constant(2, dtype=TARGET_DTYPE) * tf.cast((i // 2), TARGET_DTYPE))
-        / d_model,
+        (tf.constant(2, dtype=TARGET_DTYPE) * tf.cast((i // 2), TARGET_DTYPE)) / d_model,
     )
     return pos * angle_rates
 

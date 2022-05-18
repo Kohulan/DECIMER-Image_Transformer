@@ -1,0 +1,3 @@
+tensorflow-gpu==2.7.1
+opencv-python
+pystow
