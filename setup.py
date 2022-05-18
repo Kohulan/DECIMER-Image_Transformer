@@ -22,6 +22,7 @@ setuptools.setup(
         "tensorflow-gpu==2.7.1",
         "opencv-python",
         "pystow",
+        "efficientnet",
     ],
     package_data={"DECIMER": ["repack/*.*","automl/*.*", "automl/efficientnetv2/*.*", "Utils/*.*"]},
     classifiers=[
