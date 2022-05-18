@@ -19,12 +19,12 @@ The original implementation of DECIMER[1] using GPU takes a longer training time
 
 ## Method and model changes
  - The DECIMER now uses EfficientNet-V2[3] for Image feature extraction and a transformer model [4] for predicting the SMILES.
- - The SMILES used for during training and predictions
+ - The SMILES used during training and predictions
 
 ### Changes in the training method
 
  - We converted our datasets into [TFRecord](https://www.tensorflow.org/tutorials/load_data/tfrecord) Files, A binary file system the TPUs can read in a much faster way. Also, we can use these files to train on GPUs. Using the TFRecord helps us train the model fast by overcoming the bottleneck of reading multiple files from the hard disks.
- - We moved our data to [Google Cloud Buckets](https://cloud.google.com/storage/docs/json_api/v1/buckets). An efficient storage solution provided by google cloud environment where we can access these files from any google cloud VMs easily and in a much faster way. (To get the highest speed, the cloud storage and the VM should be in the same region)
+ - We moved our data to [Google Cloud Buckets](https://cloud.google.com/storage/docs/json_api/v1/buckets). An efficient storage solution provided by the google cloud environment where we can access these files from any google cloud VMs easily and in a much faster way. (To get the highest speed, the cloud storage and the VM should be in the same region)
  - We adopted the TensorFlow data pipeline to load all TFRecord files to the TPUs from Google Cloud Buckets.
  - We modified the main training code to work on TPUs using [TPU strategy](https://www.tensorflow.org/api_docs/python/tf/distribute/TPUStrategy) introduced in Tensorflow 2.0.
 
@@ -32,7 +32,7 @@ The original implementation of DECIMER[1] using GPU takes a longer training time
 
 ## How to use DECIMER?
 
-### We suggest using DECIMER inside a Conda environment, which makes the dependencies to install easily.
+### We suggest using DECIMER inside a Conda environment, which makes the dependencies install easily.
 - Conda can be downloaded as part of the [Anaconda](https://www.anaconda.com/) or the [Miniconda](https://conda.io/en/latest/miniconda.html) platforms (Python 3.7). We recommend installing miniconda3. Using Linux, you can get it with:
 ```
 $ wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
@@ -112,3 +112,4 @@ print(SMILES)
 
 ## Research Group
 [![GitHub Logo](https://github.com/Kohulan/DECIMER-Image-to-SMILES/blob/master/assets/CheminfGit.png)](https://cheminf.uni-jena.de)
+
