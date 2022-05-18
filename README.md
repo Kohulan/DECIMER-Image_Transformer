@@ -62,14 +62,15 @@ $ pip install decimer
 ```
 ### How to use inside your own python script
 ```python
-from decimer import DECIMER
-model_name = "Isomeric"
-img_path = "caffeine.png"
-caffeine_smiles = DECIMER.predict_SMILES(img_path,model_name)
-print(caffeine_smiles)
+from decimer import predict_SMILES
+
+# Chemical depiction to SMILES translation
+image_path = "path/to/imagefile"
+SMILES = predict_SMILES(image_path)
+print(SMILES)
 ```
 
-### Install tensorflow==2.3.0 if you do not have an Nvidia GPU (On Mac OS)
+### Install tensorflow==2.7.1 if you do not have an Nvidia GPU (On Mac OS)
 
 ## License:
 - This project is licensed under the MIT License - see the [LICENSE](https://raw.githubusercontent.com/Kohulan/DECIMER-Image_Transformer/master/LICENSE?token=AHKLIF3EULMCUKCFUHIPBMDARSMDO) file for details
