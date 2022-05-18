@@ -50,7 +50,7 @@ $ sudo apt install unzip
 $ conda create --name DECIMER
 $ conda activate DECIMER
 $ conda install pip
-$ python -m pip install -U pip
+$ python3 -m pip install -U pip
 ```
 
 Install the latest code from GitHub with:
@@ -72,7 +72,7 @@ $ pip install decimer
 ```
 ### How to use inside your own python script
 ```python
-from decimer import predict_SMILES
+from DECIMER import predict_SMILES
 
 # Chemical depiction to SMILES translation
 image_path = "path/to/imagefile"
