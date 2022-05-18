@@ -43,6 +43,16 @@ $ bash Miniconda3-latest-Linux-x86_64.sh
 
 ### Python Package Installation
 
+#### Use a conda environment for clean installation
+```shell
+$ sudo apt update
+$ sudo apt install unzip
+$ conda create --name DECIMER
+$ conda activate DECIMER
+$ conda install pip
+$ python -m pip install -U pip
+```
+
 Install the latest code from GitHub with:
 ```shell
 $ pip install git+https://github.com/Kohulan/DECIMER-Image_Transformer.git
