@@ -1,13 +1,14 @@
 # Network configuration file
 import tensorflow as tf
 import efficientnet.tfkeras as efn
-import Efficient_Net_encoder
-import Transformer_decoder
+import DECIMER.Efficient_Net_encoder
+import DECIMER.Transformer_decoder
 from PIL import Image
 import numpy as np
 import io
 import cv2
 import pystow
+import subprocess
 
 TARGET_DTYPE = tf.float32
 

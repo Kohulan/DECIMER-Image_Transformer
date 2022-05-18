@@ -4,7 +4,7 @@ import logging
 import pickle
 import pystow
 import tensorflow as tf
-from .repack import config
+import DECIMER.config as config
 
 # Silence tensorflow model loading warnings.
 logging.getLogger("absl").setLevel("ERROR")
@@ -24,15 +24,15 @@ for gpu in gpus:
     tf.config.experimental.set_memory_growth(gpu, True)
 
 # Set path
-default_path = pystow.join("DECIMER-V2", "models")
+default_path = pystow.join("DECIMER-V2")
 
 # model download location
 model_url = "https://storage.googleapis.com/decimer_weights/decimer_v2/models.zip"
 model_path = str(default_path) + "/DECIMER_model/"
-
+print(model_path)
 # download models to a default location
 if not os.path.exists(model_path):
-    helper.download_trained_weights(model_url, default_path)
+    config.download_trained_weights(model_url, default_path)
 
 
 
