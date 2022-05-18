@@ -11,7 +11,6 @@ logging.getLogger("absl").setLevel("ERROR")
 
 # Silence tensorflow errors. optional not recommened if your model is not working properly.
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
-print(tf.__version__)
 
 # Set the absolute path
 HERE = os.path.dirname(os.path.abspath(__file__))
