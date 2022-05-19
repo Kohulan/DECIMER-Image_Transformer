@@ -12,10 +12,18 @@ DECIMER.decimer module
    :undoc-members:
    :show-inheritance:
 
-Module contents
+DECIMER.config module
 ---------------
 
-.. automodule:: DECIMER
+.. automodule:: DECIMER.config
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Repack_model module
+---------------
+
+.. automodule:: Repack_model
    :members:
    :undoc-members:
    :show-inheritance:
