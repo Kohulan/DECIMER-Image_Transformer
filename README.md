@@ -15,7 +15,7 @@ The DECIMER 2.0 [5] (Deep lEarning for Chemical ImagE Recognition) project [1] w
 
 The original implementation of DECIMER[1] using GPU takes a longer training time when we use a bigger dataset of more than 1 million images. To overcome these longer training times, many implement the training script to work on multiple GPUs. However, we tried to step up and implemented our code to use Google's Machine Learning hardware [TPU(Tensor Processing Unit)](https://en.wikipedia.org/wiki/Tensor_Processing_Unit) [2]. You can learn more about the hardware [here](https://en.wikipedia.org/wiki/Tensor_Processing_Unit).
 
-[![GitHub Logo](https://github.com/Kohulan/DECIMER-Image_Transformer/blob/DECIMER_V1.0/DECIMER_8K_Red_.png?raw=true)](https://github.com/Kohulan/DECIMER-Image_Transformer)
+[![GitHub Logo](https://github.com/Kohulan/DECIMER-Image_Transformer/blob/master/DECIMER_V2.png?raw=true)](https://github.com/Kohulan/DECIMER-Image_Transformer)
 
 ## Method and model changes
  - The DECIMER now uses EfficientNet-V2[3] for Image feature extraction and a transformer model [4] for predicting the SMILES.
