@@ -23,7 +23,7 @@ DECIMER.config module
 Repack_model module
 ---------------
 
-.. automodule:: Repack_model
+.. automodule:: DECIMER.Repack_model
    :members:
    :undoc-members:
    :show-inheritance:
