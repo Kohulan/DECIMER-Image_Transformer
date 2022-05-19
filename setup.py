@@ -19,7 +19,7 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     license="MIT",
     install_requires=[
-        "tensorflow>=2.7.1",
+        "tensorflow>=2.6.3",
         "opencv-python",
         "pystow",
         "efficientnet",
