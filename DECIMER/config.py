@@ -293,5 +293,5 @@ def download_trained_weights(model_url: str, model_path: str, verbose=1):
         print(model_path)
     if verbose > 0:
         print("... done downloading trained model!")
-        with zipfile.ZipFile("model_path.as_posix()","r") as zip_ref:
-            zip_ref.extractall("model_path.parent.as_posix()")
+        with zipfile.ZipFile(model_path.as_posix(),"r") as zip_ref:
+            zip_ref.extractall(model_path.parent.as_posix())
