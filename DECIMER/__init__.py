@@ -23,7 +23,7 @@ please raise a issue on the Github repository.
 
 """
 
-__version__ = "2.0.0"
+__version__ = "2.0.1"
 
 __all__ = [
     "DECIMER",
