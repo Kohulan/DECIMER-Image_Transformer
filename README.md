@@ -1,4 +1,4 @@
-# DECIMER 2.0: Deep Learning for Chemical Image Recognition using Efficient-Net V2 + Transformer
+# DECIMER Image Transformer V2: Deep Learning for Chemical Image Recognition using Efficient-Net V2 + Transformer
 
 [![License](https://img.shields.io/badge/License-MIT%202.0-blue.svg)](https://opensource.org/licenses/MIT)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-blue.svg)](https://GitHub.com/Kohulan/DECIMER-Image_Transformer/graphs/commit-activity)
