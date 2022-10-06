@@ -15,7 +15,7 @@ The DECIMER 1.0 [8] (Deep lEarning for Chemical ImagE Recognition) project [1] w
 
 The original implementation of DECIMER[1] using GPU takes a longer training time when we use a bigger dataset of more than 1 million images. To overcome these longer training times, many implement the training script to work on multiple GPUs. However, we tried to step up and implemented our code to use Google's Machine Learning hardware [TPU(Tensor Processing Unit)](https://en.wikipedia.org/wiki/Tensor_Processing_Unit) [2]. You can learn more about the hardware [here](https://en.wikipedia.org/wiki/Tensor_Processing_Unit).
 
-[![GitHub Logo](https://github.com/Kohulan/DECIMER-Image_Transformer/blob/master/DECIMER_8K_Red_.png?raw=true)](https://github.com/Kohulan/Smiles-TO-iUpac-Translator)
+[![GitHub Logo](https://github.com/Kohulan/DECIMER-Image_Transformer/blob/DECIMER_V1.0/DECIMER_8K_Red_.png?raw=true)](https://github.com/Kohulan/Smiles-TO-iUpac-Translator)
 
 ## Method and model changes
  - The DECIMER now uses EfficientNet-B3 [3],[4] for Image feature extraction and a transformer model [5] for predicting the SMILES.
@@ -138,7 +138,7 @@ The Python package automatically installs the `decimer` command-line tool.
 $ decimer --help  # Use for help
 ```
 
-- When you run the program for the first time, the models will get automatically downloaded(Note: total size is ~ 1GB). Also, you can manually download the models from [here](https://storage.googleapis.com/iupac_models_trained/DECIMER_transformer_models/DECIMER_trained_models_v1.0.zip)
+- When you run the program for the first time, the models will get automatically downloaded(Note: total size is ~ 1GB). Also, you can manually download the models from [here](https://zenodo.org/record/7152181/files/DECIMER_trained_models_v1.0.zip?download=1)
 e.g.: 
 ```shell
 $ decimer --model Canonical --image Sample_Images/caffeine.png       # Predict SMILES for a single image.
