@@ -28,9 +28,9 @@ The original implementation of DECIMER[1] using GPU takes a longer training time
  - We adopted the TensorFlow data pipeline to load all TFRecord files to the TPUs from Google Cloud Buckets.
  - We modified the main training code to work on TPUs using [TPU strategy](https://www.tensorflow.org/api_docs/python/tf/distribute/TPUStrategy) introduced in Tensorflow 2.0.
 
-### Documentation - Working
-
 ## How to use DECIMER?
+- Python package [Documentation](https://decimer-image-transformer.readthedocs.io/en/latest/?badge=latest)
+- Model library could be found here: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7152195.svg)](https://doi.org/10.5281/zenodo.7152195)
 
 ### We suggest using DECIMER inside a Conda environment, which makes the dependencies install easily.
 - Conda can be downloaded as part of the [Anaconda](https://www.anaconda.com/) or the [Miniconda](https://conda.io/en/latest/miniconda.html) platforms (Python 3.7). We recommend installing miniconda3. Using Linux, you can get it with:
