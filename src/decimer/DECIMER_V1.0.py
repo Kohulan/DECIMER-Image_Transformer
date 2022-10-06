@@ -107,7 +107,7 @@ def load_trained_model(model_id):
     # restoring the latest checkpoint in checkpoint_dir
     model_default_path = pystow.join("decimer", "Trained_Models")
     checkpoint_path = str(model_default_path) + "/" + model_id + "/"
-    model_url = "https://storage.googleapis.com/iupac_models_trained/DECIMER_transformer_models/DECIMER_trained_models_v1.0.zip"
+    model_url = "https://zenodo.org/record/7152181/files/DECIMER_trained_models_v1.0.zip?download=1"
     if not os.path.exists(checkpoint_path):
         helper.download_trained_weights(model_url, checkpoint_path)
 
