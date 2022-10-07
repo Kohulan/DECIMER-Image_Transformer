@@ -1,6 +1,6 @@
 # EfficientNet-V2 config
 import tensorflow as tf
-import DECIMER.automl
+import DECIMER.efficientnetv2
 
 BATCH_SIZE_DEBUG = 2
 MODEL = "efficientnetv2-b3"  # @param
@@ -31,7 +31,7 @@ def get_efficientnetv2_backbone(
             "\n...At this time we only want to use the raw "
             "(no pretraining), headless, features with no pooling ...\n"
         )
-    backbone = automl.efficientnetv2.effnetv2_model.EffNetV2Model(model_name=model_name)
+    backbone = efficientnetv2.effnetv2_model.EffNetV2Model(model_name=model_name)
     backbone(
         tf.ones((BATCH_SIZE_DEBUG, *input_shape)), training=False, features_only=True
     )
