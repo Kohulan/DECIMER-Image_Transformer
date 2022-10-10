@@ -11,7 +11,7 @@
 
 ## Abstract
 
-The DECIMER 2.0 [5] (Deep lEarning for Chemical ImagE Recognition) project [1] was launched to address the OCSR problem with the latest computational intelligence methods to provide an automated open-source software solution.
+The DECIMER 2.1 [5] (Deep lEarning for Chemical ImagE Recognition) project [1] was launched to address the OCSR problem with the latest computational intelligence methods to provide an automated open-source software solution.
 
 The original implementation of DECIMER[1] using GPU takes a longer training time when we use a bigger dataset of more than 1 million images. To overcome these longer training times, many implement the training script to work on multiple GPUs. However, we tried to step up and implemented our code to use Google's Machine Learning hardware [TPU(Tensor Processing Unit)](https://en.wikipedia.org/wiki/Tensor_Processing_Unit) [2]. You can learn more about the hardware [here](https://en.wikipedia.org/wiki/Tensor_Processing_Unit).
 
@@ -80,7 +80,7 @@ SMILES = predict_SMILES(image_path)
 print(SMILES)
 ```
 
-### Install tensorflow==2.7.1 if you do not have an Nvidia GPU (On Mac OS)
+### Install tensorflow >= 2.8.0 if you do not have an Nvidia GPU (On Mac OS)
 
 ## License:
 - This project is licensed under the MIT License - see the [LICENSE](https://raw.githubusercontent.com/Kohulan/DECIMER-Image_Transformer/master/LICENSE?token=AHKLIF3EULMCUKCFUHIPBMDARSMDO) file for details
