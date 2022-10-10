@@ -27,7 +27,7 @@ for gpu in gpus:
 default_path = pystow.join("DECIMER-V2")
 
 # model download location
-model_url = "https://zenodo.org/record/7152195/files/models.zip"
+model_url = "https://zenodo.org/record/7180845/files/models.zip"
 model_path = str(default_path) + "/DECIMER_model/"
 
 # download models to a default location
