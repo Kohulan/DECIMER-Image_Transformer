@@ -1,4 +1,4 @@
-tensorflow>=2.6.3
+tensorflow>=2.8.0
 opencv-python
 pystow
 efficientnet

@@ -5,6 +5,7 @@ import pickle
 import pystow
 import tensorflow as tf
 import DECIMER.config as config
+import DECIMER.utils as utils
 
 # Silence tensorflow model loading warnings.
 logging.getLogger("absl").setLevel("ERROR")
@@ -26,7 +27,7 @@ for gpu in gpus:
 default_path = pystow.join("DECIMER-V2")
 
 # model download location
-model_url = "https://zenodo.org/record/7152195/files/models.zip?download=1"
+model_url = "https://zenodo.org/record/7152195/files/models.zip"
 model_path = str(default_path) + "/DECIMER_model/"
 
 # download models to a default location
@@ -34,12 +35,11 @@ if not os.path.exists(model_path):
     config.download_trained_weights(model_url, default_path)
 
 
-
-
 # Load important pickle files which consists the tokenizers and the maxlength setting
 
 tokenizer = pickle.load(
-    open(default_path.as_posix()+"/DECIMER_model/assets/tokenizer_SMILES.pkl",
+    open(
+        default_path.as_posix() + "/DECIMER_model/assets/tokenizer_SMILES.pkl",
         "rb",
     )
 )
@@ -86,7 +86,7 @@ def detokenize_output(predicted_array: int) -> str:
 
 
 # Load DECIMER model_packed
-DECIMER_V2 = tf.saved_model.load(default_path.as_posix()+"/DECIMER_model/")
+DECIMER_V2 = tf.saved_model.load(default_path.as_posix() + "/DECIMER_model/")
 
 
 def predict_SMILES(image_path: str) -> str:
@@ -102,7 +102,7 @@ def predict_SMILES(image_path: str) -> str:
     """
     chemical_structure = config.decode_image(image_path)
     predicted_tokens = DECIMER_V2(chemical_structure)
-    predicted_SMILES = detokenize_output(predicted_tokens)
+    predicted_SMILES = utils.decoder(detokenize_output(predicted_tokens))
 
     return predicted_SMILES
 
