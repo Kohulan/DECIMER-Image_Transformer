@@ -8,6 +8,8 @@ import numpy as np
 import io
 import cv2
 import pystow
+import pathlib
+import pyheif
 import zipfile
 
 TARGET_DTYPE = tf.float32
@@ -66,6 +68,26 @@ def PIL_im_to_BytesIO(im):
     return output
 
 
+def HEIF_to_pillow(image_path: str):
+    """
+    Converts Apple's HEIF format to useful pillow object
+    ___
+    image_path (str): path of input image
+    ___
+    Output: PIL.Image
+    """
+    heif_file = pyheif.read(image_path)
+    pil_im = Image.frombytes(
+        heif_file.mode,
+        heif_file.size,
+        heif_file.data,
+        "raw",
+        heif_file.mode,
+        heif_file.stride,
+    )
+    return pil_im.convert("RGBA")
+
+
 def remove_transparent(image_path: str):
     """
     Removes the transparent layer from a PNG image with an alpha channel
@@ -74,9 +96,12 @@ def remove_transparent(image_path: str):
     ___
     Output: PIL.Image
     """
-    png = Image.open(image_path).convert("RGBA")
-    background = Image.new("RGBA", png.size, (255, 255, 255))
+    if pathlib.Path(image_path).suffix == ".HEIC":
+        png = HEIF_to_pillow(image_path)
+    else:
+        png = Image.open(image_path).convert("RGBA")
 
+    background = Image.new("RGBA", png.size, (255, 255, 255))
     alpha_composite = Image.alpha_composite(background, png)
 
     return alpha_composite
@@ -225,7 +250,7 @@ class CustomSchedule(tf.keras.optimizers.schedules.LearningRateSchedule):
 
     def __call__(self, step):
         arg1 = tf.math.rsqrt(step)
-        arg2 = step * (self.warmup_steps ** -1.5)
+        arg2 = step * (self.warmup_steps**-1.5)
 
         return tf.math.rsqrt(self.d_model) * tf.math.minimum(arg1, arg2)
 
@@ -293,5 +318,5 @@ def download_trained_weights(model_url: str, model_path: str, verbose=1):
         print(model_path)
     if verbose > 0:
         print("... done downloading trained model!")
-        with zipfile.ZipFile(model_path.as_posix(),"r") as zip_ref:
+        with zipfile.ZipFile(model_path.as_posix(), "r") as zip_ref:
             zip_ref.extractall(model_path.parent.as_posix())
