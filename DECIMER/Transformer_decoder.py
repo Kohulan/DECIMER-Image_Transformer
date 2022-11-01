@@ -319,6 +319,7 @@ class TransformerEncoder(tf.keras.layers.Layer):
 
         self.d_model = d_model
         self.num_layers = num_layers
+        self.embedding = tf.keras.layers.Dense(self.d_model, activation="relu")
         self.pos_encoding = positional_encoding_1d(
             maximum_position_encoding, self.d_model
         )
@@ -331,6 +332,7 @@ class TransformerEncoder(tf.keras.layers.Layer):
     def call(self, x, training, mask=None):
         # adding embedding and position encoding.
         #   – (batch_size, input_seq_len, d_model)
+        x = self.embedding(x)
         x += self.pos_encoding
         x = self.dropout(x, training=training)
 
