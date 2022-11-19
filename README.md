@@ -99,7 +99,7 @@ print(SMILES)
 
 ## Acknowledgement
 - We thank [Charles Tapley Hoyt](https://github.com/cthoyt) for his valuable advice and help in improving the DECIMER repository.
-- We are grateful for the company @Google making free computing time on their TensorFlow Research Cloud infrastructure available to us. 
+- Research supported with Cloud TPUs from Google's TPU Research Cloud (TRC) 
 
 ## Author: [Kohulan](https://kohulanr.com)
 
