@@ -15,6 +15,23 @@ import zipfile
 TARGET_DTYPE = tf.float32
 
 
+def resize_byratio(image):
+    """
+    This function takes a Pillow Image object and will resize the image by 512 x 512
+    To upscale or to downscale the image LANCZOS resampling method is used.
+    with the new pillow version the antialias is turned on when using LANCZOS.
+    ___
+    im: PIL.Image
+    ___
+    output: PIL.Image
+    """
+    maxwidth = maxheight = 512
+    ratio = maxwidth / max(image.width, image.height)
+    new_size = int((float(image.width) * ratio)), int((float(image.height) * ratio))
+    resized_image = image.resize(new_size, resample=Image.LANCZOS)
+    return resized_image
+
+
 def central_square_image(im):
     """
     This function takes a Pillow Image object and will add white padding
@@ -28,8 +45,8 @@ def central_square_image(im):
     max_wh = int(1.2 * max(im.size))
     # If the new image is smaller than 299x299, then let's paste it into an empty image
     # of that size instead of distorting it later while resizing.
-    if max_wh < 299:
-        max_wh = 299
+    if max_wh < 512:
+        max_wh = 512
     new_im = Image.new(im.mode, (max_wh, max_wh), "white")
     paste_pos = (
         int((new_im.size[0] - im.size[0]) / 2),
@@ -102,6 +119,7 @@ def remove_transparent(image_path: str):
         png = Image.open(image_path).convert("RGBA")
 
     background = Image.new("RGBA", png.size, (255, 255, 255))
+
     alpha_composite = Image.alpha_composite(background, png)
 
     return alpha_composite
@@ -118,16 +136,64 @@ def get_bnw_image(image):
 
     im_np = np.asarray(image)
     grayscale = cv2.cvtColor(im_np, cv2.COLOR_BGR2GRAY)
-    (thresh, im_bw) = cv2.threshold(
-        grayscale, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU
+    # (thresh, im_bw) = cv2.threshold(grayscale, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
+    im_pil = Image.fromarray(grayscale)
+    enhancer = ImageEnhance.Contrast(im_pil)
+    im_output = enhancer.enhance(1.2)
+    return im_output
+
+
+def increase_contrast(image):
+    """
+    This function increases the contrast of an image input.
+    ___
+    image: PIL.Image
+    ___
+    Output: PIL.Image
+    """
+
+    # Get brightness range
+    min = np.min(image)
+    max = np.max(image)
+
+    # Use LUT to convert image values
+    LUT = np.zeros(256, dtype=np.uint8)
+    LUT[min : max + 1] = np.linspace(
+        start=0, stop=255, num=(max - min) + 1, endpoint=True, dtype=np.uint8
     )
-    im_pil = Image.fromarray(im_bw)
-    return im_pil
+
+    # Apply LUT and return image
+    return Image.fromarray(LUT[image])
+
+
+def get_resize(image):
+    """
+    This function used to decide how to resize a given image without losing much information.
+    ___
+    image: PIL.Image
+    ___
+    Output: PIL.Image
+    """
+
+    width, height = image.size
+
+    # Checks the image size and resizes using the LANCOS image resampling
+    if (width == height) and (width < 512):
+        image = image.resize((512, 512), resample=Image.LANCZOS)
+
+    elif width >= 512 or height >= 512:
+        return image
+
+    else:
+        image = resize_byratio(image)
+
+    return image
 
 
 def decode_image(image_path: str):
     """
-    Loads and preprocesses an image
+    Loads an image and preprocesses the input image in several steps to get the image ready for DECIMER input.
+
     Args:
         image_path (str): path of input image
 
@@ -135,12 +201,14 @@ def decode_image(image_path: str):
         Processed image
     """
     img = remove_transparent(image_path)
+    img = increase_contrast(img)
     img = get_bnw_image(img)
+    img = get_resize(img)
     img = delete_empty_borders(img)
     img = central_square_image(img)
     img = PIL_im_to_BytesIO(img)
     img = tf.image.decode_png(img.getvalue(), channels=3)
-    img = tf.image.resize(img, (299, 299))
+    img = tf.image.resize(img, (512, 512), method="gaussian", antialias=True)
     img = efn.preprocess_input(img)
     return img
 
