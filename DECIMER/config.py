@@ -3,7 +3,7 @@ import tensorflow as tf
 import efficientnet.tfkeras as efn
 import DECIMER.Efficient_Net_encoder
 import DECIMER.Transformer_decoder
-from PIL import Image
+from PIL import Image, ImageEnhance
 import numpy as np
 import io
 import cv2
