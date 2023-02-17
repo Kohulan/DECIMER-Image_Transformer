@@ -25,7 +25,7 @@ def resize_byratio(image):
     ___
     output: PIL.Image
     """
-    maxwidth = maxheight = 512
+    maxwidth = 512
     ratio = maxwidth / max(image.width, image.height)
     new_size = int((float(image.width) * ratio)), int((float(image.height) * ratio))
     resized_image = image.resize(new_size, resample=Image.LANCZOS)
