@@ -4,6 +4,7 @@
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-blue.svg)](https://GitHub.com/Kohulan/DECIMER-Image_Transformer/graphs/commit-activity)
 [![GitHub issues](https://img.shields.io/github/issues/Kohulan/DECIMER-Image_Transformer.svg)](https://GitHub.com/Kohulan/DECIMER-Image_Transformer/issues/)
 [![GitHub contributors](https://img.shields.io/github/contributors/Kohulan/DECIMER-Image_Transformer.svg)](https://GitHub.com/Kohulan/DECIMER-Image_Transformer/graphs/contributors/)
+[![tensorflow](https://img.shields.io/badge/TensorFlow-2.10.1-FF6F00.svg?style=flat&logo=tensorflow)](https://www.tensorflow.org)
 [![DOI](https://zenodo.org/badge/293572361.svg)](https://zenodo.org/badge/latestdoi/293572361)
 [![Documentation Status](https://readthedocs.org/projects/decimer-image-transformer/badge/?version=latest)](https://decimer-image-transformer.readthedocs.io/en/latest/?badge=latest)
 [![GitHub release](https://img.shields.io/github/release/Kohulan/DECIMER-Image_Transformer.svg)](https://GitHub.com/Kohulan/DECIMER-Image_Transformer/releases/)
