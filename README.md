@@ -1,4 +1,4 @@
-# DECIMER Image Transformer V2: Deep Learning for Chemical Image Recognition using Efficient-Net V2 + Transformer
+# ***DECIMER Image Transformer***: Deep Learning for Chemical Image Recognition using Efficient-Net V2 + Transformer
 
 [![License](https://img.shields.io/badge/License-MIT%202.0-blue.svg)](https://opensource.org/licenses/MIT)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-blue.svg)](https://GitHub.com/Kohulan/DECIMER-Image_Transformer/graphs/commit-activity)
@@ -30,7 +30,7 @@ The original implementation of DECIMER[1] using GPU takes a longer training time
 
 ## How to use DECIMER?
 - Python package [Documentation](https://decimer-image-transformer.readthedocs.io/en/latest/?badge=latest)
-- Model library could be found here: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7180845.svg)](https://doi.org/10.5281/zenodo.7180845)
+- Model library could be found here: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7624994.svg)](https://zenodo.org/record/7624994)
 
 ### We suggest using DECIMER inside a Conda environment, which makes the dependencies install easily.
 - Conda can be downloaded as part of the [Anaconda](https://www.anaconda.com/) or the [Miniconda](https://conda.io/en/latest/miniconda.html) platforms (Python 3.7). We recommend installing miniconda3. Using Linux, you can get it with:
