@@ -1,6 +1,6 @@
 # EfficientNet-V2 config
 import tensorflow as tf
-import DECIMER.efficientnetv2
+import DECIMER.efficientnetv2 as efficientnetv2
 
 BATCH_SIZE_DEBUG = 2
 MODEL = "efficientnetv2-b3"  # @param
