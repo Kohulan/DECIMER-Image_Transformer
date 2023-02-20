@@ -48,7 +48,7 @@ $ bash Miniconda3-latest-Linux-x86_64.sh
 ```shell
 $ sudo apt update
 $ sudo apt install unzip
-$ conda create --name DECIMER
+$ conda create --name DECIMER python=3.10.0
 $ conda activate DECIMER
 $ conda install pip
 $ python3 -m pip install -U pip
@@ -81,7 +81,7 @@ SMILES = predict_SMILES(image_path)
 print(SMILES)
 ```
 
-### Install tensorflow >= 2.8.0 if you do not have an Nvidia GPU (On Mac OS)
+### Install tensorflow == 2.10.1 if you do not have an Nvidia GPU (On Mac OS)
 
 ## License:
 - This project is licensed under the MIT License - see the [LICENSE](https://raw.githubusercontent.com/Kohulan/DECIMER-Image_Transformer/master/LICENSE?token=AHKLIF3EULMCUKCFUHIPBMDARSMDO) file for details
