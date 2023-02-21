@@ -102,6 +102,10 @@ print(SMILES)
 - We thank [Charles Tapley Hoyt](https://github.com/cthoyt) for his valuable advice and help in improving the DECIMER repository.
 - Research supported with Cloud TPUs from Google's TPU Research Cloud (TRC) 
 
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/30716951/220350828-913e6645-6a0a-403c-bcb8-160d061d4606.png" width="500" class="center">
+</p>
+
 ## Author: [Kohulan](https://kohulanr.com)
 
 [![GitHub Logo](https://github.com/Kohulan/DECIMER-Image-to-SMILES/raw/master/assets/DECIMER.gif)](https://decimer.ai)
