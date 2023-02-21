@@ -12,7 +12,7 @@
 
 ## Abstract
 
-The DECIMER 2.1 [5] (Deep lEarning for Chemical ImagE Recognition) project [1] was launched to address the OCSR problem with the latest computational intelligence methods to provide an automated open-source software solution.
+The DECIMER 2.2 [5] (Deep lEarning for Chemical ImagE Recognition) project [1] was launched to address the OCSR problem with the latest computational intelligence methods to provide an automated open-source software solution.
 
 The original implementation of DECIMER[1] using GPU takes a longer training time when we use a bigger dataset of more than 1 million images. To overcome these longer training times, many implement the training script to work on multiple GPUs. However, we tried to step up and implemented our code to use Google's Machine Learning hardware [TPU(Tensor Processing Unit)](https://en.wikipedia.org/wiki/Tensor_Processing_Unit) [2]. You can learn more about the hardware [here](https://en.wikipedia.org/wiki/Tensor_Processing_Unit).
 
@@ -87,7 +87,7 @@ print(SMILES)
 - This project is licensed under the MIT License - see the [LICENSE](https://raw.githubusercontent.com/Kohulan/DECIMER-Image_Transformer/master/LICENSE?token=AHKLIF3EULMCUKCFUHIPBMDARSMDO) file for details
 
 ## Citation
-
+- Rajan K, Brinkhaus HO, Agea MI, Zielesny A, Steinbeck C (2023) DECIMER.ai - An open platform for automated optical chemical structure identification, segmentation and recognition in scientific publications. ChemRxiv. doi: https://10.26434/chemrxiv-2023-xhcx9
 - Rajan, K., Zielesny, A. & Steinbeck, C. DECIMER 1.0: deep learning for chemical image recognition using transformers. J Cheminform 13, 61 (2021). https://doi.org/10.1186/s13321-021-00538-8
 
 ## References
