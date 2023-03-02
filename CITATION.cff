@@ -11,8 +11,8 @@ authors:
     given-names: "Christoph"
     orcid: "https://orcid.org/0000-0001-6966-0814"  
 title: "DECIMER-V2"
-version: 2.0.0
-doi: 10.5281/??
+version: 2.2.0
+doi: 10.5281/zenodo.7655952
 date-released: 2022.05.18
 url: "https://github.com/Kohulan/DECIMER-Image_Transformer-2"
 license: MIT
