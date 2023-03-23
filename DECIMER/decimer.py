@@ -3,6 +3,7 @@ import sys
 import logging
 import pickle
 import pystow
+import shutil
 import tensorflow as tf
 import DECIMER.config as config
 import DECIMER.utils as utils
