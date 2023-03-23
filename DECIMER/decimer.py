@@ -31,7 +31,8 @@ model_url = "https://zenodo.org/record/7624994/files/models.zip"
 model_path = str(default_path) + "/DECIMER_model/"
 
 # download models to a default location
-if not os.path.exists(model_path):
+if os.path.exists(model_path):
+    shutil.rmtree(model_path)
     config.download_trained_weights(model_url, default_path)
 
 
