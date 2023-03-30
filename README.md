@@ -63,7 +63,7 @@ Install in development mode with:
 ```shell
 $ git clone https://github.com/Kohulan/DECIMER-Image_Transformer.git decimer
 $ cd decimer/
-$ pip install -e.
+$ pip install -e .
 ```
 - Where `-e` means "editable" mode.
 
@@ -71,6 +71,23 @@ Install from PyPi
 ```shell
 $ pip install decimer
 ```
+
+#### HEIF support
+
+.heic images are supported by the pyheif package, but this is difficult to install on windows, so is not installed by default. To install with heif support:
+
+```shell
+$ pip install -e .[heif]
+```
+
+for an editable install, or
+
+```shell
+$ pip install decimer[heif]
+```
+
+to install from PyPi.
+
 ### How to use inside your own python script
 ```python
 from DECIMER import predict_SMILES

@@ -22,9 +22,11 @@ setuptools.setup(
         "tensorflow==2.10.1",
         "opencv-python",
         "pystow",
-        "pyheif",
         "efficientnet",
     ],
+    install_extras={
+        "heif": ["pyheif"],
+    },
     package_data={"DECIMER": ["repack/*.*", "efficientnetv2/*.*", "Utils/*.*"]},
     classifiers=[
         "Programming Language :: Python :: 3",

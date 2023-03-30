@@ -9,8 +9,8 @@ import io
 import cv2
 import pystow
 import pathlib
-import pyheif
 import zipfile
+
 
 TARGET_DTYPE = tf.float32
 
@@ -93,6 +93,9 @@ def HEIF_to_pillow(image_path: str):
     ___
     Output: PIL.Image
     """
+    
+    import pyheif
+
     heif_file = pyheif.read(image_path)
     pil_im = Image.frombytes(
         heif_file.mode,
