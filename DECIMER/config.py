@@ -4,12 +4,12 @@ import efficientnet.tfkeras as efn
 import DECIMER.Efficient_Net_encoder
 import DECIMER.Transformer_decoder
 from PIL import Image, ImageEnhance
+from pillow_heif import register_heif_opener
 import numpy as np
 import io
 import cv2
 import pystow
 import pathlib
-import pyheif
 import zipfile
 
 TARGET_DTYPE = tf.float32
@@ -93,16 +93,10 @@ def HEIF_to_pillow(image_path: str):
     ___
     Output: PIL.Image
     """
-    heif_file = pyheif.read(image_path)
-    pil_im = Image.frombytes(
-        heif_file.mode,
-        heif_file.size,
-        heif_file.data,
-        "raw",
-        heif_file.mode,
-        heif_file.stride,
-    )
-    return pil_im.convert("RGBA")
+    register_heif_opener()
+
+    heif_file = Image.open(image_path).convert("RGBA")
+    return heif_file
 
 
 def remove_transparent(image_path: str):
