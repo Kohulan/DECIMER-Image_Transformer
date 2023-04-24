@@ -1,8 +1,7 @@
 import sys
 import os
 
-sys.path.append("../DECIMER_V2/src/")
-from Predictor_EfficientNet2 import predict_SMILES
+from DECIMER import predict_SMILES
 
 
 def main():
