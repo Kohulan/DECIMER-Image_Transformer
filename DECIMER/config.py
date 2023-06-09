@@ -9,7 +9,6 @@ import numpy as np
 import io
 import cv2
 import pystow
-import pathlib
 import zipfile
 
 TARGET_DTYPE = tf.float32
@@ -107,10 +106,14 @@ def remove_transparent(image_path: str):
     ___
     Output: PIL.Image
     """
-    if pathlib.Path(image_path).suffix == ".HEIC":
-        png = HEIF_to_pillow(image_path)
-    else:
+    try:
         png = Image.open(image_path).convert("RGBA")
+    except Exception as e:
+        if type(e).__name__ == "UnidentifiedImageError":
+            png = HEIF_to_pillow(image_path)
+        else:
+            print(e)
+            raise Exception
 
     background = Image.new("RGBA", png.size, (255, 255, 255))
 
