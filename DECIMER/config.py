@@ -112,7 +112,7 @@ def remove_transparent(image_path: str):
         if type(e).__name__ == "UnidentifiedImageError":
             png = HEIF_to_pillow(image_path)
         else:
-            print("Error occured check image!")
+            print(e)
 
     background = Image.new("RGBA", png.size, (255, 255, 255))
 
