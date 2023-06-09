@@ -135,7 +135,7 @@ def get_bnw_image(image):
     # (thresh, im_bw) = cv2.threshold(grayscale, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
     im_pil = Image.fromarray(grayscale)
     enhancer = ImageEnhance.Contrast(im_pil)
-    im_output = enhancer.enhance(1.4)
+    im_output = enhancer.enhance(1.2)
     return im_output
 
 
