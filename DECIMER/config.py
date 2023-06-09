@@ -113,6 +113,7 @@ def remove_transparent(image_path: str):
             png = HEIF_to_pillow(image_path)
         else:
             print(e)
+            raise Exception
 
     background = Image.new("RGBA", png.size, (255, 255, 255))
 
