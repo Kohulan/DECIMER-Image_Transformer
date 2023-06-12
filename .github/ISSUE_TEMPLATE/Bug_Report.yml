@@ -72,15 +72,11 @@ body:
       value: A bug happened!
     validations:
       required: true
-  - type: image
+  - type: textarea
     id: screenshot
     attributes:
-      label: >-
-        Which images caused the issue? (This is mandatory for images related
-        issues)
-      description: >
-        Please ensure that an image depicting the cause of the bug or the
-        inaccuracy of the prediction is included.
+      label: Which images caused the issue? (This is mandatory for images related issues)
+      description: Please ensure that an image depicting the cause of the bug or the inaccuracy of the prediction is included.
       placeholder: Attach the image
     validations:
       required: false
