@@ -1,0 +1,117 @@
+name: DECIMER issue template
+description: >-
+  To report any DECIMER-Image_Transformer related issue please use this
+  template. Please report dta/security related issue by directly senidng us an
+  email.
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+  - type: markdown
+    attributes:
+      value: >
+        Please make sure that this is a bug. As per our [GitHub
+        Policy](https://github.com/Kohulan/DECIMER-Image_Transformer/blob/master/ISSUES.md).    
+  - type: dropdown
+    id: issue-type
+    attributes:
+      label: Issue Type
+      description: What type of issue would you like to report?
+      multiple: false
+      options:
+        - Bug
+        - Build/Install
+        - Performance
+        - Support
+        - Feature Request
+        - Documentation Feature Request
+        - Questions
+    validations:
+      required: true
+  - type: dropdown
+    id: source
+    attributes:
+      label: Source
+      description: DECIMER Image Transformer installed from
+      options:
+        - GitHub (source)
+        - PyPi
+    validations:
+      required: true
+  - type: input
+    id: decimerversion
+    attributes:
+      label: DECIMER Image Transformer Version
+      description: null
+      placeholder: 'ex,. 2.0.0'
+    validations:
+      required: true
+  - type: input
+    id: OS
+    attributes:
+      label: OS Platform and Distribution
+      description: null
+      placeholder: 'e.g., Linux Ubuntu 16.04'
+    validations:
+      required: false
+  - type: input
+    id: Python
+    attributes:
+      label: Python version
+      description: null
+      placeholder: 'e.g., 3.9'
+    validations:
+      required: false
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: Current Behaviour?
+      description: 'Also tell us, what did you expect to happen?'
+      placeholder: Tell us what you see!
+      value: A bug happened!
+    validations:
+      required: true
+  - type: image
+    id: screenshot
+    attributes:
+      label: >-
+        Which images caused the issue? (This is mandatory for images related
+        issues)
+      description: >
+        Please ensure that an image depicting the cause of the bug or the
+        inaccuracy of the prediction is included.
+      placeholder: Attach the image
+    validations:
+      required: false
+  - type: textarea
+    id: code-to-reproduce
+    attributes:
+      label: Standalone code to reproduce the issue
+      description: >-
+        Provide a reproducible test case that is the bare minimum necessary to
+        generate the problem. If possible, please share a link to
+        Colab/Jupyter/any notebook.
+      placeholder: Tell us what you see!
+      value: null
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: >-
+        Please copy and paste any relevant log output. This will be
+        automatically formatted into code, so no need for backticks.
+      render: shell
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: >-
+        By submitting this issue, you agree to follow our [Code of
+        Conduct](https://github.com/Kohulan/DECIMER-Image_Transformer/blob/master/CODE_OF_CONDUCT.md)
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true
