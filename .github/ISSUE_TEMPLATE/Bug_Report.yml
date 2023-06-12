@@ -1,7 +1,7 @@
 name: DECIMER issue template
 description: >-
-  To report any DECIMER-Image_Transformer related issue please use this
-  template. Please report dta/security related issue by directly senidng us an
+  To report any DECIMER Image Transformer related issue please use this
+  template. Please report data/security related issue by directly sending us an
   email.
 body:
   - type: markdown
