@@ -20,7 +20,7 @@ setuptools.setup(
     author_email="kohulan.rajan@uni-jena.de",
     maintainer="Kohulan Rajan, Otto Brinkhaus ",
     maintainer_email="kohulan.rajan@uni-jena.de, otto.brinkhaus@uni-jena.de",
-    description="DECIMER 2.0: Deep Learning for Chemical Image Recognition using Efficient-Net V2 + Transformer",
+    description="DECIMER 2.3: Deep Learning for Chemical Image Recognition using Efficient-Net V2 + Transformer",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/Kohulan/DECIMER-Image_Transformer",
