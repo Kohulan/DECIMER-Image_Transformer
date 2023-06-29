@@ -380,5 +380,5 @@ def download_trained_weights(model_url: str, model_path: str, verbose=1):
             zip_ref.extractall(model_path.parent.as_posix())
         # Delete zipfile after downloading
         if Path(model_path).exists():
-            path.unlink()
+            Path(model_path).unlink()
         
