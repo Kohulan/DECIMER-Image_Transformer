@@ -5,11 +5,13 @@ import DECIMER.Efficient_Net_encoder
 import DECIMER.Transformer_decoder
 from PIL import Image, ImageEnhance
 from pillow_heif import register_heif_opener
+from pathlib import Path
 import numpy as np
 import io
 import cv2
 import pystow
 import zipfile
+
 
 TARGET_DTYPE = tf.float32
 
@@ -376,3 +378,7 @@ def download_trained_weights(model_url: str, model_path: str, verbose=1):
         print("... done downloading trained model!")
         with zipfile.ZipFile(model_path.as_posix(), "r") as zip_ref:
             zip_ref.extractall(model_path.parent.as_posix())
+        # Delete zipfile after downloading
+        if Path(model_path).exists():
+            path.unlink()
+        
