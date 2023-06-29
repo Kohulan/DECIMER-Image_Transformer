@@ -19,10 +19,8 @@ def resize_byratio(image):
     This function takes a Pillow Image object and will resize the image by 512 x 512
     To upscale or to downscale the image LANCZOS resampling method is used.
     with the new pillow version the antialias is turned on when using LANCZOS.
-    ___
-    im: PIL.Image
-    ___
-    output: PIL.Image
+    Args: PIL.Image
+    Returns: PIL.Image
     """
     maxwidth = 512
     ratio = maxwidth / max(image.width, image.height)
@@ -31,66 +29,58 @@ def resize_byratio(image):
     return resized_image
 
 
-def central_square_image(im):
+def central_square_image(image):
     """
     This function takes a Pillow Image object and will add white padding
     so that the image has a square shape with the width/height of the longest side
     of the original image.
-    ___
-    im: PIL.Image
-    ___
-    output: PIL.Image
+    Args: PIL.Image
+    Returns: PIL.Image
     """
-    max_wh = int(1.2 * max(im.size))
+    max_wh = int(1.2 * max(image.size))
     # If the new image is smaller than 299x299, then let's paste it into an empty image
     # of that size instead of distorting it later while resizing.
     if max_wh < 512:
         max_wh = 512
-    new_im = Image.new(im.mode, (max_wh, max_wh), "white")
+    new_im = Image.new(image.mode, (max_wh, max_wh), "white")
     paste_pos = (
-        int((new_im.size[0] - im.size[0]) / 2),
-        int((new_im.size[1] - im.size[1]) / 2),
+        int((new_im.size[0] - image.size[0]) / 2),
+        int((new_im.size[1] - image.size[1]) / 2),
     )
-    new_im.paste(im, paste_pos)
+    new_im.paste(image, paste_pos)
     return new_im
 
 
-def delete_empty_borders(im):
+def delete_empty_borders(image):
     """This function takes a Pillow Image object, converts it to grayscale and
     deletes white space at the borders.
-    ___
-    im: PIL.Image
-    ___
-    output: PIL.Image
+    Args: PIL.Image
+    Returns: PIL.Image
     """
-    im = np.asarray(im.convert("L"))
-    mask = im > 200
+    image = np.asarray(image.convert("L"))
+    mask = image > 200
     rows = np.flatnonzero((~mask).sum(axis=1))
     cols = np.flatnonzero((~mask).sum(axis=0))
-    crop = im[rows.min() : rows.max() + 1, cols.min() : cols.max() + 1]
+    crop = image[rows.min() : rows.max() + 1, cols.min() : cols.max() + 1]
     return Image.fromarray(crop)
 
 
-def PIL_im_to_BytesIO(im):
+def PIL_im_to_BytesIO(image):
     """
     Convert pillow image to io.BytesIO object
-    ___
-    im: PIL.Image
-    ___
-    Output: io.BytesIO object with the image data
+    Args: PIL.Image
+    Returns: io.BytesIO object with the image data
     """
     output = io.BytesIO()
-    im.save(output, format="PNG")
+    image.save(output, format="PNG")
     return output
 
 
 def HEIF_to_pillow(image_path: str):
     """
     Converts Apple's HEIF format to useful pillow object
-    ___
-    image_path (str): path of input image
-    ___
-    Output: PIL.Image
+    Returns: image_path (str): path of input image
+    Returns: PIL.Image
     """
     register_heif_opener()
 
@@ -101,10 +91,8 @@ def HEIF_to_pillow(image_path: str):
 def remove_transparent(image_path: str):
     """
     Removes the transparent layer from a PNG image with an alpha channel
-    ___
-    image_path (str): path of input image
-    ___
-    Output: PIL.Image
+    Args: image_path (str): path of input image
+    Returns: PIL.Image
     """
     try:
         png = Image.open(image_path).convert("RGBA")
@@ -125,10 +113,8 @@ def remove_transparent(image_path: str):
 def get_bnw_image(image):
     """
     converts images to black and white
-    ___
-    image: PIL.Image
-    ___
-    Output: PIL.Image
+    Args: PIL.Image
+    Returns: PIL.Image
     """
 
     im_np = np.asarray(image)
@@ -136,17 +122,15 @@ def get_bnw_image(image):
     # (thresh, im_bw) = cv2.threshold(grayscale, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
     im_pil = Image.fromarray(grayscale)
     enhancer = ImageEnhance.Contrast(im_pil)
-    im_output = enhancer.enhance(1.2)
+    im_output = enhancer.enhance(1.8)
     return im_output
 
 
 def increase_contrast(image):
     """
     This function increases the contrast of an image input.
-    ___
-    image: PIL.Image
-    ___
-    Output: PIL.Image
+    Args: PIL.Image
+    Returns: PIL.Image
     """
 
     # Get brightness range
@@ -166,24 +150,30 @@ def increase_contrast(image):
 def get_resize(image):
     """
     This function used to decide how to resize a given image without losing much information.
-    ___
-    image: PIL.Image
-    ___
-    Output: PIL.Image
+    Args: PIL.Image
+    Returns: PIL.Image
     """
-
     width, height = image.size
 
     # Checks the image size and resizes using the LANCOS image resampling
     if (width == height) and (width < 512):
         image = image.resize((512, 512), resample=Image.LANCZOS)
-
     elif width >= 512 or height >= 512:
         return image
-
     else:
         image = resize_byratio(image)
 
+    return image
+
+
+def increase_brightness(image):
+    """
+    This function adjusts the brightness of the given image.
+    Args: PIL.Image
+    Returns: PIL.Image
+    """
+    enhancer = ImageEnhance.Brightness(image)
+    image = enhancer.enhance(1.6)
     return image
 
 
@@ -203,6 +193,7 @@ def decode_image(image_path: str):
     img = get_resize(img)
     img = delete_empty_borders(img)
     img = central_square_image(img)
+    img = increase_brightness(img)
     img = PIL_im_to_BytesIO(img)
     img = tf.image.decode_png(img.getvalue(), channels=3)
     img = tf.image.resize(img, (512, 512), method="gaussian", antialias=True)
