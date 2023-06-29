@@ -105,12 +105,7 @@ def predict_SMILES(image_path: str) -> str:
     """
     chemical_structure = config.decode_image(image_path)
     predicted_tokens = DECIMER_V2(chemical_structure)
-    prediction = utils.decoder(detokenize_output(predicted_tokens))
-    prediction = prediction.replace("2H", "H").replace("3H", "H")
-    if "." in prediction and len(prediction.split(".")) > 2:
-        predicted_SMILES = prediction.split(".")[0]
-    else:
-        predicted_SMILES = prediction
+    predicted_SMILES = utils.decoder(detokenize_output(predicted_tokens))
 
     return predicted_SMILES
 
