@@ -43,7 +43,8 @@ def distort_image(input_image_path: str, output_image_path: str) -> None:
 def main():
     """This script takes an input directory with images of chemical structure depictions, applies a random
     rotation (-5° or +5°) as well as shearing (angle drawn from [-0.1, 0.1]) to every input image. These
-    distortions are supposed to imitate the image modifications described by Clevert et al (Img2Mol (preprint))"""
+    distortions are supposed to imitate the image modifications described by Clevert et al (Img2Mol (preprint))
+    """
     input_dir = os.path.abspath(sys.argv[1])
     output_dir = os.path.abspath(sys.argv[2])
     if not os.path.exists(output_dir):

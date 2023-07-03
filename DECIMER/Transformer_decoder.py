@@ -105,7 +105,6 @@ def create_look_ahead_mask(size):
 
 
 def create_mask(inp, tar):
-
     # Used in the 1st attention block in the decoder.
     # It is used to pad and mask future tokens in the input received by
     # the decoder.
@@ -209,7 +208,6 @@ def point_wise_feed_forward_network(d_model, dff):
 
 class TransformerEncoderLayer(tf.keras.layers.Layer):
     def __init__(self, d_model, num_heads, dff, dropout_rate=0.1):
-
         super(TransformerEncoderLayer, self).__init__()
 
         self.mha = tf.keras.layers.MultiHeadAttention(
@@ -225,7 +223,6 @@ class TransformerEncoderLayer(tf.keras.layers.Layer):
         self.dropout2 = tf.keras.layers.Dropout(dropout_rate)
 
     def call(self, x, training, mask=None):
-
         # returns (batch_size, input_seq_len, d_model)
         attn_output, _ = self.mha(x, x, x, mask, return_attention_scores=True)
 
@@ -250,7 +247,6 @@ class TransformerEncoderLayer(tf.keras.layers.Layer):
 
 class TransformerDecoderLayer(tf.keras.layers.Layer):
     def __init__(self, d_model, num_heads, dff, dropout_rate=0.1):
-
         super(TransformerDecoderLayer, self).__init__()
 
         # WE COULD USE A CUSTOM DEFINED MHA MODEL BUT WE WILL USE TFA INSTEAD
@@ -276,7 +272,6 @@ class TransformerDecoderLayer(tf.keras.layers.Layer):
 
     # enc_output.shape == (batch_size, input_seq_len, d_model)
     def call(self, x, enc_output, training, look_ahead_mask=None, padding_mask=None):
-
         attn1, attn_weights_block1 = self.mha1(x, x, x, look_ahead_mask)
         attn1 = self.dropout1(attn1, training=training)
 
@@ -370,7 +365,6 @@ class TransformerDecoder(tf.keras.layers.Layer):
         self.dropout = tf.keras.layers.Dropout(dropout_rate)
 
     def call(self, x, enc_output, training, look_ahead_mask=None, padding_mask=None):
-
         seq_len = tf.shape(x)[1]
         attention_weights = {}
 
@@ -405,7 +399,6 @@ class Transformer(tf.keras.Model):
         pe_target,
         dropout_rate=0.1,
     ):
-
         super(Transformer, self).__init__()
 
         self.t_encoder = TransformerEncoder(

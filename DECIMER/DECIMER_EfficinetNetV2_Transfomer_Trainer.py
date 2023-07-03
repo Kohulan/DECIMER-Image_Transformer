@@ -220,7 +220,6 @@ def prepare_for_training(lr_config, encoder_config, transformer_config, verbose=
     """
 
     with strategy.scope():
-
         loss_object = tf.keras.losses.SparseCategoricalCrossentropy(
             from_logits=True, reduction=tf.keras.losses.Reduction.NONE
         )
