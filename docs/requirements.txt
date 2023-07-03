@@ -6,4 +6,4 @@ tensorflow>=2.6.3
 opencv-python
 pystow
 efficientnet
-pyheif
+pillow_heif
