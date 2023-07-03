@@ -13,7 +13,7 @@ conda install -c rdkit rdkit
 ## The slight distortions (shearing, rotation) are applied to the benchmark images by running:
 
 ```
-python distort_images $input_directory $output_directory
+python distort_images.py $input_directory $output_directory
 ```
 
 ## Run DECIMER and save the results in a file:
