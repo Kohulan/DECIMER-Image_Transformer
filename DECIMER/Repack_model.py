@@ -2,10 +2,10 @@ import os
 import tensorflow as tf
 
 import pickle
-import Transformer_decoder
-import Efficient_Net_encoder
-import config
-import utils
+import DECIMER.Efficient_Net_encoder as Efficient_Net_encoder
+import DECIMER.Transformer_decoder as Transformer_decoder
+import DECIMER.config as config
+import DECIMER.utils as utils
 
 print(tf.__version__)
 
@@ -16,8 +16,8 @@ for gpu in gpus:
     tf.config.experimental.set_memory_growth(gpu, True)
 
 # load assets
-tokenizer = pickle.load(open("tokenizer_TPU_Stereo.pkl", "rb"))
-max_length = pickle.load(open("max_length_TPU_Stereo.pkl", "rb"))
+tokenizer = pickle.load(open("tokenizer.pkl", "rb"))
+max_length = pickle.load(open("max_length.pkl", "rb"))
 
 # Image parameters
 IMG_EMB_DIM = (16, 16, 232)

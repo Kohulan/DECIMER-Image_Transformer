@@ -1,6 +1,8 @@
 nbsphinx
 sphinx-autodoc-typehints
 sphinx_rtd_theme
+furo
+sphinx_material
 numpy>=1.19
 tensorflow>=2.6.3
 opencv-python

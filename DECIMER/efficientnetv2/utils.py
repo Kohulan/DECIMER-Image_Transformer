@@ -543,7 +543,7 @@ def get_ckpt_var_map(
     if not var_map or len(var_map) < 5:
         raise ValueError(f"var_map={var_map} is almost empty, please check logs.")
 
-    for (k, v) in var_map.items():
+    for k, v in var_map.items():
         logging.log_first_n(logging.INFO, f"Init {v.op.name} from ckpt var {k}", 10)
 
     return var_map

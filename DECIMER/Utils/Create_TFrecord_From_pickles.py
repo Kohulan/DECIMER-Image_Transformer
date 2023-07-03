@@ -43,7 +43,6 @@ for file_in in args.file:
         return tf.train.Feature(bytes_list=tf.train.BytesList(value=[value]))
 
     def get_train_tfrecord(num_shards, train_captions, img_name_vector, file_index):
-
         print("Total number of TFrecords: ", num_shards, flush=True)
 
         for i in range(num_shards):
@@ -57,7 +56,6 @@ for file_in in args.file:
             writer = tf.io.TFRecordWriter(tfrecord_name)
             counter = 0
             for j in range(len(sub_split_img_id)):
-
                 # print(decoded_image.shape)
                 caption_ = sub_split_cap_train[j]
                 # image_id_ = sub_split_img_id[counter]

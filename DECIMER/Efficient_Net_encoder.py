@@ -56,7 +56,6 @@ class Encoder(tf.keras.Model):
         pretrained_weights=None,
         scale_factor=0,
     ):
-
         super(Encoder, self).__init__()
 
         self.image_embedding_dim = image_embedding_dim

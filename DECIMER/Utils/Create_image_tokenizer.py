@@ -15,7 +15,6 @@ for gpu in gpus:
 
 
 def main():
-
     Smiles_Path = "Path_to_file"
     # Images_Path = "Train_Images/"
 
@@ -61,7 +60,6 @@ def main():
 
 
 def data_loader(Smiles_Path):
-
     # read the Captions file
     with open(Smiles_Path, "r") as txt_file:
         smiles = txt_file.read()
