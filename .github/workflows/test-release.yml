@@ -15,7 +15,6 @@ on:
 jobs:
 
   build:
-
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -35,3 +34,13 @@ jobs:
           pip install -e .
           pip install tox
           tox
+
+  release-please:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: google-github-actions/release-please-action@v3
+        with:
+          release-type: python
+          package-name: release-please-action
+          token: ${{ secrets.GITHUB_TOKEN }}
