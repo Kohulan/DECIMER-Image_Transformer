@@ -1,0 +1,56 @@
+# Changelog
+
+## [2.3.1](https://github.com/Kohulan/DECIMER-Image_Transformer/compare/v1.0.1...v2.3.1) (2023-07-04)
+
+
+### Features
+
+* Add new theme for docs ([4d69afd](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/4d69afd0e07ad9cf0e9df6ce4fcd2cd4493ae74c))
+* add release-please ([bbfdc80](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/bbfdc80079444b4416eebd4575fca0d45ad7cd26))
+* Create Bug_Report.yml ([ffb8540](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/ffb8540f201577544f1ee8319e4c311a517065f1))
+* Create CODE_OF_CONDUCT.md ([605fdb4](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/605fdb4d8fb60e8dda89808e159440c0170fd592))
+* Create ISSUES.md ([82ebb33](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/82ebb33bdf46713f09c06c20465cec114c08fbe5))
+* New model and preprocessing ([782c5b9](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/782c5b98fbb15cdcacdd338263506f138f7addc3))
+* Update config file and refactor code ([c46c852](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/c46c8520fc4bf44490af908160ccf00a075a62d9))
+* Update repack to fit to 512 x 512 ([960904b](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/960904b2c5422d60d1f32733e7a4769d497052ee))
+
+
+### Bug Fixes
+
+* check HEIC from path [#44](https://github.com/Kohulan/DECIMER-Image_Transformer/issues/44) ([40bb299](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/40bb29931df046d49935114888ae06058c3b3a0c))
+* check model path ([aacbe3a](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/aacbe3ad0b7a2ac753a6ee9065364fefcedd7d84))
+* delete model zipfile ([bab2193](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/bab2193d149e25b86ebda2cf4a38e0f5705b3903))
+* Docs issues for building ([e715966](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/e7159666ea1d5aa0a91c16c3d7216ff7ca0d493a))
+* docs requirements.txt ([ced96a3](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/ced96a3771cf359e30b4ed7d9767cf572e9e9d12))
+* Don't download model if present ([57e809f](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/57e809f5fe0475fd79ceb1b88a0ee283184f4f1a))
+* Fixed Benchmark/README example ([aaf4db2](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/aaf4db2ef8526b8faf69055afe69cb84838464ff))
+* flake8 errors ([99eb533](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/99eb5332d7810017dfa8c27d08c9d9ed362498f1))
+* Import efficient-net properly ([16b8e63](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/16b8e63c35b4dbcce752fb58df980f26d73e9b9e))
+* import pyheif ([6ecb4e4](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/6ecb4e4f2c5987c57d43f12955aa5fc56613dd2c))
+* linter issues ([839c0a2](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/839c0a2888e43d99ef8ef2b439ca591e99f4fbdf))
+* modify branch ([6a17ee3](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/6a17ee34454a4c486313af2b27ae2b6b9560096b))
+* Prediction postprocessing ([063a50f](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/063a50fda830730f1f05975ce2bed53422187030))
+* print original error ([504b394](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/504b394b16855ccb4630af340acfc78a771b2d8e))
+* pyheif isuue for windows using pillow-heif ([49bae11](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/49bae11da90c5e908eff53e5b00f93e8826aa0bd))
+* raise exception ([b2dad4d](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/b2dad4d3a8ab7bf54c9779d9a6091a82ba5056da))
+* Readthedocs theme ([26c3ba0](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/26c3ba02ca2d4796a024dd783b0a5dc66352bbdb))
+* Removes previous models ([fb9b858](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/fb9b85805e03083926b772807bb314e9752effc1))
+* revert TF version ([0f99e12](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/0f99e121da86904ce41ec598cf720f8ce089bb87))
+* set TensorFlow version to 2.10.0 ([1221cad](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/1221cad8310082b5cd22110e3a14c86804665ed5))
+* start release version ([964599d](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/964599d9a380527c85c9f92aaf9f00979250876d))
+* Test assertion ([aaf0a55](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/aaf0a55bb1acaa619b7462e53bcb1d14276708a1))
+* Test expected results ([54dbbc8](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/54dbbc8cb42800599b4058adade27a7d58a7d32a))
+* typo Update Bug_Report.yml ([20efde3](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/20efde3840b8b9a8acc0a3b5c05ad2e766c1f2ce))
+* Update Bug_Report.yml ([8a01bc4](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/8a01bc46c1f0cbb3999a07e4574fea9e4bc33d55))
+* Update contrast setting ([f496307](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/f49630712011e62fed7fbc4247abe71943b6d2ef))
+* Update DOI ([71acf86](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/71acf86e024422153d9358b1e47f8c4c48ba6d58))
+* Update model links ([d95a26a](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/d95a26a0b2d7984c1e6eaac72bd87aa368b7e6c0))
+* Update TensorFlow support for MacOS ([d4eb411](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/d4eb4113802956a096094018cdeb97808a7758df))
+* update tensorflow version ([d0967b5](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/d0967b52397795ec4d2de4f5ba2d6d3bdbf7686b))
+* Update TensorFlow, fix: Tests ([1d2b583](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/1d2b5830855dc80d24b3567280df0409c4c276c1))
+* Update to load functions from installation [#38](https://github.com/Kohulan/DECIMER-Image_Transformer/issues/38) ([960ffc6](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/960ffc6e0d10b72d48338b240336a23d3bf8b941))
+* Update tox.ini ([7615d69](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/7615d69a1f227ef2b1864ac97e54191db9ca8ac9))
+* Update TRC Logo ([3958dc6](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/3958dc6f18ac14c7ab6d39991757770e29658480))
+* Verion bump ([c55769d](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/c55769dd69efa4fa41618e2b7a327b3e435e4755))
+* Verion bump setup.py ([61049ef](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/61049ef0089e73b62f255708e3fb1c9088afc97e))
+* version update ([56b18ed](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/56b18ed4f07ce120072a8cb8fc1fd53568c6d3aa))
