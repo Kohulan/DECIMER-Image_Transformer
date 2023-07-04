@@ -44,3 +44,4 @@ jobs:
           release-type: python
           package-name: release-please-action
           token: ${{ secrets.GITHUB_TOKEN }}
+          start-version: '2.3.0'
