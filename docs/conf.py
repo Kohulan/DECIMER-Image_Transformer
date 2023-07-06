@@ -14,16 +14,23 @@ import os
 import sys
 
 sys.path.insert(0, os.path.abspath(".."))
+import DECIMER
+from datetime import datetime
 
 # -- Project information -----------------------------------------------------
 
 project = "DECIMER-Image_Transformer"
-copyright = "2023, Kohulan Rajan"
+version = DECIMER.__version__
+current_year = datetime.today().year
+copyright = "2019-{}, Kohulan Rajan at the Friedrich Schiller University Jena".format(
+    current_year
+)
 author = "Kohulan Rajan"
-
-# The full version, including alpha/beta/rc tags
-release = "2.3.0"
-
+rst_prolog = """
+.. |current_year| replace:: {}
+""".format(
+    current_year
+)
 
 # -- General configuration ---------------------------------------------------
 
@@ -78,17 +85,32 @@ html_theme = "furo"
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
-# Material theme options (see theme.conf for more information)
 html_theme_options = {
     "light_css_variables": {
-        "color-brand-primary": "red",
-        "color-brand-content": "#CC3333",
-        "color-admonition-background": "orange",
+        "color-brand-primary": "#E37B74",
+        "color-brand-content": "#E37B74",
+        "color-code-background": "#F8F8F8",
+        "color-code-border": "#E37B74",
+        "color-admonition-background": "#FEECEC",
+        "color-link": "#E37B74",
+        "color-pre-background": "#F8F8F8",
+        "color-pre-border": "#E37B74",
+    },
+    "dark_css_variables": {
+        "color-brand-primary": "#E37B74",
+        "color-brand-content": "#E37B74",
+        "color-code-background": "#222222",
+        "color-code-border": "#E37B74",
+        "color-admonition-background": "#331E1C",
+        "color-link": "#E37B74",
+        "color-pre-background": "#222222",
+        "color-pre-border": "#E37B74",
     },
     "sidebar_hide_name": True,
     "navigation_with_keys": True,
     "top_of_page_button": "edit",
 }
+
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
