@@ -122,8 +122,6 @@ class DECIMER_Predictor(tf.Module):
 
     def __call__(self, Decoded_image):
         assert isinstance(Decoded_image, tf.Tensor)
-        if len(Decoded_image.shape) == 0:
-            sentence = Decoded_image[tf.newaxis]
 
         _image_batch = tf.expand_dims(Decoded_image, 0)
         _image_embedding = encoder(_image_batch, training=False)
