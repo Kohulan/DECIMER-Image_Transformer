@@ -1,11 +1,6 @@
 # EfficientNet-V2 config
 import tensorflow as tf
-if int(tf.__version__.split(".")[1]) <= 10:
-    import DECIMER.efficientnetv2 as efficientnetv2
-elif __name__ == "__main__":
-    raise ImportError("Please use tensorflow 2.10 when working with the checkpoints.")
-else:
-    from DECIMER.efficientnetv2 import effnetv2_model
+import DECIMER.efficientnetv2 as efficientnetv2
 
 BATCH_SIZE_DEBUG = 2
 MODEL = "efficientnetv2-m"  # @param
@@ -21,10 +16,7 @@ def get_efficientnetv2_backbone(
             "\n...At this time we only want to use the raw "
             "(no pretraining), headless, features with no pooling ...\n"
         )
-    if int(tf.__version__.split(".")[1]) <= 10:
-        backbone = efficientnetv2.effnetv2_model.EffNetV2Model(model_name=model_name)
-    else:
-        backbone = effnetv2_model.EffNetV2Model(model_name=model_name)
+    backbone = efficientnetv2.effnetv2_model.EffNetV2Model(model_name=model_name)
     backbone(
         tf.ones((BATCH_SIZE_DEBUG, *input_shape)), training=False, features_only=True
     )
