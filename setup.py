@@ -32,6 +32,8 @@ setuptools.setup(
         "pystow",
         "pillow-heif",
         "efficientnet",
+        "selfies",
+        "tensorflow-addons",
     ],
     package_data={"DECIMER": ["repack/*.*", "efficientnetv2/*.*", "Utils/*.*"]},
     classifiers=[
