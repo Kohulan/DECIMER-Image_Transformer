@@ -2,9 +2,10 @@
 import tensorflow as tf
 if int(tf.__version__.split(".")[1]) <= 10:
     import DECIMER.efficientnetv2 as efficientnetv2
-else:
+elif __name__ == "__main__":
     raise ImportError("Please use tensorflow 2.10 when working with the checkpoints.")
-    # from DECIMER.efficientnetv2 import effnetv2_model
+else:
+    from DECIMER.efficientnetv2 import effnetv2_model
 
 BATCH_SIZE_DEBUG = 2
 MODEL = "efficientnetv2-m"  # @param
