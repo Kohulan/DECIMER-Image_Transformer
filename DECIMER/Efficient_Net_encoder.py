@@ -1,30 +1,17 @@
 # EfficientNet-V2 config
 import tensorflow as tf
-import DECIMER.efficientnetv2 as efficientnetv2
+import efficientnetv2
+from efficientnetv2 import effnetv2_model
+from efficientnetv2 import effnetv2_configs
 
 BATCH_SIZE_DEBUG = 2
-MODEL = "efficientnetv2-b3"  # @param
+MODEL = "efficientnetv2-m"  # @param
 
 
 # Define encoder
 def get_efficientnetv2_backbone(
-    model_name, include_top=False, input_shape=(299, 299, 3), pooling=None, weights=None
+    model_name, include_top=False, input_shape=(512, 512, 3), pooling=None, weights=None
 ):
-    """Initiate and get the desired Efficient-Net V2 backbone as encoder
-
-    Args:
-        model_name (str): Name of the Efficient-Net V2 model
-        include_top (bool, optional):  Defaults to False.
-        input_shape (tuple, optional): Image shape. Defaults to (299, 299, 3).
-        pooling (int, optional): Max pooling values. Defaults to None.
-        weights ( optional): Pretrained weights. Defaults to None.
-
-    Raises:
-        NotImplementedError: At this time we only want to use the raw
-
-    Returns:
-        Efficient Net V2 backbone
-    """
     # Catch unsupported arguments
     if pooling or weights or include_top:
         raise NotImplementedError(
@@ -39,12 +26,6 @@ def get_efficientnetv2_backbone(
 
 
 class Encoder(tf.keras.Model):
-    """Encoder class
-
-    Args:
-        tf (_type_): tensorflow model module
-    """
-
     def __init__(
         self,
         image_embedding_dim,
@@ -56,6 +37,7 @@ class Encoder(tf.keras.Model):
         pretrained_weights=None,
         scale_factor=0,
     ):
+
         super(Encoder, self).__init__()
 
         self.image_embedding_dim = image_embedding_dim
