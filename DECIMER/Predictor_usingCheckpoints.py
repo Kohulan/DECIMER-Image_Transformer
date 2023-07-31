@@ -13,11 +13,12 @@ import utils
 print(tf.__version__)
 
 # Set GPU
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+os.environ["CUDA_VISIBLE_DEVICES"] = ""
+"""
 gpus = tf.config.experimental.list_physical_devices("GPU")
 for gpu in gpus:
     tf.config.experimental.set_memory_growth(gpu, True)
-
+"""
 # Set path
 default_path = pystow.join("DECIMER-V2")
 

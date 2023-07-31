@@ -33,6 +33,7 @@ setuptools.setup(
         "pillow-heif",
         "efficientnet",
         "selfies",
+        "pyyaml",
         "tensorflow-addons",
     ],
     package_data={"DECIMER": ["repack/*.*", "efficientnetv2/*.*", "Utils/*.*"]},
