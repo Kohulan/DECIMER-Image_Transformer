@@ -21,7 +21,10 @@ def get_efficientnetv2_backbone(
             "\n...At this time we only want to use the raw "
             "(no pretraining), headless, features with no pooling ...\n"
         )
-    backbone = efficientnetv2.effnetv2_model.EffNetV2Model(model_name=model_name)
+    if int(tf.__version__.split(".")[1]) <= 10:
+        backbone = efficientnetv2.effnetv2_model.EffNetV2Model(model_name=model_name)
+    else:
+        backbone = effnetv2_model.EffNetV2Model(model_name=model_name)
     backbone(
         tf.ones((BATCH_SIZE_DEBUG, *input_shape)), training=False, features_only=True
     )
