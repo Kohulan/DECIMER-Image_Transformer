@@ -6,7 +6,11 @@ import pickle
 import pystow
 from selfies import decoder
 import Transformer_decoder
-import Efficient_Net_encoder
+
+if int(tf.__version__.split(".")[1]) <= 10:
+    import Efficient_Net_encoder
+else:
+    raise ImportError("Please use tensorflow 2.10 when working with the checkpoints.")
 import config
 import utils
 
