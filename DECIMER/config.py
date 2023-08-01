@@ -1,8 +1,8 @@
 # Network configuration file
 import tensorflow as tf
 import efficientnet.tfkeras as efn
-import DECIMER.Efficient_Net_encoder
-import DECIMER.Transformer_decoder
+import DECIMER.Efficient_Net_encoder as Efficient_Net_encoder
+import DECIMER.Transformer_decoder as Transformer_decoder
 from PIL import Image, ImageEnhance
 from pillow_heif import register_heif_opener
 from pathlib import Path
@@ -252,7 +252,7 @@ class Config:
         transformer_d_dff,
         transformer_n_heads,
         image_embedding_dim,
-        dropout_rate=0.1,
+        rate=0.1,
     ):
         """This functions initializes the Transformer model as decoder with user defined
         configurations.
@@ -269,13 +269,12 @@ class Config:
         """
         self.transformer_config = dict(
             num_layers=n_transformer_layers,
-            d_model=image_embedding_dim[-1],
+            d_model=image_embedding_dim,
             num_heads=transformer_n_heads,
             dff=transformer_d_dff,
             target_vocab_size=vocab_len,
-            pe_input=image_embedding_dim[0],
-            pe_target=max_len,
-            dropout_rate=0.1,
+            max_len=max_len,
+            rate=0.1,
         )
 
     def initialize_lr_config(self, warm_steps, n_epochs):
@@ -334,18 +333,9 @@ def prepare_models(encoder_config, transformer_config, replica_batch_size, verbo
     # Instantiate the encoder model
 
     encoder = Efficient_Net_encoder.Encoder(**encoder_config)
-    initialization_batch = encoder(
-        tf.ones(
-            ((replica_batch_size,) + encoder_config["image_shape"]), dtype=TARGET_DTYPE
-        ),
-        training=False,
-    )
 
     # Instantiate the decoder model
-    transformer = Transformer_decoder.Transformer(**transformer_config)
-    transformer(
-        initialization_batch, tf.random.uniform((replica_batch_size, 1)), training=False
-    )
+    transformer = Transformer_decoder.Decoder(**transformer_config)
 
     # Show the model architectures and plot the learning rate
     if verbose:

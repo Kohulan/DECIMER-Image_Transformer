@@ -1,25 +1,50 @@
 import os
+import sys
 import tensorflow as tf
 
 import pickle
-import DECIMER.Efficient_Net_encoder as Efficient_Net_encoder
-import DECIMER.Transformer_decoder as Transformer_decoder
-import DECIMER.config as config
-import DECIMER.utils as utils
+import pystow
+from selfies import decoder
+import Transformer_decoder
+
+if int(tf.__version__.split(".")[1]) <= 10:
+    import Efficient_Net_encoder
+else:
+    raise ImportError("Please use tensorflow 2.10 when working with the checkpoints.")
+import config
+import utils
 
 print(tf.__version__)
 
 # Set GPU
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+os.environ["CUDA_VISIBLE_DEVICES"] = ""
+"""
 gpus = tf.config.experimental.list_physical_devices("GPU")
 for gpu in gpus:
     tf.config.experimental.set_memory_growth(gpu, True)
+"""
+# Set path
+default_path = pystow.join("DECIMER-V2")
+
+# model download location
+checkpoint_url = "https://zenodo.org/record/8093783/files/DECIMER_512_checkpoints.zip"
+checkpoint_path = str(default_path) + "/DECIMER_checkpoints/"
+
+if not os.path.exists(checkpoint_path):
+    config.download_trained_weights(checkpoint_url, default_path)
 
 # load assets
-tokenizer = pickle.load(open("tokenizer.pkl", "rb"))
-max_length = pickle.load(open("max_length.pkl", "rb"))
 
-# Image parameters
+tokenizer = pickle.load(
+    open(
+        default_path.as_posix() + "/DECIMER_model/assets/tokenizer_SMILES.pkl",
+        "rb",
+    )
+)
+
+max_length = 302
+
+# Image partameters
 IMG_EMB_DIM = (16, 16, 512)
 IMG_EMB_DIM = (IMG_EMB_DIM[0] * IMG_EMB_DIM[1], IMG_EMB_DIM[2])
 IMG_SHAPE = (512, 512, 3)
@@ -40,7 +65,6 @@ VOCAB_LEN = len(tokenizer.word_index)
 PE_OUTPUT = MAX_LEN
 TARGET_V_SIZE = VOCAB_LEN
 REPLICA_BATCH_SIZE = 1
-
 
 # Config Encoder
 PREPROCESSING_FN = tf.keras.applications.efficientnet.preprocess_input
@@ -65,6 +89,9 @@ testing_config.initialize_transformer_config(
     image_embedding_dim=D_MODEL,
 )
 
+# print(f"Encoder config:\n\t -> {testing_config.encoder_config}\n")
+# print(f"Transformer config:\n\t -> {testing_config.transformer_config}\n")
+
 # Prepare model
 optimizer, encoder, transformer = config.prepare_models(
     encoder_config=testing_config.encoder_config,
@@ -74,7 +101,6 @@ optimizer, encoder, transformer = config.prepare_models(
 )
 
 # Load trained model checkpoint
-checkpoint_path = "checkpoints"
 ckpt = tf.train.Checkpoint(
     encoder=encoder, transformer=transformer, optimizer=optimizer
 )
@@ -84,52 +110,23 @@ if ckpt_manager.latest_checkpoint:
     start_epoch = int(ckpt_manager.latest_checkpoint.split("-")[-1])
 
 
-def detokenize_output(predicted_array):
-    outputs = [tokenizer.index_word[i] for i in predicted_array[0].numpy()]
-    prediction = (
-        "".join([str(elem) for elem in outputs])
-        .replace("<start>", "")
-        .replace("<end>", "")
-    )
-
-    return prediction
+def main():
+    if len(sys.argv) != 2:
+        print("Usage: {} $image_path".format(sys.argv[0]))
+    else:
+        SMILES = predict_SMILES(sys.argv[1])
+        print(SMILES)
 
 
 class DECIMER_Predictor(tf.Module):
-    """This is a class which takes care of inference. It loads the saved checkpoint and the necessary
-    tokenizers. The inference begins with the start token (<start>) and ends when the end token(<end>)
-    is met. This class can only work with tf.Tensor objects. The strings shoul gets transformed into np.arrays
-    before feeding them into this class.
-    """
-
     def __init__(self, encoder, tokenizer, transformer, max_length):
-        """Load the tokenizers, the maximum input and output length and the model.
-
-        Args:
-            encoder (tf.keras.model):  The encoder model
-            tokenizer (tf.keras.tokenizer): Output tokenizer, defines which charater is assigned to what token
-            transformer (tf.keras.model):  The transformer model
-            max_length (int): Maximum length of a string which can get predicted
-        """
         self.encoder = encoder
         self.tokenizer = tokenizer
         self.transformer = transformer
         self.max_length = max_length
 
     def __call__(self, Decoded_image):
-        """This fuction takes in the Decoded image as input and
-        makes the predicted list of tokens and return the tokens as tf.Tensor array.
-        Before feeding the input array we must define start and the end tokens.
-
-        Args:
-            Decoded_image (tf.Tensor[tf.int32]): Input array in tf.Eagertensor format.
-
-        Returns:
-            output (tf.Tensor[tf.int64]): predicted output as an array.
-        """
         assert isinstance(Decoded_image, tf.Tensor)
-        if len(Decoded_image.shape) == 0:
-            sentence = Decoded_image[tf.newaxis]
 
         _image_batch = tf.expand_dims(Decoded_image, 0)
         _image_embedding = encoder(_image_batch, training=False)
@@ -163,44 +160,41 @@ class DECIMER_Predictor(tf.Module):
             if predicted_id == end_token:
                 break
         output = tf.transpose(output_array.stack())
-
         return output
 
 
+def detokenize_output(predicted_array):
+    outputs = [tokenizer.index_word[i] for i in predicted_array[0].numpy()]
+    prediction = (
+        "".join([str(elem) for elem in outputs])
+        .replace("<start>", "")
+        .replace("<end>", "")
+    )
+
+    return prediction
+
+
+# Initiate the DECIMER class
 DECIMER = DECIMER_Predictor(encoder, tokenizer, transformer, MAX_LEN)
 
 
-class ExportDECIMERPredictor(tf.Module):
-    """This class wraps the inference class into a module into tf.Module sub-class, with a tf.function on the __call__ method.
-    So we could export the model as a tf.saved_model.
+def predict_SMILES(image_path: str):
     """
+    This function takes an image path (str) and returns the SMILES
+    representation of the depicted molecule (str).
 
-    def __init__(self, DECIMER):
-        """Import the translator instance."""
-        self.DECIMER = DECIMER
+    Args:
+        image_path (str): Path of chemical structure depiction image
 
-    @tf.function
-    def __call__(self, Decoded_Image):
-        """This fucntion calls the __call__function from the translator class.
-        In the tf.function only the output sentence is returned.
-        Thanks to the non-strict execution in tf.function any unnecessary values are never computed.
+    Returns:
+        (str): SMILES representation of the molecule in the input image
+    """
+    decodedImage = config.decode_image(image_path)
+    predicted_tokens = DECIMER(tf.constant(decodedImage))
+    predicted_SMILES = utils.decoder(detokenize_output(predicted_tokens))
 
-        Args:
-            sentence (tf.Tensor[tf.int32]): Input array in tf.Easgertensor format.
-
-        Returns:
-            tf.Tensor[tf.int64]: predicted output as an array.
-        """
-
-        result = self.DECIMER(Decoded_Image)
-
-        return result
+    return predicted_SMILES
 
 
-DECIMER_export = ExportDECIMERPredictor(DECIMER)
-
-tf.saved_model.save(
-    DECIMER_export,
-    export_dir="DECIMER_Packed_model",
-    options=tf.saved_model.SaveOptions(experimental_custom_gradients=True),
-)
+if __name__ == "__main__":
+    main()

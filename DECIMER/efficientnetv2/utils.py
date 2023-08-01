@@ -131,7 +131,6 @@ class WarmupLearningRateSchedule(tf.keras.optimizers.schedules.LearningRateSched
             lr = tf.math.maximum(lr, self.minimal_lr)
 
         if self.warmup_epochs:
-            logging.info("Learning rate warmup_epochs: %s", str(self.warmup_epochs))
             warmup_steps = int(self.warmup_epochs * self.steps_per_epoch)
             warmup_lr = (
                 self.initial_lr
@@ -220,9 +219,6 @@ class TpuBatchNormalization(tf.keras.layers.BatchNormalization):
 
     def call(self, inputs, training=None):
         outputs = super().call(inputs, training)
-        # A temporary hack for tf1 compatibility with keras batch norm.
-        for u in self.updates:
-            tf.compat.v1.add_to_collection(tf.compat.v1.GraphKeys.UPDATE_OPS, u)
         return outputs
 
 
@@ -233,14 +229,6 @@ class BatchNormalization(tf.keras.layers.BatchNormalization):
         if not kwargs.get("name", None):
             kwargs["name"] = "tpu_batch_normalization"
         super().__init__(**kwargs)
-
-    def call(self, inputs, training=None):
-        outputs = super().call(inputs, training)
-        if training and not tf.executing_eagerly():
-            # A temporary hack for tf1 compatibility with keras batch norm.
-            for u in self.updates:
-                tf.compat.v1.add_to_collection(tf.compat.v1.GraphKeys.UPDATE_OPS, u)
-        return outputs
 
 
 def normalization(
@@ -360,7 +348,7 @@ class Pair(tuple):
 
 def scalar(name, tensor, is_tpu=True):
     """Stores a (name, Tensor) tuple in a custom collection."""
-    logging.info("Adding scale summary %s", Pair(name, tensor))
+    logging.info("Adding scalar summary %s", Pair(name, tensor))
     if is_tpu:
         tf.compat.v1.add_to_collection(
             "scalar_summaries", Pair(name, tf.reduce_mean(tensor))
@@ -421,7 +409,7 @@ def float16_scope():
         yield varscope
 
 
-def set_precision_policy(policy_name=None, loss_scale=False):
+def set_precision_policy(policy_name=None):
     """Set precision policy according to the name.
 
     Args:
@@ -435,15 +423,8 @@ def set_precision_policy(policy_name=None, loss_scale=False):
     assert policy_name in ("mixed_float16", "mixed_bfloat16", "float32")
     logging.info("use mixed precision policy name %s", policy_name)
     tf.compat.v1.keras.layers.enable_v2_dtype_behavior()
-    # mixed_float16 training is not supported for now, so disable loss_scale.
-    # float32 and mixed_bfloat16 do not need loss scale for training.
-    if loss_scale:
-        policy = tf.keras.mixed_precision.experimental.Policy(policy_name)
-    else:
-        policy = tf.keras.mixed_precision.experimental.Policy(
-            policy_name, loss_scale=None
-        )
-    tf.keras.mixed_precision.experimental.set_policy(policy)
+    policy = tf.keras.mixed_precision.Policy(policy_name)
+    tf.keras.mixed_precision.set_global_policy(policy)
 
 
 def build_model_with_precision(pp, mm, ii, tt, *args, **kwargs):
@@ -464,6 +445,7 @@ def build_model_with_precision(pp, mm, ii, tt, *args, **kwargs):
     Returns:
       the output of mm model.
     """
+    del tt
     if pp == "mixed_bfloat16":
         set_precision_policy(pp)
         inputs = tf.cast(ii, tf.bfloat16)
@@ -471,7 +453,7 @@ def build_model_with_precision(pp, mm, ii, tt, *args, **kwargs):
             outputs = mm(inputs, *args, **kwargs)
         set_precision_policy("float32")
     elif pp == "mixed_float16":
-        set_precision_policy(pp, loss_scale=tt)
+        set_precision_policy(pp)
         inputs = tf.cast(ii, tf.float16)
         with float16_scope():
             outputs = mm(inputs, *args, **kwargs)
@@ -543,7 +525,78 @@ def get_ckpt_var_map(
     if not var_map or len(var_map) < 5:
         raise ValueError(f"var_map={var_map} is almost empty, please check logs.")
 
-    for k, v in var_map.items():
+    for (k, v) in var_map.items():
         logging.log_first_n(logging.INFO, f"Init {v.op.name} from ckpt var {k}", 10)
 
     return var_map
+
+
+def restore_tf2_ckpt(model, ckpt_path_or_file, skip_mismatch=True, exclude_layers=None):
+    """Restore variables from a given checkpoint.
+
+    Args:
+      model: the keras model to be restored.
+      ckpt_path_or_file: the path or file for checkpoint.
+      skip_mismatch: whether to skip variables if shape mismatch,
+        only works with tf1 checkpoint.
+      exclude_layers: string list exclude layer's variables,
+        only works with tf2 checkpoint.
+
+    Raises:
+      KeyError: if access unexpected variables.
+    """
+    ckpt_file = ckpt_path_or_file
+    if tf.io.gfile.isdir(ckpt_file):
+        ckpt_file = tf.train.latest_checkpoint(ckpt_file)
+
+    # Try to load object-based checkpoint (by model.save_weights).
+    var_list = tf.train.list_variables(ckpt_file)
+    if var_list[0][0] == "_CHECKPOINTABLE_OBJECT_GRAPH":
+        print(f"Load checkpointable from {ckpt_file}, excluding {exclude_layers}")
+        keys = {var[0].split("/")[0] for var in var_list}
+        keys.discard("_CHECKPOINTABLE_OBJECT_GRAPH")
+        if exclude_layers:
+            exclude_layers = set(exclude_layers)
+            keys = keys.difference(exclude_layers)
+        ckpt = tf.train.Checkpoint(
+            **{
+                key: getattr(model, key, None)
+                for key in keys
+                if getattr(model, key, None)
+            }
+        )
+        status = ckpt.restore(ckpt_file)
+        status.assert_nontrivial_match()
+        return
+
+    print(f"Load TF1 graph based checkpoint from {ckpt_file}.")
+    var_dict = {v.name.split(":")[0]: v for v in model.weights}
+    reader = tf.train.load_checkpoint(ckpt_file)
+    var_shape_map = reader.get_variable_to_shape_map()
+    for key, var in var_dict.items():
+        if key in var_shape_map:
+            if var_shape_map[key] != var.shape:
+                msg = "Shape mismatch: %s" % key
+                if skip_mismatch:
+                    logging.warning(msg)
+                else:
+                    raise ValueError(msg)
+            else:
+                var.assign(reader.get_tensor(key), read_value=False)
+                logging.log_first_n(
+                    logging.INFO, f"Init {var.name} from {key} ({ckpt_file})", 10
+                )
+        else:
+            msg = "Not found %s in %s" % (key, ckpt_file)
+            if skip_mismatch:
+                logging.warning(msg)
+            else:
+                raise KeyError(msg)
+
+
+class ReuableBackupAndRestore(tf.keras.callbacks.experimental.BackupAndRestore):
+    """A BackupAndRestore callback that can be used across multiple model.fit()s."""
+
+    def on_train_end(self, logs=None):
+        # don't delete the backup, so it can be used for future model.fit()s
+        pass

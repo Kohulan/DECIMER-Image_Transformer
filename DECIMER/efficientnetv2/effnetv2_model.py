@@ -32,9 +32,9 @@ import six
 from six.moves import xrange
 import tensorflow as tf
 
-from efficientnetv2 import effnetv2_configs
-from efficientnetv2 import hparams
-from efficientnetv2 import utils
+from DECIMER.efficientnetv2 import effnetv2_configs
+from DECIMER.efficientnetv2 import hparams
+from DECIMER.efficientnetv2 import utils
 
 
 def conv_kernel_initializer(shape, dtype=None, partition_info=None):
