@@ -9,3 +9,4 @@ opencv-python
 pystow
 efficientnet
 pillow_heif
+pyyaml
