@@ -35,7 +35,7 @@ model_path = str(default_path) + "/DECIMER_model/"
 # download models to a default location
 if (
     os.path.exists(model_path)
-    and os.stat(model_path + "/saved_model.pb").st_size != 28073658
+    and os.stat(model_path + "/saved_model.pb").st_size != 28080309
 ):
     shutil.rmtree(model_path)
     config.download_trained_weights(model_url, default_path)
