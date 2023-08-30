@@ -190,7 +190,7 @@ class DECIMER_Predictor(tf.Module):
             predictions = prediction_batch[:, -1:, :]  # (batch_size, 1, vocab_size)
             
             predicted_id = tf.cast(tf.argmax(predictions, axis=-1), tf.int32)
-            confidence = predictions[-1][-1][int(predicted_id)]
+            confidence = predictions[0, 0, int(predicted_id[0, 0])]
             output_array = output_array.write(t + 1, predicted_id[0])
             confidence_array = confidence_array.write(t + 1, confidence)
             if predicted_id == end_token:
