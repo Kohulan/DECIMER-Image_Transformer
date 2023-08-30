@@ -15,12 +15,12 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="decimer",
-    version="2.3.1",
+    version="2.4.0",
     author="Kohulan Rajan",
     author_email="kohulan.rajan@uni-jena.de",
     maintainer="Kohulan Rajan, Otto Brinkhaus ",
     maintainer_email="kohulan.rajan@uni-jena.de, otto.brinkhaus@uni-jena.de",
-    description="DECIMER 2.3: Deep Learning for Chemical Image Recognition using Efficient-Net V2 + Transformer",
+    description="DECIMER 2.4.0: Deep Learning for Chemical Image Recognition using Efficient-Net V2 + Transformer",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/Kohulan/DECIMER-Image_Transformer",

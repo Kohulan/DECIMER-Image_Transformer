@@ -29,7 +29,7 @@ for gpu in gpus:
 default_path = pystow.join("DECIMER-V2")
 
 # model download location
-model_url = "https://zenodo.org/record/8093783/files/models.zip"
+model_url = "https://zenodo.org/record/8300489/files/models.zip"
 model_path = str(default_path) + "/DECIMER_model/"
 
 # download models to a default location
@@ -110,9 +110,12 @@ def detokenize_output_add_confidence(
     prediction_with_confidence = [(tokenizer.index_word[predicted_array[0].numpy()[i]],
                                    confidence_array[i].numpy())
                                   for i in range(len(confidence_array))]
+    # remove start and end tokens
+    prediction_with_confidence_ = prediction_with_confidence[1:-1]
+
     decoded_prediction_with_confidence = list([(utils.decoder(tok), conf) for tok, conf
-                                               in prediction_with_confidence[1:-1]])
-    decoded_prediction_with_confidence.append(prediction_with_confidence[-1])
+                                               in prediction_with_confidence_])
+    #decoded_prediction_with_confidence.append(prediction_with_confidence_[-1])
     return decoded_prediction_with_confidence
 
 

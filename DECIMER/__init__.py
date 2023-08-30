@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-DECIMER V2.3.1 Python Package.
+DECIMER V2.4.0 Python Package.
 ============================
 
 This repository contains DECIMER-V2,Deep lEarning for Chemical ImagE Recognition) project
@@ -23,11 +23,11 @@ please raise a issue on the Github repository.
 
 """
 
-__version__ = "2.3.1"
+__version__ = "2.4.0"
 
 __all__ = [
     "DECIMER",
 ]
 
 
-from .decimer import predict_SMILES
+from .decimer import predict_SMILES, predict_SMILES_with_confidence
