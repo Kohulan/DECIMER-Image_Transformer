@@ -5,13 +5,14 @@ import pickle
 import pystow
 import shutil
 import tensorflow as tf
+from typing import List, Tuple
 import DECIMER.config as config
 import DECIMER.utils as utils
 
 # Silence tensorflow model loading warnings.
 logging.getLogger("absl").setLevel("ERROR")
 
-# Silence tensorflow errors. optional not recommened if your model is not working properly.
+# Silence tensorflow errors - not recommended if your model is not working properly.
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
 
 # Set the absolute path
@@ -87,8 +88,32 @@ def detokenize_output(predicted_array: int) -> str:
         .replace("<start>", "")
         .replace("<end>", "")
     )
-
     return prediction
+
+
+def detokenize_output_add_confidence(
+    predicted_array: tf.Tensor,
+    confidence_array: tf.Tensor,
+) -> List[Tuple[str, float]]:
+    """
+    This function takes the predicted array of tokens as well as the confidence values
+    returned by the Transformer Decoder and returns a list of tuples
+    that contain each token of the predicted SMILES string and the confidence
+    value.
+
+    Args:
+        predicted_array (tf.Tensor): Transformer Decoder output array (predicted tokens)
+
+    Returns:
+        str: SMILES string
+    """
+    prediction_with_confidence = [(tokenizer.index_word[predicted_array[0].numpy()[i]],
+                                   confidence_array[i].numpy())
+                                  for i in range(len(confidence_array))]
+    decoded_prediction_with_confidence = list([(utils.decoder(tok), conf) for tok, conf
+                                               in prediction_with_confidence[1:-1]])
+    decoded_prediction_with_confidence.append(prediction_with_confidence[-1])
+    return decoded_prediction_with_confidence
 
 
 # Load DECIMER model_packed
@@ -107,10 +132,30 @@ def predict_SMILES(image_path: str) -> str:
         (str): SMILES representation of the molecule in the input image
     """
     chemical_structure = config.decode_image(image_path)
-    predicted_tokens = DECIMER_V2(chemical_structure)
+    predicted_tokens, _ = DECIMER_V2(chemical_structure)
     predicted_SMILES = utils.decoder(detokenize_output(predicted_tokens))
-
     return predicted_SMILES
+
+
+def predict_SMILES_with_confidence(image_path: str) -> List[Tuple[str, float]]:
+    """
+    This function takes an image path (str) and returns a list of tuples
+    that contain each token of the predicted SMILES string and the confidence
+    level from the last layer of the Transformer decoder.
+
+    Args:
+        image_path (str): Path of chemical structure depiction image
+
+    Returns:
+        (List[Tuple[str, float]]): Tuples that contain the tokens and the confidence
+            values of the predicted SMILES
+    """
+    decodedImage = config.decode_image(image_path)
+    predicted_tokens, confidence_values = DECIMER_V2(tf.constant(decodedImage))
+    predicted_SMILES_with_confidence = detokenize_output_add_confidence(
+        predicted_tokens,
+        confidence_values)
+    return predicted_SMILES_with_confidence
 
 
 if __name__ == "__main__":

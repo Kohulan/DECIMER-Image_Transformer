@@ -185,7 +185,7 @@ class Decoder(tf.keras.Model):
             for _ in range(num_layers)
         ]
         self.dropout = tf.keras.layers.Dropout(rate)
-        self.final_layer = tf.keras.layers.Dense(target_vocab_size)
+        self.final_layer = tf.keras.layers.Dense(target_vocab_size, activation="softmax")
 
     def call(self, x, enc_output, training, look_ahead_mask=None, padding_mask=None):
         seq_len = tf.shape(x)[1]
