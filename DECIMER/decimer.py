@@ -115,7 +115,7 @@ def detokenize_output_add_confidence(
 
     decoded_prediction_with_confidence = list([(utils.decoder(tok), conf) for tok, conf
                                                in prediction_with_confidence_])
-    #decoded_prediction_with_confidence.append(prediction_with_confidence_[-1])
+    decoded_prediction_with_confidence.append(prediction_with_confidence_[-1])
     return decoded_prediction_with_confidence
 
 
