@@ -83,9 +83,7 @@ if ckpt_manager.latest_checkpoint:
     start_epoch = int(ckpt_manager.latest_checkpoint.split("-")[-1])
 
 
-def detokenize_output(
-    predicted_array: tf.Tensor
-) -> str:
+def detokenize_output(predicted_array: tf.Tensor) -> str:
     """
     This function takes the predicted array of tokens and returns the predicted SMILES
     string.
@@ -104,6 +102,7 @@ def detokenize_output(
     )
     return prediction
 
+
 def detokenize_output_add_confidence(
     predicted_array: tf.Tensor,
     confidence_array: tf.Tensor,
@@ -120,11 +119,16 @@ def detokenize_output_add_confidence(
     Returns:
         str: SMILES string
     """
-    prediction_with_confidence = [(tokenizer.index_word[predicted_array[0].numpy()[i]],
-                                   confidence_array[i].numpy())
-                                  for i in range(len(confidence_array))]
-    decoded_prediction_with_confidence = list([(utils.decoder(tok), conf) for tok, conf
-                                               in prediction_with_confidence[1:-1]])
+    prediction_with_confidence = [
+        (
+            tokenizer.index_word[predicted_array[0].numpy()[i]],
+            confidence_array[i].numpy(),
+        )
+        for i in range(len(confidence_array))
+    ]
+    decoded_prediction_with_confidence = list(
+        [(utils.decoder(tok), conf) for tok, conf in prediction_with_confidence[1:-1]]
+    )
     decoded_prediction_with_confidence.append(prediction_with_confidence[-1])
     return decoded_prediction_with_confidence
 
@@ -188,7 +192,7 @@ class DECIMER_Predictor(tf.Module):
 
             # select the last word from the seq_len dimension
             predictions = prediction_batch[:, -1:, :]  # (batch_size, 1, vocab_size)
-            
+
             predicted_id = tf.cast(tf.argmax(predictions, axis=-1), tf.int32)
             confidence = predictions[0, 0, int(predicted_id[0, 0])]
             output_array = output_array.write(t + 1, predicted_id[0])

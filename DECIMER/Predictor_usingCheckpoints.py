@@ -177,9 +177,7 @@ class DECIMER_Predictor(tf.Module):
         return output, confidence_array.stack()
 
 
-def detokenize_output(
-    predicted_array: tf.Tensor
-) -> str:
+def detokenize_output(predicted_array: tf.Tensor) -> str:
     """
     This function takes the predicted array of tokens and returns the predicted SMILES
     string.
@@ -198,6 +196,7 @@ def detokenize_output(
     )
     return prediction
 
+
 def detokenize_output_add_confidence(
     predicted_array: tf.Tensor,
     confidence_array: tf.Tensor,
@@ -214,17 +213,23 @@ def detokenize_output_add_confidence(
     Returns:
         str: SMILES string
     """
-    prediction_with_confidence = [(tokenizer.index_word[predicted_array[0].numpy()[i]],
-                                   confidence_array[i].numpy())
-                                  for i in range(len(confidence_array))]
-    decoded_prediction_with_confidence = list([(utils.decoder(tok), conf) for tok, conf
-                                               in prediction_with_confidence[1:-1]])
+    prediction_with_confidence = [
+        (
+            tokenizer.index_word[predicted_array[0].numpy()[i]],
+            confidence_array[i].numpy(),
+        )
+        for i in range(len(confidence_array))
+    ]
+    decoded_prediction_with_confidence = list(
+        [(utils.decoder(tok), conf) for tok, conf in prediction_with_confidence[1:-1]]
+    )
     decoded_prediction_with_confidence.append(prediction_with_confidence[-1])
     return decoded_prediction_with_confidence
 
 
 # Initiate the DECIMER class
 DECIMER = DECIMER_Predictor(encoder, tokenizer, transformer, MAX_LEN)
+
 
 def predict_SMILES_with_confidence(image_path: str) -> List[Tuple[str, float]]:
     """
@@ -242,8 +247,8 @@ def predict_SMILES_with_confidence(image_path: str) -> List[Tuple[str, float]]:
     decodedImage = config.decode_image(image_path)
     predicted_tokens, confidence_values = DECIMER(tf.constant(decodedImage))
     predicted_SMILES_with_confidence = detokenize_output_add_confidence(
-        predicted_tokens,
-        confidence_values)
+        predicted_tokens, confidence_values
+    )
     return predicted_SMILES_with_confidence
 
 

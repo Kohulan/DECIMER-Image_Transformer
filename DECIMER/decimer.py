@@ -107,14 +107,19 @@ def detokenize_output_add_confidence(
     Returns:
         str: SMILES string
     """
-    prediction_with_confidence = [(tokenizer.index_word[predicted_array[0].numpy()[i]],
-                                   confidence_array[i].numpy())
-                                  for i in range(len(confidence_array))]
+    prediction_with_confidence = [
+        (
+            tokenizer.index_word[predicted_array[0].numpy()[i]],
+            confidence_array[i].numpy(),
+        )
+        for i in range(len(confidence_array))
+    ]
     # remove start and end tokens
     prediction_with_confidence_ = prediction_with_confidence[1:-1]
 
-    decoded_prediction_with_confidence = list([(utils.decoder(tok), conf) for tok, conf
-                                               in prediction_with_confidence_])
+    decoded_prediction_with_confidence = list(
+        [(utils.decoder(tok), conf) for tok, conf in prediction_with_confidence_]
+    )
     decoded_prediction_with_confidence.append(prediction_with_confidence_[-1])
     return decoded_prediction_with_confidence
 
@@ -156,8 +161,8 @@ def predict_SMILES_with_confidence(image_path: str) -> List[Tuple[str, float]]:
     decodedImage = config.decode_image(image_path)
     predicted_tokens, confidence_values = DECIMER_V2(tf.constant(decodedImage))
     predicted_SMILES_with_confidence = detokenize_output_add_confidence(
-        predicted_tokens,
-        confidence_values)
+        predicted_tokens, confidence_values
+    )
     return predicted_SMILES_with_confidence
 
 

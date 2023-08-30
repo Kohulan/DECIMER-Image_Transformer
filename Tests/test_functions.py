@@ -9,10 +9,13 @@ def test_imagetosmiles():
     actual_result = predict_SMILES(img_path)
     assert expected_result == actual_result
 
+
 @pytest.mark.filterwarnings("ignore::DeprecationWarning")
 def test_imagetosmilesWithConfidence():
     img_path = "Tests/caffeine.png"
     actual_result = predict_SMILES_with_confidence(img_path)
-    
+
     for element, confidence in actual_result:
-        assert confidence >= 0.9, f"Confidence for element '{element}' is below 0.9 (confidence: {confidence})"
+        assert (
+            confidence >= 0.9
+        ), f"Confidence for element '{element}' is below 0.9 (confidence: {confidence})"
