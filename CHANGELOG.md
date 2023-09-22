@@ -1,5 +1,35 @@
 # Changelog
 
+## [2.4.0](https://github.com/Kohulan/DECIMER-Image_Transformer/compare/v2.3.1...v2.4.0) (2023-08-30)
+
+
+### Features
+
+* add confidence score for predictions ([6584b29](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/6584b292e6d2e771158587fab39cc7ae4b9b904c))
+* add confidence score testing to Tests ([588b667](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/588b66768f2e792d05c373c8b4072bff2d76cf7e))
+
+
+### Bug Fixes
+
+* add pyyaml to requirements.txt ([d572ded](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/d572ded36c114fc3dc88f1c19893c1e81585979e))
+* confidence extraction ([6c95fee](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/6c95feece66642e75e1cd1befa6cbab4a57a19c4))
+* efficientnet imports ([70080f6](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/70080f65b451b368cec1415479b98c15065b0e22))
+* efficientNet Model params ([7057fab](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/7057fab3af87b7220b54424061378ebf884cd47c))
+* Import modules according to TensorFlow versions ([65600ff](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/65600ffe06e0223fc36c5f17957e9b6e76f1d2a7))
+* linter issue of unused import ([5f607e4](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/5f607e4cc50af2ebeaf03f8b316deb0a9e8c8393))
+* linting issues ([40cffed](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/40cffedd493efef8b0929fdb21930cbd6b7c3d36))
+* model size to check for download ([b66bca6](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/b66bca6c4c25abac42c1fb29aba1f3e5ac45f7a3))
+* read the docs theme ([f6732e7](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/f6732e7927aa8f65d449af2a7bdb8e7dd35afe88))
+* remove duplicate efficientnet imports ([3896425](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/38964250c77839c4ea11bda591140bb22728bff9))
+* revert to original way of importing ([7af54c9](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/7af54c9eb159a5d02d8e49d891673c3f8a591b38))
+* update EfficientNet import issue ([758a0f4](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/758a0f4a54a4063a7f22887b33f07763e9cac6ce))
+* use checkpoints properly for predictions [#65](https://github.com/Kohulan/DECIMER-Image_Transformer/issues/65) and [#66](https://github.com/Kohulan/DECIMER-Image_Transformer/issues/66) ([f47ac99](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/f47ac99eaebfd16e45281d094884bdecc566f507))
+
+
+### Reverts
+
+* original implementation ([e1b946a](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/e1b946aa849e6a78448acd83f7b2e24e5e228f0b))
+
 ## [2.3.1](https://github.com/Kohulan/DECIMER-Image_Transformer/compare/v1.0.1...v2.3.1) (2023-07-04)
 
 
