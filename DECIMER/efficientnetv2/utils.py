@@ -19,7 +19,6 @@ import os
 from absl import logging
 import numpy as np
 import tensorflow as tf
-import tensorflow_addons.layers as tfa_layers
 
 from tensorflow.python.tpu import (
     tpu_function,
@@ -236,7 +235,7 @@ def normalization(
 ):
     """Normalization after conv layers."""
     if norm_type == "gn":
-        return tfa_layers.GroupNormalization(groups, axis, epsilon, name=name)
+        return tf.keras.layers.GroupNormalization(groups, axis, epsilon, name=name)
 
     if norm_type == "tpu_bn":
         return TpuBatchNormalization(
