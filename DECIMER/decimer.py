@@ -28,19 +28,8 @@ for gpu in gpus:
 # Set path
 default_path = pystow.join("DECIMER-V2")
 
-# model download location
-model_url = "https://zenodo.org/record/8300489/files/models.zip"
-model_path = os.path.join(default_path.as_posix(), "DECIMER_model")
-
 # download models to a default location
-if (
-    os.path.exists(model_path)
-    and os.stat(os.path.join(model_path, "saved_model.pb")).st_size != 28080309
-):
-    shutil.rmtree(model_path)
-    config.download_trained_weights(model_url, default_path)
-elif not os.path.exists(model_path):
-    config.download_trained_weights(model_url, default_path)
+utils.ensure_model(default_path=default_path)
 
 # Load important pickle files which consists the tokenizers and the maxlength setting
 tokenizer = pickle.load(
