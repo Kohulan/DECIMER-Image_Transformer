@@ -1,4 +1,6 @@
 import re
+import os
+import DECIMER.config as config
 
 pattern = "R([0-9]*)|X([0-9]*)|Y([0-9]*)|Z([0-9]*)"
 add_space_re = "^(\W+)|(\W+)$"
@@ -57,3 +59,27 @@ def decoder(predictions):
         .replace("§", "0")
     )
     return modified
+
+def ensure_model(
+    default_path: str,
+    model_url: str = "https://zenodo.org/record/8300489/files/models.zip"
+):
+    """Function to ensure model is present locally
+
+    Convenient function to ensure model download before usage
+
+    Args:
+        default path (str): default path for DECIMER data
+        model_url (str): trained model url for downloading
+    """
+
+    model_path = os.path.join(default_path.as_posix(), "DECIMER_model")
+
+    if (
+        os.path.exists(model_path)
+        and os.stat(os.path.join(model_path, "saved_model.pb")).st_size != 28080309
+    ):
+        shutil.rmtree(model_path)
+        config.download_trained_weights(model_url, default_path)
+    elif not os.path.exists(model_path):
+        config.download_trained_weights(model_url, default_path)
