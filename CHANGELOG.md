@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.5.0](https://github.com/Kohulan/DECIMER-Image_Transformer/compare/v2.4.0...v2.5.0) (2024-01-11)
+
+
+### Features
+
+* automated-pypi-releases ([987e770](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/987e77058c333497ae1fdbcec55460a102477c6b))
+
+
+### Bug Fixes
+
+* installation issues ([a959a8b](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/a959a8b961fe81f6cebea47cf87fd81cd2f7913a))
+
 ## [2.4.0](https://github.com/Kohulan/DECIMER-Image_Transformer/compare/v2.3.1...v2.4.0) (2023-08-30)
 
 
