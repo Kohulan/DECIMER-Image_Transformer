@@ -1,6 +1,8 @@
-import sys
 import os
-from rdkit import Chem, DataStructs
+import sys
+
+from rdkit import Chem
+from rdkit import DataStructs
 
 
 def compare_molecules_inchi_match(

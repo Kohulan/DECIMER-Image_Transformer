@@ -1,10 +1,13 @@
 import os
-import tensorflow as tf
-from typing import List, Tuple
 import pickle
+from typing import List
+from typing import Tuple
+
+import tensorflow as tf
+
+import DECIMER.config as config
 import DECIMER.Efficient_Net_encoder as Efficient_Net_encoder
 import DECIMER.Transformer_decoder as Transformer_decoder
-import DECIMER.config as config
 
 print(tf.__version__)
 

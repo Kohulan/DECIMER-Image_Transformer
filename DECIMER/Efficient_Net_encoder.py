@@ -1,8 +1,9 @@
 # EfficientNet-V2 config
 import tensorflow as tf
+
 import DECIMER.efficientnetv2
-from DECIMER.efficientnetv2 import effnetv2_model
 from DECIMER.efficientnetv2 import effnetv2_configs
+from DECIMER.efficientnetv2 import effnetv2_model
 
 BATCH_SIZE_DEBUG = 2
 MODEL = "efficientnetv2-m"  # @param
@@ -37,7 +38,6 @@ class Encoder(tf.keras.Model):
         pretrained_weights=None,
         scale_factor=0,
     ):
-
         super(Encoder, self).__init__()
 
         self.image_embedding_dim = image_embedding_dim

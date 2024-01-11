@@ -1,15 +1,16 @@
-import config
-import Efficient_Net_encoder
-import Transformer_decoder
-import efficientnet.tfkeras as efn
-import time
+import pickle
 import re
 import sys
-import pickle
+import time
 from datetime import datetime
+
+import config
+import Efficient_Net_encoder
+import efficientnet.tfkeras as efn
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import tensorflow as tf
-import matplotlib as mpl
+import Transformer_decoder
 
 mpl.use("Agg")
 

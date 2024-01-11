@@ -1,5 +1,7 @@
 import pytest
-from DECIMER import predict_SMILES, predict_SMILES_with_confidence
+
+from DECIMER import predict_SMILES
+from DECIMER import predict_SMILES_with_confidence
 
 
 @pytest.mark.filterwarnings("ignore::DeprecationWarning")

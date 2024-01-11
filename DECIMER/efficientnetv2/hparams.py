@@ -16,7 +16,10 @@
 import ast
 import collections
 import copy
-from typing import Any, Dict, Text
+from typing import Any
+from typing import Dict
+from typing import Text
+
 import tensorflow as tf
 import yaml
 

@@ -1,9 +1,11 @@
 import os
-import sys
-import tensorflow as tf
-from typing import List, Tuple
 import pickle
+import sys
+from typing import List
+from typing import Tuple
+
 import pystow
+import tensorflow as tf
 import Transformer_decoder
 
 if int(tf.__version__.split(".")[1]) <= 10:

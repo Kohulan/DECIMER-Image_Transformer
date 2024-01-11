@@ -12,7 +12,7 @@ body:
     attributes:
       value: >
         Please make sure that this is a bug. As per our [GitHub
-        Policy](https://github.com/Kohulan/DECIMER-Image_Transformer/blob/master/ISSUES.md).    
+        Policy](https://github.com/Kohulan/DECIMER-Image_Transformer/blob/master/ISSUES.md).
   - type: dropdown
     id: issue-type
     attributes:

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
+import platform
 
 import setuptools
-import platform
 
 if (
     platform.processor() == "arm" or platform.processor() == "i386"

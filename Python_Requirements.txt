@@ -1,5 +1,0 @@
-tensorflow>=2.8.0
-opencv-python
-pystow
-efficientnet
-pillow-heif
