@@ -26,11 +26,11 @@ import copy
 import itertools
 import math
 
-from absl import logging
 import numpy as np
 import six
-from six.moves import xrange
 import tensorflow as tf
+from absl import logging
+from six.moves import xrange
 
 from DECIMER.efficientnetv2 import effnetv2_configs
 from DECIMER.efficientnetv2 import hparams

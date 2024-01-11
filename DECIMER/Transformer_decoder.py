@@ -1,5 +1,5 @@
-import tensorflow as tf
 import numpy as np
+import tensorflow as tf
 
 # Set target dtype
 TARGET_DTYPE = tf.float32

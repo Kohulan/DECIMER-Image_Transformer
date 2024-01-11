@@ -1,8 +1,9 @@
 # © Kohulan Rajan - 2020
-import tensorflow as tf
 import os
-from datetime import datetime
 import pickle
+from datetime import datetime
+
+import tensorflow as tf
 
 print(datetime.now().strftime("%Y/%m/%d %H:%M:%S"), "Process started", flush=True)
 

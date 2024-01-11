@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 """
 DECIMER V2.4.0 Python Package.
 ============================

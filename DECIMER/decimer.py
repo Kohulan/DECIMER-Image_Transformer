@@ -1,11 +1,13 @@
-import os
-import sys
 import logging
+import os
 import pickle
+import sys
+from typing import List
+from typing import Tuple
+
 import pystow
-import shutil
 import tensorflow as tf
-from typing import List, Tuple
+
 import DECIMER.config as config
 import DECIMER.utils as utils
 
@@ -34,7 +36,9 @@ utils.ensure_model(default_path=default_path)
 # Load important pickle files which consists the tokenizers and the maxlength setting
 tokenizer = pickle.load(
     open(
-        os.path.join(default_path.as_posix(), "DECIMER_model", "assets", "tokenizer_SMILES.pkl"),
+        os.path.join(
+            default_path.as_posix(), "DECIMER_model", "assets", "tokenizer_SMILES.pkl"
+        ),
         "rb",
     )
 )

@@ -8,7 +8,7 @@ _________________
 
 ```
 conda install -c rdkit rdkit
-``` 
+```
 
 ## The slight distortions (shearing, rotation) are applied to the benchmark images by running:
 

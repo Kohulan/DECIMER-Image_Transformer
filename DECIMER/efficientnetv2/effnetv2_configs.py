@@ -15,6 +15,7 @@
 """EfficientNet V1 and V2 model configs."""
 import functools
 import re
+
 from DECIMER.efficientnetv2 import hparams
 
 cfg_register = functools.partial(hparams.register, prefix="cfg:")

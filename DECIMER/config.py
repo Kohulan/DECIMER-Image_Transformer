@@ -1,16 +1,19 @@
 # Network configuration file
-import tensorflow as tf
+import io
+import zipfile
+from pathlib import Path
+
+import cv2
 import efficientnet.tfkeras as efn
+import numpy as np
+import pystow
+import tensorflow as tf
+from PIL import Image
+from PIL import ImageEnhance
+from pillow_heif import register_heif_opener
+
 import DECIMER.Efficient_Net_encoder as Efficient_Net_encoder
 import DECIMER.Transformer_decoder as Transformer_decoder
-from PIL import Image, ImageEnhance
-from pillow_heif import register_heif_opener
-from pathlib import Path
-import numpy as np
-import io
-import cv2
-import pystow
-import zipfile
 
 
 TARGET_DTYPE = tf.float32

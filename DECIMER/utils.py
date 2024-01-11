@@ -1,5 +1,7 @@
-import re
 import os
+import re
+import shutil
+
 import DECIMER.config as config
 
 pattern = "R([0-9]*)|X([0-9]*)|Y([0-9]*)|Z([0-9]*)"
@@ -60,9 +62,10 @@ def decoder(predictions):
     )
     return modified
 
+
 def ensure_model(
     default_path: str,
-    model_url: str = "https://zenodo.org/record/8300489/files/models.zip"
+    model_url: str = "https://zenodo.org/record/8300489/files/models.zip",
 ):
     """Function to ensure model is present locally
 
@@ -74,6 +77,7 @@ def ensure_model(
     """
 
     model_path = os.path.join(default_path.as_posix(), "DECIMER_model")
+    print(model_path)
 
     if (
         os.path.exists(model_path)

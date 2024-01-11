@@ -1,9 +1,10 @@
 # -*- coding: UTF-8 -*-
 # © Kohulan Rajan - 2020
-import tensorflow as tf
+import argparse
 import os
 import pickle
-import argparse
+
+import tensorflow as tf
 
 parser = argparse.ArgumentParser()
 parser.add_argument("file", nargs="+")

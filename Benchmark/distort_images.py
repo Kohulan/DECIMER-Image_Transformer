@@ -1,9 +1,11 @@
-import sys
 import os
+import sys
 from multiprocessing import Pool
-import numpy as np
-from skimage.io import imread, imsave
+
 import imgaug.augmenters as iaa
+import numpy as np
+from skimage.io import imread
+from skimage.io import imsave
 
 
 def distort_image(input_image_path: str, output_image_path: str) -> None:
