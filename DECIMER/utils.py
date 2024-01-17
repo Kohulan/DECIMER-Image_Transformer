@@ -67,7 +67,7 @@ def ensure_model(
     default_path: str,
     model_url: str = "https://zenodo.org/record/8300489/files/models.zip",
 ):
-    """Function to ensure model is present locally
+    """Function to ensure model is present locally.
 
     Convenient function to ensure model download before usage
 

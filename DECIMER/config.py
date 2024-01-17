@@ -20,9 +20,10 @@ TARGET_DTYPE = tf.float32
 
 
 def resize_byratio(image):
-    """
-    This function takes a Pillow Image object and will resize the image by 512 x 512
-    To upscale or to downscale the image LANCZOS resampling method is used.
+    """This function takes a Pillow Image object and will resize the image by
+    512 x 512 To upscale or to downscale the image LANCZOS resampling method is
+    used.
+
     with the new pillow version the antialias is turned on when using LANCZOS.
     Args: PIL.Image
     Returns: PIL.Image
@@ -35,10 +36,10 @@ def resize_byratio(image):
 
 
 def central_square_image(image):
-    """
-    This function takes a Pillow Image object and will add white padding
-    so that the image has a square shape with the width/height of the longest side
+    """This function takes a Pillow Image object and will add white padding so
+    that the image has a square shape with the width/height of the longest side
     of the original image.
+
     Args: PIL.Image
     Returns: PIL.Image
     """
@@ -59,6 +60,7 @@ def central_square_image(image):
 def delete_empty_borders(image):
     """This function takes a Pillow Image object, converts it to grayscale and
     deletes white space at the borders.
+
     Args: PIL.Image
     Returns: PIL.Image
     """
@@ -132,8 +134,8 @@ def get_bnw_image(image):
 
 
 def increase_contrast(image):
-    """
-    This function increases the contrast of an image input.
+    """This function increases the contrast of an image input.
+
     Args: PIL.Image
     Returns: PIL.Image
     """
@@ -153,8 +155,9 @@ def increase_contrast(image):
 
 
 def get_resize(image):
-    """
-    This function used to decide how to resize a given image without losing much information.
+    """This function used to decide how to resize a given image without losing
+    much information.
+
     Args: PIL.Image
     Returns: PIL.Image
     """
@@ -172,8 +175,8 @@ def get_resize(image):
 
 
 def increase_brightness(image):
-    """
-    This function adjusts the brightness of the given image.
+    """This function adjusts the brightness of the given image.
+
     Args: PIL.Image
     Returns: PIL.Image
     """
@@ -183,8 +186,8 @@ def increase_brightness(image):
 
 
 def decode_image(image_path: str):
-    """
-    Loads an image and preprocesses the input image in several steps to get the image ready for DECIMER input.
+    """Loads an image and preprocesses the input image in several steps to get
+    the image ready for DECIMER input.
 
     Args:
         image_path (str): path of input image
@@ -207,9 +210,7 @@ def decode_image(image_path: str):
 
 
 class Config:
-    """
-    Configuration class
-    """
+    """Configuration class."""
 
     def __init__(
         self,
@@ -227,8 +228,8 @@ class Config:
         do_permute=False,
         pretrained_weights=None,
     ):
-        """This functions initializes the Efficient-Net V2 encoder with user defined
-        configurations.
+        """This functions initializes the Efficient-Net V2 encoder with user
+        defined configurations.
 
         Args:
             image_embedding_dim (int): Embedding dimention of the input image
@@ -257,9 +258,8 @@ class Config:
         image_embedding_dim,
         rate=0.1,
     ):
-        """This functions initializes the Transformer model as decoder with user defined
-        configurations.
-
+        """This functions initializes the Transformer model as decoder with
+        user defined configurations.
 
         Args:
             vocab_len (int): Total number of words in the input vocabulary
@@ -281,7 +281,7 @@ class Config:
         )
 
     def initialize_lr_config(self, warm_steps, n_epochs):
-        """This function sets the configuration to initialize learning rate
+        """This function sets the configuration to initialize learning rate.
 
         Args:
             warm_steps (int): Number of steps The learning rate is increased
@@ -294,7 +294,7 @@ class Config:
 
 
 class CustomSchedule(tf.keras.optimizers.schedules.LearningRateSchedule):
-    """Custom schedule for learning rate used during training
+    """Custom schedule for learning rate used during training.
 
     Args:
         tf (_type_): keras learning rate schedule
@@ -316,9 +316,9 @@ class CustomSchedule(tf.keras.optimizers.schedules.LearningRateSchedule):
 
 
 def prepare_models(encoder_config, transformer_config, replica_batch_size, verbose=0):
-    """This function is used to initiate the Encoder and the Transformer with appropriate
-    configs set by the user. After initiating the models this function returns the Encoder,Transformer
-    and the optimizer.
+    """This function is used to initiate the Encoder and the Transformer with
+    appropriate configs set by the user. After initiating the models this
+    function returns the Encoder,Transformer and the optimizer.
 
     Args:
         encoder_config ([type]): Encoder configuration set by user in the config class.
@@ -353,9 +353,10 @@ def prepare_models(encoder_config, transformer_config, replica_batch_size, verbo
 
 # Downloads the model and unzips the file downloaded, if the model is not present on the working directory.
 def download_trained_weights(model_url: str, model_path: str, verbose=1):
-    """This function downloads the trained models and tokenizers to a default location.
-    After downloading the zipped file the function unzips the file automatically.
-    If the model exists on the default location this function will not work.
+    """This function downloads the trained models and tokenizers to a default
+    location. After downloading the zipped file the function unzips the file
+    automatically. If the model exists on the default location this function
+    will not work.
 
     Args:
         model_url (str): trained model url for downloading.

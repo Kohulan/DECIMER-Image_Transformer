@@ -45,16 +45,14 @@ tokenizer = pickle.load(
 
 
 def main():
-    """
-    This function take the path of the image as user input
-    and returns the predicted SMILES as output in CLI.
+    """This function take the path of the image as user input and returns the
+    predicted SMILES as output in CLI.
 
     Agrs:
         str: image_path
 
     Returns:
         str: predicted SMILES
-
     """
     if len(sys.argv) != 2:
         print("Usage: {} $image_path".format(sys.argv[0]))
@@ -64,9 +62,8 @@ def main():
 
 
 def detokenize_output(predicted_array: int) -> str:
-    """
-    This function takes the predited tokens from the DECIMER model
-    and returns the decoded SMILES string.
+    """This function takes the predited tokens from the DECIMER model and
+    returns the decoded SMILES string.
 
     Args:
         predicted_array (int): Predicted tokens from DECIMER
@@ -87,11 +84,10 @@ def detokenize_output_add_confidence(
     predicted_array: tf.Tensor,
     confidence_array: tf.Tensor,
 ) -> List[Tuple[str, float]]:
-    """
-    This function takes the predicted array of tokens as well as the confidence values
-    returned by the Transformer Decoder and returns a list of tuples
-    that contain each token of the predicted SMILES string and the confidence
-    value.
+    """This function takes the predicted array of tokens as well as the
+    confidence values returned by the Transformer Decoder and returns a list of
+    tuples that contain each token of the predicted SMILES string and the
+    confidence value.
 
     Args:
         predicted_array (tf.Tensor): Transformer Decoder output array (predicted tokens)
@@ -121,8 +117,7 @@ DECIMER_V2 = tf.saved_model.load(default_path.as_posix() + "/DECIMER_model/")
 
 
 def predict_SMILES(image_path: str) -> str:
-    """
-    This function takes an image path (str) and returns the SMILES
+    """This function takes an image path (str) and returns the SMILES
     representation of the depicted molecule (str).
 
     Args:
@@ -138,8 +133,7 @@ def predict_SMILES(image_path: str) -> str:
 
 
 def predict_SMILES_with_confidence(image_path: str) -> List[Tuple[str, float]]:
-    """
-    This function takes an image path (str) and returns a list of tuples
+    """This function takes an image path (str) and returns a list of tuples
     that contain each token of the predicted SMILES string and the confidence
     level from the last layer of the Transformer decoder.
 

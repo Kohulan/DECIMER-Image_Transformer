@@ -8,9 +8,8 @@ from rdkit import DataStructs
 def compare_molecules_inchi_match(
     input_file_path: str, reference_directory: str
 ) -> None:
-    """
-    This function checks if the molecules in the DECIMER results to a set of reference
-    mol-files using Standard InChI.
+    """This function checks if the molecules in the DECIMER results to a set of
+    reference mol-files using Standard InChI.
 
     Args:
             input_file (str): Path of file that contains image names and SMILES as created by run_decimer_save_results.py

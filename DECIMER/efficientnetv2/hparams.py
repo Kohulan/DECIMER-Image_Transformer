@@ -158,7 +158,10 @@ class Config(dict):
             yaml.dump(self.as_dict(), f, default_flow_style=False)
 
     def parse_from_str(self, config_str: Text) -> Dict[Any, Any]:
-        """Parse a string like 'x.y=1,x.z=2' to nested dict {x: {y: 1, z: 2}}."""
+        """Parse a string like 'x.y=1,x.z=2' to nested dict {x: {y: 1, z:
+
+        2}}.
+        """
         if not config_str:
             return {}
         config_dict = {}

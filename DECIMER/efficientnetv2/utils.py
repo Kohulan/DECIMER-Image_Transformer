@@ -192,7 +192,8 @@ class TpuBatchNormalization(tf.keras.layers.BatchNormalization):
         super().__init__(fused=fused, **kwargs)
 
     def _moments(self, inputs, reduction_axes, keep_dims):
-        """Compute the mean and variance: it overrides the original _moments."""
+        """Compute the mean and variance: it overrides the original
+        _moments."""
         shard_mean, shard_variance = super()._moments(
             inputs, reduction_axes, keep_dims=keep_dims
         )
@@ -222,7 +223,8 @@ class TpuBatchNormalization(tf.keras.layers.BatchNormalization):
 
 
 class BatchNormalization(tf.keras.layers.BatchNormalization):
-    """Fixed default name of BatchNormalization to match TpuBatchNormalization."""
+    """Fixed default name of BatchNormalization to match
+    TpuBatchNormalization."""
 
     def __init__(self, **kwargs):
         if not kwargs.get("name", None):
@@ -371,7 +373,10 @@ def get_tpu_host_call(global_step, model_dir, iterations_per_loop):
         return None  # No summaries to write.
 
     def host_call_fn(global_step, *args):
-        """Training host call. Creates summaries for training metrics."""
+        """Training host call.
+
+        Creates summaries for training metrics.
+        """
         gs = global_step[0]
         with tf.summary.create_file_writer(
             model_dir, max_queue=iterations_per_loop
@@ -594,7 +599,8 @@ def restore_tf2_ckpt(model, ckpt_path_or_file, skip_mismatch=True, exclude_layer
 
 
 class ReuableBackupAndRestore(tf.keras.callbacks.experimental.BackupAndRestore):
-    """A BackupAndRestore callback that can be used across multiple model.fit()s."""
+    """A BackupAndRestore callback that can be used across multiple
+    model.fit()s."""
 
     def on_train_end(self, logs=None):
         # don't delete the backup, so it can be used for future model.fit()s

@@ -76,8 +76,8 @@ AUTO = tf.data.experimental.AUTOTUNE
 
 
 def decode_image(image_data):
-    """Preprocess the input image for Efficient-Net and
-    returned the preprocessed image
+    """Preprocess the input image for Efficient-Net and returned the
+    preprocessed image.
 
     Args:
         image_data (int array): Decoded image in 2D array
@@ -98,8 +98,8 @@ def decode_image(image_data):
 
 
 def read_tfrecord(example):
-    """Read a tf record file and decodes the image and text data
-    back into original form.
+    """Read a tf record file and decodes the image and text data back into
+    original form.
 
     Args:
         example (tf.record): single entry from tf record file
@@ -124,7 +124,7 @@ numbers = re.compile(r"(\d+)")
 
 
 def numericalSort(value):
-    """Sorts the filenames numerically
+    """Sorts the filenames numerically.
 
     Args:
         value (int): numerical value of the file name
@@ -138,7 +138,7 @@ def numericalSort(value):
 
 
 def get_dataset(batch_size=BATCH_SIZE, buffered_size=BUFFER_SIZE, path=""):
-    """Creates a batch of data rom a given dataset
+    """Creates a batch of data rom a given dataset.
 
     Args:
         batch_size (int, optional): number of datapoints per batch. Defaults to BATCH_SIZE.
@@ -207,8 +207,8 @@ print("Training preparation\n")
 
 
 def prepare_for_training(lr_config, encoder_config, transformer_config, verbose=0):
-    """Preparte the model for training. initiate the learning rate, loss object, metrics
-    and optimizer
+    """Preparte the model for training. initiate the learning rate, loss
+    object, metrics and optimizer.
 
     Args:
         lr_config (int): values for learning rate configuration
@@ -239,13 +239,11 @@ def prepare_for_training(lr_config, encoder_config, transformer_config, verbose=
         train_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(
             name="train_accuracy", dtype=tf.float32
         )
-        """
-        validation_loss = tf.keras.metrics.Mean(
-            name="validation_loss", dtype=tf.float32
-        )
-        validation_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(
-            name="validation_accuracy", dtype=tf.float32
-        )
+        """validation_loss = tf.keras.metrics.Mean(
+
+        name="validation_loss", dtype=tf.float32 ) validation_accuracy =
+        tf.keras.metrics.SparseCategoricalAccuracy(
+        name="validation_accuracy", dtype=tf.float32 )
         """
         # Declare the learning rate schedule (try this as actual lr schedule and list...)
         lr_scheduler = config.CustomSchedule(
@@ -327,7 +325,7 @@ if ckpt_manager.latest_checkpoint:
 
 # Main training step fucntion
 def train_step(image_batch, selfies_batch):
-    """Main training step function
+    """Main training step function.
 
     Args:
         image_batch (float array): Input image batch
