@@ -62,10 +62,8 @@ def decoder(predictions):
     )
     return modified
 
-def ensure_models(
-    default_path: str,
-    model_urls: dict
-) -> dict:
+
+def ensure_models(default_path: str, model_urls: dict) -> dict:
     """Function to ensure models are present locally.
 
     Convenient function to ensure model downloads before usage
@@ -89,9 +87,8 @@ def ensure_models(
             config.download_trained_weights(model_url, default_path)
         elif not os.path.exists(model_path):
             config.download_trained_weights(model_url, default_path)
-        
+
         # Store the model path
         model_paths[model_name] = model_path
 
     return model_paths
-

@@ -32,8 +32,9 @@ default_path = pystow.join("DECIMER-V2")
 
 model_urls = {
     "DECIMER": "https://zenodo.org/record/8300489/files/models.zip",
-    "DECIMER_HandDrawn": "https://zenodo.org/records/10781330/files/DECIMER_HandDrawn_model.zip"
+    "DECIMER_HandDrawn": "https://zenodo.org/records/10781330/files/DECIMER_HandDrawn_model.zip",
 }
+
 
 def get_models(model_urls: dict) -> Tuple[object, tf.saved_model, tf.saved_model]:
     """Download and load models from the provided URLs.
@@ -54,7 +55,9 @@ def get_models(model_urls: dict) -> Tuple[object, tf.saved_model, tf.saved_model
     model_paths = utils.ensure_models(default_path=default_path, model_urls=model_urls)
 
     # Load tokenizers
-    tokenizer_path = os.path.join(model_paths["DECIMER"], "assets", "tokenizer_SMILES.pkl")
+    tokenizer_path = os.path.join(
+        model_paths["DECIMER"], "assets", "tokenizer_SMILES.pkl"
+    )
     tokenizer = pickle.load(open(tokenizer_path, "rb"))
 
     # Load DECIMER models
@@ -63,7 +66,9 @@ def get_models(model_urls: dict) -> Tuple[object, tf.saved_model, tf.saved_model
 
     return tokenizer, DECIMER_V2, DECIMER_Hand_drawn
 
+
 tokenizer, DECIMER_V2, DECIMER_Hand_drawn = get_models(model_urls)
+
 
 def detokenize_output(predicted_array: int) -> str:
     """This function takes the predited tokens from the DECIMER model and
@@ -115,7 +120,10 @@ def detokenize_output_add_confidence(
     decoded_prediction_with_confidence.append(prediction_with_confidence_[-1])
     return decoded_prediction_with_confidence
 
-def predict_SMILES(image_path: str, confidence: bool = False, hand_drawn: bool = False) -> str:
+
+def predict_SMILES(
+    image_path: str, confidence: bool = False, hand_drawn: bool = False
+) -> str:
     """Predicts SMILES representation of a molecule depicted in the given image.
 
     Args:
@@ -127,17 +135,20 @@ def predict_SMILES(image_path: str, confidence: bool = False, hand_drawn: bool =
         str: SMILES representation of the molecule in the input image, optionally with confidence values
     """
     chemical_structure = config.decode_image(image_path)
-    
+
     model = DECIMER_Hand_drawn if hand_drawn else DECIMER_V2
     predicted_tokens, confidence_values = model(tf.constant(chemical_structure))
-    
+
     predicted_SMILES = utils.decoder(detokenize_output(predicted_tokens))
-    
+
     if confidence:
-        predicted_SMILES_with_confidence = detokenize_output_add_confidence(predicted_tokens, confidence_values)
+        predicted_SMILES_with_confidence = detokenize_output_add_confidence(
+            predicted_tokens, confidence_values
+        )
         return predicted_SMILES, predicted_SMILES_with_confidence
-    
+
     return predicted_SMILES
+
 
 def main():
     """This function take the path of the image as user input and returns the
@@ -154,6 +165,7 @@ def main():
     else:
         SMILES = predict_SMILES(sys.argv[1])
         print(SMILES)
+
 
 if __name__ == "__main__":
     main()
