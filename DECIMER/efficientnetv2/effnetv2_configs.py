@@ -63,7 +63,8 @@ class BlockDecoder(object):
         return "_".join(args)
 
     def decode(self, string_list):
-        """Decodes a list of string notations to specify blocks inside the network.
+        """Decodes a list of string notations to specify blocks inside the
+        network.
 
         Args:
           string_list: a list of strings, each string is a notation of block.

@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-DECIMER V2.4.0 Python Package.
-============================
+"""DECIMER V2.4.0 Python Package. ============================
 
 This repository contains DECIMER-V2,Deep lEarning for Chemical ImagE Recognition) project
 was launched to address the OCSR problem with the latest computational intelligence methods
@@ -19,7 +17,6 @@ print(SMILES)
 
 For comments, bug reports or feature ideas,
 please raise a issue on the Github repository.
-
 """
 
 __version__ = "2.4.0"

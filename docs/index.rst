@@ -22,7 +22,7 @@ Install DECIMER in the command line using pip:
 
 .. code-block::
 
-   $ pip install decimer
+   pip install decimer
 
 .. toctree::
    :maxdepth: 2

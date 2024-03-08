@@ -87,9 +87,8 @@ if ckpt_manager.latest_checkpoint:
 
 
 def detokenize_output(predicted_array: tf.Tensor) -> str:
-    """
-    This function takes the predicted array of tokens and returns the predicted SMILES
-    string.
+    """This function takes the predicted array of tokens and returns the
+    predicted SMILES string.
 
     Args:
         predicted_array (tf.Tensor): Transformer Decoder output array (predicted tokens)
@@ -110,11 +109,10 @@ def detokenize_output_add_confidence(
     predicted_array: tf.Tensor,
     confidence_array: tf.Tensor,
 ) -> List[Tuple[str, float]]:
-    """
-    This function takes the predicted array of tokens as well as the confidence values
-    returned by the Transformer Decoder and returns a list of tuples
-    that contain each token of the predicted SMILES string and the confidence
-    value.
+    """This function takes the predicted array of tokens as well as the
+    confidence values returned by the Transformer Decoder and returns a list of
+    tuples that contain each token of the predicted SMILES string and the
+    confidence value.
 
     Args:
         predicted_array (tf.Tensor): Transformer Decoder output array (predicted tokens)
@@ -137,14 +135,18 @@ def detokenize_output_add_confidence(
 
 
 class DECIMER_Predictor(tf.Module):
-    """This is a class which takes care of inference. It loads the saved checkpoint and the necessary
-    tokenizers. The inference begins with the start token (<start>) and ends when the end token(<end>)
-    is met. This class can only work with tf.Tensor objects. The strings shoul gets transformed into np.arrays
-    before feeding them into this class.
+    """This is a class which takes care of inference.
+
+    It loads the saved checkpoint and the necessary tokenizers. The
+    inference begins with the start token (<start>) and ends when the
+    end token(<end>) is met. This class can only work with tf.Tensor
+    objects. The strings shoul gets transformed into np.arrays before
+    feeding them into this class.
     """
 
     def __init__(self, encoder, tokenizer, transformer, max_length):
-        """Load the tokenizers, the maximum input and output length and the model.
+        """Load the tokenizers, the maximum input and output length and the
+        model.
 
         Args:
             encoder (tf.keras.model):  The encoder model
@@ -158,8 +160,8 @@ class DECIMER_Predictor(tf.Module):
         self.max_length = max_length
 
     def __call__(self, Decoded_image):
-        """This fuction takes in the Decoded image as input and
-        makes the predicted list of tokens and return the tokens as tf.Tensor array.
+        """This fuction takes in the Decoded image as input and makes the
+        predicted list of tokens and return the tokens as tf.Tensor array.
         Before feeding the input array we must define start and the end tokens.
 
         Args:
@@ -211,7 +213,9 @@ DECIMER = DECIMER_Predictor(encoder, tokenizer, transformer, MAX_LEN)
 
 
 class ExportDECIMERPredictor(tf.Module):
-    """This class wraps the inference class into a module into tf.Module sub-class, with a tf.function on the __call__ method.
+    """This class wraps the inference class into a module into tf.Module sub-
+    class, with a tf.function on the __call__ method.
+
     So we could export the model as a tf.saved_model.
     """
 
@@ -222,8 +226,9 @@ class ExportDECIMERPredictor(tf.Module):
     @tf.function
     def __call__(self, Decoded_Image):
         """This fucntion calls the __call__function from the translator class.
-        In the tf.function only the output sentence is returned.
-        Thanks to the non-strict execution in tf.function any unnecessary values are never computed.
+        In the tf.function only the output sentence is returned. Thanks to the
+        non-strict execution in tf.function any unnecessary values are never
+        computed.
 
         Args:
             sentence (tf.Tensor[tf.int32]): Input array in tf.Easgertensor format.

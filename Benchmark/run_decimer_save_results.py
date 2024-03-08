@@ -5,10 +5,9 @@ from DECIMER import predict_SMILES
 
 
 def main():
-    """
-    This script runs Decimer on every image in a given directory (first argument) and saves the
-    results in a text file with a given ID (second argument).
-    """
+    """This script runs Decimer on every image in a given directory (first
+    argument) and saves the results in a text file with a given ID (second
+    argument)."""
     im_path = sys.argv[1]
     save_ID = sys.argv[2]
 

@@ -9,14 +9,15 @@ from skimage.io import imsave
 
 
 def distort_image(input_image_path: str, output_image_path: str) -> None:
-    """
-    This function takes the path of an input image and the desired output image path (both str).
-    It rotates the input image randomly (-5° or +5°) and applies shearing (in x or y-direction with an
-    angle of -9° or 9°) as described by Clevert et al (Img2Mol (preprint)).
-    I was a bit confused about the "shearing factor" of +/- 0.1 described by Clevert et al. Normally the transformation
-    is done with a shearing angle. I assume here that the correponding angle is 0.1*90° = 9° as 90° is the extreme case
-    where the image turns into a horizontal or vertical line.
-    This seems reasonable as it results in a mild distortion as described by the authors.
+    """This function takes the path of an input image and the desired output
+    image path (both str). It rotates the input image randomly (-5° or +5°) and
+    applies shearing (in x or y-direction with an angle of -9° or 9°) as
+    described by Clevert et al (Img2Mol (preprint)). I was a bit confused about
+    the "shearing factor" of +/- 0.1 described by Clevert et al. Normally the
+    transformation is done with a shearing angle. I assume here that the
+    correponding angle is 0.1*90° = 9° as 90° is the extreme case where the
+    image turns into a horizontal or vertical line. This seems reasonable as it
+    results in a mild distortion as described by the authors.
 
     Args:
             input_image_path (str): Path of input image
@@ -43,9 +44,12 @@ def distort_image(input_image_path: str, output_image_path: str) -> None:
 
 
 def main():
-    """This script takes an input directory with images of chemical structure depictions, applies a random
-    rotation (-5° or +5°) as well as shearing (angle drawn from [-0.1, 0.1]) to every input image. These
-    distortions are supposed to imitate the image modifications described by Clevert et al (Img2Mol (preprint))
+    """This script takes an input directory with images of chemical structure
+    depictions, applies a random rotation (-5° or +5°) as well as shearing
+    (angle drawn from [-0.1, 0.1]) to every input image.
+
+    These distortions are supposed to imitate the image modifications
+    described by Clevert et al (Img2Mol (preprint))
     """
     input_dir = os.path.abspath(sys.argv[1])
     output_dir = os.path.abspath(sys.argv[2])

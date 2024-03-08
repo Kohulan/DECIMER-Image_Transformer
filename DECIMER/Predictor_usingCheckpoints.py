@@ -130,9 +130,8 @@ class DECIMER_Predictor(tf.Module):
         self.max_length = max_length
 
     def __call__(self, Decoded_image):
-        """
-        Run the DECIMER predictor model when called.
-        Usage of predict_SMILES or predict_SMILES_with_confidence is recommended instead
+        """Run the DECIMER predictor model when called. Usage of predict_SMILES
+        or predict_SMILES_with_confidence is recommended instead.
 
         Args:
             Decoded_image (_type_): output of config.decode_image
@@ -180,9 +179,8 @@ class DECIMER_Predictor(tf.Module):
 
 
 def detokenize_output(predicted_array: tf.Tensor) -> str:
-    """
-    This function takes the predicted array of tokens and returns the predicted SMILES
-    string.
+    """This function takes the predicted array of tokens and returns the
+    predicted SMILES string.
 
     Args:
         predicted_array (tf.Tensor): Transformer Decoder output array (predicted tokens)
@@ -203,11 +201,10 @@ def detokenize_output_add_confidence(
     predicted_array: tf.Tensor,
     confidence_array: tf.Tensor,
 ) -> List[Tuple[str, float]]:
-    """
-    This function takes the predicted array of tokens as well as the confidence values
-    returned by the Transformer Decoder and returns a list of tuples
-    that contain each token of the predicted SMILES string and the confidence
-    value.
+    """This function takes the predicted array of tokens as well as the
+    confidence values returned by the Transformer Decoder and returns a list of
+    tuples that contain each token of the predicted SMILES string and the
+    confidence value.
 
     Args:
         predicted_array (tf.Tensor): Transformer Decoder output array (predicted tokens)
@@ -234,8 +231,7 @@ DECIMER = DECIMER_Predictor(encoder, tokenizer, transformer, MAX_LEN)
 
 
 def predict_SMILES_with_confidence(image_path: str) -> List[Tuple[str, float]]:
-    """
-    This function takes an image path (str) and returns a list of tuples
+    """This function takes an image path (str) and returns a list of tuples
     that contain each token of the predicted SMILES string and the confidence
     level from the last layer of the Transformer decoder.
 
@@ -255,8 +251,7 @@ def predict_SMILES_with_confidence(image_path: str) -> List[Tuple[str, float]]:
 
 
 def predict_SMILES(image_path: str) -> str:
-    """
-    This function takes an image path (str) and returns the SMILES
+    """This function takes an image path (str) and returns the SMILES
     representation of the depicted molecule (str).
 
     Args:
