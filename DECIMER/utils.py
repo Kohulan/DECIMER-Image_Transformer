@@ -63,27 +63,32 @@ def decoder(predictions):
     return modified
 
 
-def ensure_model(
-    default_path: str,
-    model_url: str = "https://zenodo.org/record/8300489/files/models.zip",
-):
-    """Function to ensure model is present locally.
+def ensure_models(default_path: str, model_urls: dict) -> dict:
+    """Function to ensure models are present locally.
 
-    Convenient function to ensure model download before usage
+    Convenient function to ensure model downloads before usage
 
     Args:
-        default path (str): default path for DECIMER data
-        model_url (str): trained model url for downloading
+        default_path (str): Default path for model data
+        model_urls (dict): Dictionary containing model names as keys and their corresponding URLs as values
+
+    Returns:
+        dict: A dictionary containing model names as keys and their local paths as values
     """
+    model_paths = {}
 
-    model_path = os.path.join(default_path.as_posix(), "DECIMER_model")
-    print(model_path)
+    for model_name, model_url in model_urls.items():
+        model_path = os.path.join(default_path, f"{model_name}_model")
+        if (
+            os.path.exists(model_path)
+            and os.stat(os.path.join(model_path, "saved_model.pb")).st_size != 28080309
+        ):
+            shutil.rmtree(model_path)
+            config.download_trained_weights(model_url, default_path)
+        elif not os.path.exists(model_path):
+            config.download_trained_weights(model_url, default_path)
 
-    if (
-        os.path.exists(model_path)
-        and os.stat(os.path.join(model_path, "saved_model.pb")).st_size != 28080309
-    ):
-        shutil.rmtree(model_path)
-        config.download_trained_weights(model_url, default_path)
-    elif not os.path.exists(model_path):
-        config.download_trained_weights(model_url, default_path)
+        # Store the model path
+        model_paths[model_name] = model_path
+
+    return model_paths
