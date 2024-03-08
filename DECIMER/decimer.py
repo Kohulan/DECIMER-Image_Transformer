@@ -36,7 +36,7 @@ model_urls = {
 }
 
 
-def get_models(model_urls: dict) -> Tuple[object, tf.saved_model, tf.saved_model]:
+def get_models(model_urls: dict):
     """Download and load models from the provided URLs.
 
     This function downloads models from the provided URLs to a default location,

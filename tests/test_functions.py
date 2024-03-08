@@ -16,7 +16,7 @@ def test_imagetosmilesWithConfidence():
     img_path = "tests/caffeine.png"
     actual_result = predict_SMILES(img_path, confidence=True)
 
-    for element, confidence in actual_result:
+    for element, confidence in actual_result[1]:
         assert (
             confidence >= 0.9
         ), f"Confidence for element '{element}' is below 0.9 (confidence: {confidence})"
