@@ -3,4 +3,4 @@ opencv-python
 pillow-heif
 pre-commit
 pystow
-tensorflow>=2.8.0,<=2.16.0
+tensorflow>=2.8.0,<=2.15.0
