@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.6.0](https://github.com/Kohulan/DECIMER-Image_Transformer/compare/v2.5.0...v2.6.0) (2024-03-08)
+
+
+### Features
+
+* improved DECIMER hand-drawn model ([03d508b](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/03d508b5f72c7f76c382bff49e7209c843b01b86))
+* improved DECIMER hand-drawn model ([95d6049](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/95d6049f0b84fd4d4a1289fa0a0e3c742d56a990))
+
+
+### Bug Fixes
+
+* get model module ([c145044](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/c1450448131c7b2856d36fd78c46c668d6ac45c9))
+* read the docs build error ([24ce5e1](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/24ce5e161f49d1abcd9b5078d41cdae208b01b3f))
+* read the docs build error ([af8a779](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/af8a779a3f6c777fccd74cf022b2727465969f63))
+* read the docs build error python ([8d3bcaf](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/8d3bcafec9263cac7814c52b09982675137cbd29))
+* update tests ([1068c8a](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/1068c8ac92965c757ee94f561f9acef4cce61cee))
+
 ## [2.5.0](https://github.com/Kohulan/DECIMER-Image_Transformer/compare/v2.4.0...v2.5.0) (2024-01-11)
 
 
