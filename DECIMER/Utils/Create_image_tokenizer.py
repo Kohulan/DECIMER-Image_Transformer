@@ -70,7 +70,7 @@ def data_loader(Smiles_Path):
     all_img_name = []
 
     for line in smiles.split("\n"):
-        # Split the ID and SMILES to seperate tokens
+        # Split the ID and SMILES to separate tokens
         tokens = line.split(",")
 
         image_id = str(tokens[0]) + ".png"
