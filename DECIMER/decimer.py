@@ -71,7 +71,7 @@ tokenizer, DECIMER_V2, DECIMER_Hand_drawn = get_models(model_urls)
 
 
 def detokenize_output(predicted_array: int) -> str:
-    """This function takes the predited tokens from the DECIMER model and
+    """This function takes the predicted tokens from the DECIMER model and
     returns the decoded SMILES string.
 
     Args:

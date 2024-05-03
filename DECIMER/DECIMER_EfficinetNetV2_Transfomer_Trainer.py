@@ -250,7 +250,7 @@ def prepare_for_training(lr_config, encoder_config, transformer_config, verbose=
             transformer_config["d_model"], lr_config["warm_steps"]
         )
 
-        # Instiate an optimizer
+        # Instantiate an optimizer
         optimizer = tf.keras.optimizers.Adam(
             lr_scheduler, beta_1=0.9, beta_2=0.98, epsilon=1e-9
         )
@@ -323,7 +323,7 @@ if ckpt_manager.latest_checkpoint:
     start_epoch = int(ckpt_manager.latest_checkpoint.split("-")[-1])
 
 
-# Main training step fucntion
+# Main training step function
 def train_step(image_batch, selfies_batch):
     """Main training step function.
 
@@ -376,7 +376,7 @@ def dist_train_step(image_batch, selfies_batch):
 
 
 """
-# Main validation step fucntion
+# Main validation step function
 def validation_step(image_batch, selfies_batch):
 
     selfies_batch_input = selfies_batch[:, :-1]

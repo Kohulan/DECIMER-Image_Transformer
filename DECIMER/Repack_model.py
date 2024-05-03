@@ -140,7 +140,7 @@ class DECIMER_Predictor(tf.Module):
     It loads the saved checkpoint and the necessary tokenizers. The
     inference begins with the start token (<start>) and ends when the
     end token(<end>) is met. This class can only work with tf.Tensor
-    objects. The strings shoul gets transformed into np.arrays before
+    objects. The strings should get transformed into np.arrays before
     feeding them into this class.
     """
 
@@ -150,7 +150,7 @@ class DECIMER_Predictor(tf.Module):
 
         Args:
             encoder (tf.keras.model):  The encoder model
-            tokenizer (tf.keras.tokenizer): Output tokenizer, defines which charater is assigned to what token
+            tokenizer (tf.keras.tokenizer): Output tokenizer, defines which character is assigned to what token
             transformer (tf.keras.model):  The transformer model
             max_length (int): Maximum length of a string which can get predicted
         """
@@ -160,7 +160,7 @@ class DECIMER_Predictor(tf.Module):
         self.max_length = max_length
 
     def __call__(self, Decoded_image):
-        """This fuction takes in the Decoded image as input and makes the
+        """This function takes in the Decoded image as input and makes the
         predicted list of tokens and return the tokens as tf.Tensor array.
         Before feeding the input array we must define start and the end tokens.
 
@@ -225,7 +225,7 @@ class ExportDECIMERPredictor(tf.Module):
 
     @tf.function
     def __call__(self, Decoded_Image):
-        """This fucntion calls the __call__function from the translator class.
+        """This function calls the __call__function from the translator class.
         In the tf.function only the output sentence is returned. Thanks to the
         non-strict execution in tf.function any unnecessary values are never
         computed.
