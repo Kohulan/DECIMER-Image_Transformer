@@ -45,7 +45,7 @@ tokenizer = pickle.load(
 
 max_length = 302
 
-# Image partameters
+# Image parameters
 IMG_EMB_DIM = (16, 16, 512)
 IMG_EMB_DIM = (IMG_EMB_DIM[0] * IMG_EMB_DIM[1], IMG_EMB_DIM[2])
 IMG_SHAPE = (512, 512, 3)

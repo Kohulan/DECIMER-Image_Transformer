@@ -87,7 +87,7 @@ print(SMILES)
 - This project is licensed under the MIT License - see the [LICENSE](https://raw.githubusercontent.com/Kohulan/DECIMER-Image_Transformer/master/LICENSE?token=AHKLIF3EULMCUKCFUHIPBMDARSMDO) file for details
 
 ## Citation
-- Rajan K, Brinkhaus HO, Agea MI, Zielesny A, Steinbeck C (2023) DECIMER.ai - An open platform for automated optical chemical structure identification, segmentation and recognition in scientific publications. ChemRxiv. doi: https://10.26434/chemrxiv-2023-xhcx9
+- Rajan K, Brinkhaus HO, Agea MI, Zielesny A, Steinbeck C DECIMER.ai - An open platform for automated optical chemical structure identification, segmentation and recognition in scientific publications. Nat. Commun. 14, 5045 (2023). https://doi.org/10.1038/s41467-023-40782-0
 - Rajan, K., Zielesny, A. & Steinbeck, C. DECIMER 1.0: deep learning for chemical image recognition using transformers. J Cheminform 13, 61 (2021). https://doi.org/10.1186/s13321-021-00538-8
 
 ## References

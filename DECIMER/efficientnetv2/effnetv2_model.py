@@ -180,7 +180,7 @@ class MBConvBlock(tf.keras.layers.Layer):
 
         self.endpoints = None
 
-        # Builds the block accordings to arguments.
+        # Builds the block according to arguments.
         self._build()
 
     @property
