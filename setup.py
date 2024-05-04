@@ -23,6 +23,9 @@ setuptools.setup(
     description="DECIMER 2.6.0: Deep Learning for Chemical Image Recognition using Efficient-Net V2 + Transformer",
     long_description=long_description,
     long_description_content_type="text/markdown",
+    entry_points={
+        "console_scripts": ["decimer = DECIMER.decimer:main"],
+    },
     url="https://github.com/Kohulan/DECIMER-Image_Transformer",
     packages=setuptools.find_packages(),
     license="MIT",
