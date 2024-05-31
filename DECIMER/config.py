@@ -11,6 +11,7 @@ import tensorflow as tf
 from PIL import Image
 from PIL import ImageEnhance
 from pillow_heif import register_heif_opener
+from typing import Union
 
 import DECIMER.Efficient_Net_encoder as Efficient_Net_encoder
 import DECIMER.Transformer_decoder as Transformer_decoder
@@ -95,26 +96,69 @@ def HEIF_to_pillow(image_path: str):
     return heif_file
 
 
-def remove_transparent(image_path: str):
+def remove_transparent(image: Union[str, np.ndarray]) -> Image.Image:
     """
-    Removes the transparent layer from a PNG image with an alpha channel
-    Args: image_path (str): path of input image
-    Returns: PIL.Image
+    Removes the transparent layer from a PNG image with an alpha channel.
+
+    Args:
+        image (Union[str, np.ndarray]): Path of the input image or a numpy array representing the image.
+
+    Returns:
+        PIL.Image.Image: The image with transparency removed.
     """
-    try:
-        png = Image.open(image_path).convert("RGBA")
-    except Exception as e:
-        if type(e).__name__ == "UnidentifiedImageError":
-            png = HEIF_to_pillow(image_path)
-        else:
-            print(e)
-            raise Exception
+    def process_image(png: Image.Image) -> Image.Image:
+        """
+        Helper function to remove transparency from a single image.
 
-    background = Image.new("RGBA", png.size, (255, 255, 255))
+        Args:
+            png (PIL.Image.Image): The input PIL image with transparency.
 
-    alpha_composite = Image.alpha_composite(background, png)
+        Returns:
+            PIL.Image.Image: The image with transparency removed.
+        """
+        background = Image.new("RGBA", png.size, (255, 255, 255))
+        alpha_composite = Image.alpha_composite(background, png)
+        return alpha_composite
 
-    return alpha_composite
+    def handle_image_path(image_path: str) -> Image.Image:
+        """
+        Helper function to handle image paths.
+
+        Args:
+            image_path (str): The path to the input image.
+
+        Returns:
+            PIL.Image.Image: The image with transparency removed.
+        """
+        try:
+            png = Image.open(image_path).convert("RGBA")
+        except Exception as e:
+            if type(e).__name__ == "UnidentifiedImageError":
+                png = HEIF_to_pillow(image_path)
+            else:
+                print(e)
+                raise Exception
+        return process_image(png)
+
+    def handle_numpy_array(array: np.ndarray) -> Image.Image:
+        """
+        Helper function to handle a numpy array.
+
+        Args:
+            array (np.ndarray): The numpy array representing the image.
+
+        Returns:
+            PIL.Image.Image: The image with transparency removed.
+        """
+        png = Image.fromarray(array).convert("RGBA")
+        return process_image(png)
+
+    if isinstance(image, str):
+        return handle_image_path(image)
+    elif isinstance(image, np.ndarray):
+        return handle_numpy_array(image)
+    else:
+        raise ValueError("Input should be either a string (image path) or a numpy array.")
 
 
 def get_bnw_image(image):
@@ -185,12 +229,12 @@ def increase_brightness(image):
     return image
 
 
-def decode_image(image_path: str):
+def decode_image(image_path: Union[str, np.ndarray]):
     """Loads an image and preprocesses the input image in several steps to get
     the image ready for DECIMER input.
 
     Args:
-        image_path (str): path of input image
+        image_path (Union[str, np.ndarray]): path of input image or numpy array representing the image.
 
     Returns:
         Processed image
@@ -232,7 +276,7 @@ class Config:
         defined configurations.
 
         Args:
-            image_embedding_dim (int): Embedding dimension of the input image
+            image_embedding_dim (int): Embedding dimention of the input image
             preprocessing_fn (method): Efficient Net preprocessing function for input image
             backbone_fn (method): Calls Efficient-Net V2 as backbone for encoder
             image_shape (int): Shape of the input image
@@ -267,7 +311,7 @@ class Config:
             n_transformer_layers (int): Number of layers present in the transformer model
             transformer_d_dff (int): Transformer feed forward upwards projection size
             transformer_n_heads (int): Number of heads present in the transformer model
-            image_embedding_dim (int): Total number of dimension the image gets embedded
+            image_embedding_dim (int): Total number of dimension the image gets embeddeded
             dropout_rate (float, optional): Fraction of the input units to drop. Defaults to 0.1.
         """
         self.transformer_config = dict(
@@ -330,7 +374,7 @@ def prepare_models(encoder_config, transformer_config, replica_batch_size, verbo
         [type]: Optimizer, Encoder model and the Transformer
     """
 
-    # Instantiate an optimizer
+    # Instiate an optimizer
     optimizer = tf.keras.optimizers.Adam(learning_rate=0.00051)
 
     # Instantiate the encoder model
