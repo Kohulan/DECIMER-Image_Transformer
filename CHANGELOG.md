@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.7.0](https://github.com/Kohulan/DECIMER-Image_Transformer/compare/v2.6.0...v2.7.0) (2024-06-11)
+
+
+### Features
+
+* add entry_points ([0cc241f](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/0cc241f0bb1caf28f1ff4528a5e285561a17730f))
+
+
+### Bug Fixes
+
+* one extra token prediction [#104](https://github.com/Kohulan/DECIMER-Image_Transformer/issues/104) ([6e0e483](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/6e0e483285d9dbe2ed069e3a1c9e25d69dec6974))
+
 ## [2.6.0](https://github.com/Kohulan/DECIMER-Image_Transformer/compare/v2.5.0...v2.6.0) (2024-03-08)
 
 
