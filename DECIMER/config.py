@@ -276,12 +276,12 @@ class Config:
         defined configurations.
 
         Args:
-            image_embedding_dim (int): Embedding dimention of the input image
+            image_embedding_dim (int): Embedding dimension of the input image
             preprocessing_fn (method): Efficient Net preprocessing function for input image
             backbone_fn (method): Calls Efficient-Net V2 as backbone for encoder
             image_shape (int): Shape of the input image
             do_permute (bool, optional): . Defaults to False.
-            pretrained_weights (keras weights, optional): Use pretrainined efficient net weights or not. Defaults to None.
+            pretrained_weights (keras weights, optional): Use pretrained efficient net weights or not. Defaults to None.
         """
         self.encoder_config = dict(
             image_embedding_dim=image_embedding_dim,
@@ -311,7 +311,7 @@ class Config:
             n_transformer_layers (int): Number of layers present in the transformer model
             transformer_d_dff (int): Transformer feed forward upwards projection size
             transformer_n_heads (int): Number of heads present in the transformer model
-            image_embedding_dim (int): Total number of dimension the image gets embeddeded
+            image_embedding_dim (int): Total number of dimension the image gets embedded
             dropout_rate (float, optional): Fraction of the input units to drop. Defaults to 0.1.
         """
         self.transformer_config = dict(
@@ -374,7 +374,7 @@ def prepare_models(encoder_config, transformer_config, replica_batch_size, verbo
         [type]: Optimizer, Encoder model and the Transformer
     """
 
-    # Instiate an optimizer
+    # Instantiate an optimizer
     optimizer = tf.keras.optimizers.Adam(learning_rate=0.00051)
 
     # Instantiate the encoder model
