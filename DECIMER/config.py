@@ -154,9 +154,9 @@ def remove_transparent(image: Union[str, np.ndarray]) -> Image.Image:
         return process_image(png)
 
     if isinstance(image, str):
-        return handle_image_path(image)
+        return handle_image_path(image_path=image)
     elif isinstance(image, np.ndarray):
-        return handle_numpy_array(image)
+        return handle_numpy_array(array=image)
     else:
         raise ValueError("Input should be either a string (image path) or a numpy array.")
 
