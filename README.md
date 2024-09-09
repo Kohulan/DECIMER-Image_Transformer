@@ -90,6 +90,15 @@ print(SMILES)
 - Rajan K, Brinkhaus HO, Agea MI, Zielesny A, Steinbeck C DECIMER.ai - An open platform for automated optical chemical structure identification, segmentation and recognition in scientific publications. Nat. Commun. 14, 5045 (2023). https://doi.org/10.1038/s41467-023-40782-0
 - Rajan, K., Zielesny, A. & Steinbeck, C. DECIMER 1.0: deep learning for chemical image recognition using transformers. J Cheminform 13, 61 (2021). https://doi.org/10.1186/s13321-021-00538-8
 
+## ✏️ **DECIMER - Hand-drawn Model**
+
+The DECIMER hand-drawn model provides advanced capabilities for recognizing hand-drawn chemical structures using an enhanced version of the DECIMER architecture.
+
+- **Model DOI**: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10781330.svg)](https://doi.org/10.5281/zenodo.10781330)
+
+**Citation**:
+- **Rajan, K., et al.** "Advancements in hand-drawn chemical structure recognition through an enhanced DECIMER architecture," *J Cheminform 16, 78 (2024)*. [DOI](https://doi.org/10.1186/s13321-024-00872-7)
+
 ## References
 
 1. Rajan, K., Zielesny, A. & Steinbeck, C. DECIMER: towards deep learning for chemical image recognition. J Cheminform 12, 65 (2020). https://doi.org/10.1186/s13321-020-00469-w
