@@ -153,12 +153,11 @@ def remove_transparent(image: Union[str, np.ndarray]) -> Image.Image:
         png = Image.fromarray(array).convert("RGBA")
         return process_image(png)
 
-    if isinstance(image, str):
-        return handle_image_path(image_path=image)
-    elif isinstance(image, np.ndarray):
+    # Check if input is a numpy array
+    if isinstance(image, np.ndarray):
         return handle_numpy_array(array=image)
-    else:
-        raise ValueError("Input should be either a string (image path) or a numpy array.")
+
+    return handle_image_path(image_path=image)
 
 
 def get_bnw_image(image):
