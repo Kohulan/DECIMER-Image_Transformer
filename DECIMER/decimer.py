@@ -5,6 +5,7 @@ import sys
 from typing import List
 from typing import Tuple
 
+import numpy as np
 import pystow
 import tensorflow as tf
 
@@ -122,19 +123,19 @@ def detokenize_output_add_confidence(
 
 
 def predict_SMILES(
-    image_path: str, confidence: bool = False, hand_drawn: bool = False
+        image_input: [str, np.ndarray], confidence: bool = False, hand_drawn: bool = False
 ) -> str:
     """Predicts SMILES representation of a molecule depicted in the given image.
 
     Args:
-        image_path (str): Path of chemical structure depiction image
-        confidence (bool): Flag to indicate whether to return confidence values along with SMILES prediction
-        hand_drawn (bool): Flag to indicate whether the molecule in the image is hand-drawn
+        image_input (str or np.ndarray): Path of chemical structure depiction image or a numpy array representing the image.
+        confidence (bool): Flag to indicate whether to return confidence values along with SMILES prediction.
+        hand_drawn (bool): Flag to indicate whether the molecule in the image is hand-drawn.
 
     Returns:
-        str: SMILES representation of the molecule in the input image, optionally with confidence values
+        str: SMILES representation of the molecule in the input image, optionally with confidence values.
     """
-    chemical_structure = config.decode_image(image_path)
+    chemical_structure = config.decode_image(image_input)
 
     model = DECIMER_Hand_drawn if hand_drawn else DECIMER_V2
     predicted_tokens, confidence_values = model(tf.constant(chemical_structure))
