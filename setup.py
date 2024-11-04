@@ -15,7 +15,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="decimer",
-    version="2.7.0",
+    version="2.7.1",
     author="Kohulan Rajan",
     author_email="kohulan.rajan@uni-jena.de",
     maintainer="Kohulan Rajan, Otto Brinkhaus ",
