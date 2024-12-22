@@ -106,6 +106,8 @@ def remove_transparent(image: Union[str, np.ndarray]) -> Image.Image:
     Returns:
         PIL.Image.Image: The image with transparency removed.
     """
+    # TODO: remove unnecessary nested helper functions
+    # TODO: separate reading image from file path from removing transparent layer
     def process_image(png: Image.Image) -> Image.Image:
         """
         Helper function to remove transparency from a single image.
