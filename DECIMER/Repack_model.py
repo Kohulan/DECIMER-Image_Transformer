@@ -159,54 +159,72 @@ class DECIMER_Predictor(tf.Module):
         self.transformer = transformer
         self.max_length = max_length
 
-    def __call__(self, Decoded_image):
-        """This function takes in the Decoded image as input and makes the
-        predicted list of tokens and return the tokens as tf.Tensor array.
-        Before feeding the input array we must define start and the end tokens.
+    def __call__(self, image_input):
+        """
+        This function takes in the decoded image(s) executes the forward pass.
+        It returns the list of predicted tokens and the confidence values.
 
         Args:
-            Decoded_image (tf.Tensor[tf.int32]): Input array in tf.Eagertensor format.
+            image_input must be one of two options: 
+                1) Input Tensor in tf.Eagertensor format.
+                2) List of tf.Tensor for batch processing
 
         Returns:
             output (tf.Tensor[tf.int64]): predicted output as an array.
         """
-        assert isinstance(Decoded_image, tf.Tensor)
+        # Handle input to get it into shape (batch_size, height, width, channels)
+        if isinstance(image_input, list):
+            _image_batch = tf.stack(image_input, axis=0)
+        elif isinstance(image_input, tf.Tensor):
+            _image_batch = tf.expand_dims(image_input, 0)
+        else:
+            raise TypeError("Input must be tf.Tensor or list of tf.Tensor objects!")
 
-        _image_batch = tf.expand_dims(Decoded_image, 0)
-        _image_embedding = encoder(_image_batch, training=False)
+        _image_embedding = self.encoder(_image_batch, training=False)
 
+        # Correctly handle start token for batch
         start_token = tf.cast(
-            tf.convert_to_tensor([tokenizer.word_index["<start>"]]), tf.int32
-        )
-        end_token = tf.cast(
-            tf.convert_to_tensor([tokenizer.word_index["<end>"]]), tf.int32
-        )
+            tf.fill([tf.shape(_image_batch)[0]], self.tokenizer.word_index["<start>"]),
+            tf.int32,
+        )  # (batch_size,)
+        end_token = tf.cast(self.tokenizer.word_index["<end>"], tf.int32)
 
         output_array = tf.TensorArray(dtype=tf.int32, size=0, dynamic_size=True)
         output_array = output_array.write(0, start_token)
         confidence_array = tf.TensorArray(dtype=tf.float32, size=0, dynamic_size=True)
 
         for t in tf.range(max_length):
-            output = tf.transpose(output_array.stack())
+            output = tf.transpose(output_array.stack(), [1, 0])  # (batch_size, t+1)
+
             combined_mask = Transformer_decoder.create_masks_decoder(output)
 
             # predictions.shape == (batch_size, seq_len, vocab_size)
-            prediction_batch = transformer(
+            prediction_batch = self.transformer(
                 output, _image_embedding, training=False, look_ahead_mask=combined_mask
             )
 
             # select the last word from the seq_len dimension
-            predictions = prediction_batch[:, -1:, :]  # (batch_size, 1, vocab_size)
+            predictions = prediction_batch[:, -1, :]  # (batch_size, vocab_size)
 
-            predicted_id = tf.cast(tf.argmax(predictions, axis=-1), tf.int32)
-            confidence = predictions[0, 0, int(predicted_id[0, 0])]
-            output_array = output_array.write(t + 1, predicted_id[0])
-            confidence_array = confidence_array.write(t + 1, confidence)
-            if predicted_id == end_token:
+            predicted_id = tf.cast(tf.argmax(predictions, axis=-1), tf.int32)  # (batch_size,)
+
+            # Collect confidence for each item in batch
+            confidence = tf.gather_nd(
+                predictions, tf.stack([tf.range(tf.shape(predicted_id)[0]), predicted_id], axis=1)
+            ) # (batch_size, )
+
+            output_array = output_array.write(t + 1, predicted_id)
+            confidence_array = confidence_array.write(t, confidence)
+
+            # Check for end token across the batch
+            if tf.reduce_all(tf.equal(predicted_id, end_token)):
                 break
-        output = tf.transpose(output_array.stack())
 
-        return output, confidence_array.stack()
+        # output shape: (batch_size, max_length) or (batch_size, predicted_length)
+        output = tf.transpose(output_array.stack(), [1, 0]) 
+        confidence = tf.transpose(confidence_array.stack(), [1, 0])
+
+        return output, confidence
 
 
 DECIMER = DECIMER_Predictor(encoder, tokenizer, transformer, MAX_LEN)

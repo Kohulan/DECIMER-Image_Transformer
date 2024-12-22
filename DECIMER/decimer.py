@@ -125,10 +125,12 @@ def detokenize_output_add_confidence(
 def predict_SMILES(
         image_input: [str, np.ndarray], confidence: bool = False, hand_drawn: bool = False
 ) -> str:
-    """Predicts SMILES representation of a molecule depicted in the given image.
+    """
+    Predicts SMILES representation of a molecule depicted in the given image.
 
     Args:
-        image_input (str or np.ndarray): Path of chemical structure depiction image or a numpy array representing the image.
+        image_input (list, str or np.ndarray): Path of chemical structure depiction image or a numpy array representing the image.
+            If a list of input str or np.ndarray is given, they are processed in a batch.
         confidence (bool): Flag to indicate whether to return confidence values along with SMILES prediction.
         hand_drawn (bool): Flag to indicate whether the molecule in the image is hand-drawn.
 
@@ -136,19 +138,35 @@ def predict_SMILES(
         str: SMILES representation of the molecule in the input image, optionally with confidence values.
     """
     chemical_structure = config.decode_image(image_input)
-
     model = DECIMER_Hand_drawn if hand_drawn else DECIMER_V2
     predicted_tokens, confidence_values = model(tf.constant(chemical_structure))
 
-    predicted_SMILES = utils.decoder(detokenize_output(predicted_tokens))
+    predicted_SMILES_batch = []
+    predicted_SMILES_with_confidence_batch = []
+
+    for i in range(predicted_tokens.shape[0]):  # Iterate through the batch
+        predicted_tokens = predicted_tokens[i]
+        confidence_values = confidence_values[i]
+
+        predicted_SMILES = utils.decoder(detokenize_output(predicted_tokens))
+
+        if confidence:
+            predicted_SMILES_with_confidence = detokenize_output_add_confidence(
+                predicted_tokens, confidence_values
+            )
+            predicted_SMILES_with_confidence_batch.append(predicted_SMILES_with_confidence)
+
+        predicted_SMILES_batch.append(predicted_SMILES)
 
     if confidence:
-        predicted_SMILES_with_confidence = detokenize_output_add_confidence(
-            predicted_tokens, confidence_values
-        )
-        return predicted_SMILES, predicted_SMILES_with_confidence
-
-    return predicted_SMILES
+        if len(predicted_SMILES_batch) == 1:
+            return predicted_SMILES_batch[0], predicted_SMILES_with_confidence_batch[0]
+        else:
+            return predicted_SMILES_batch, predicted_SMILES_with_confidence_batch
+    if len(predicted_SMILES_batch) == 1:
+        return predicted_SMILES_batch[0]
+    else:
+        return predicted_SMILES_batch
 
 
 def main():
