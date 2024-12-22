@@ -148,8 +148,33 @@ def predict_SMILES(
         predicted_tokens = predicted_tokens[i]
         confidence_values = confidence_values[i]
 
+    predicted_SMILES_batch = []
+    predicted_SMILES_with_confidence_batch = []
+
+    for i in range(predicted_tokens.shape[0]):  # Iterate through the batch
+        predicted_tokens = predicted_tokens[i]
+        confidence_values = confidence_values[i]
+
+        predicted_SMILES = utils.decoder(detokenize_output(predicted_tokens))
         predicted_SMILES = utils.decoder(detokenize_output(predicted_tokens))
 
+        if confidence:
+            predicted_SMILES_with_confidence = detokenize_output_add_confidence(
+                predicted_tokens, confidence_values
+            )
+            predicted_SMILES_with_confidence_batch.append(predicted_SMILES_with_confidence)
+
+        predicted_SMILES_batch.append(predicted_SMILES)
+
+    if confidence:
+        if len(predicted_SMILES_batch) == 1:
+            return predicted_SMILES_batch[0], predicted_SMILES_with_confidence_batch[0]
+        else:
+            return predicted_SMILES_batch, predicted_SMILES_with_confidence_batch
+    if len(predicted_SMILES_batch) == 1:
+        return predicted_SMILES_batch[0]
+    else:
+        return predicted_SMILES_batch
         if confidence:
             predicted_SMILES_with_confidence = detokenize_output_add_confidence(
                 predicted_tokens, confidence_values
