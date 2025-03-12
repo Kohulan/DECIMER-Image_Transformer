@@ -19,7 +19,7 @@ For comments, bug reports or feature ideas,
 please raise a issue on the Github repository.
 """
 
-__version__ = "2.6.0"
+__version__ = "2.7.1"
 
 __all__ = [
     "DECIMER",
