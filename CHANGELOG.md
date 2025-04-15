@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.7.1](https://github.com/Kohulan/DECIMER-Image_Transformer/compare/v2.7.0...v2.7.1) (2024-09-10)
+
+
+### Bug Fixes
+
+* include hand-drawn README.md ([e55c377](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/e55c377af46409e84b0451614cf28d64e9d37f31))
+* **remove_transparent:** remove strict string check to support pathlib objects in remove_transparent function ([4a1c71b](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/4a1c71b3719826d2f750a79980729651177c1281))
+
 ## [2.7.0](https://github.com/Kohulan/DECIMER-Image_Transformer/compare/v2.6.0...v2.7.0) (2024-06-11)
 
 
