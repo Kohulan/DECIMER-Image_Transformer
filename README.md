@@ -13,6 +13,7 @@
 [![GitHub issues](https://img.shields.io/github/issues/Kohulan/DECIMER-Image_Transformer.svg?style=for-the-badge)](https://GitHub.com/Kohulan/DECIMER-Image_Transformer/issues/)
 [![GitHub contributors](https://img.shields.io/github/contributors/Kohulan/DECIMER-Image_Transformer.svg?style=for-the-badge)](https://GitHub.com/Kohulan/DECIMER-Image_Transformer/graphs/contributors/)
 [![tensorflow](https://img.shields.io/badge/TensorFlow-2.10.1-FF6F00.svg?style=for-the-badge&logo=tensorflow)](https://www.tensorflow.org)
+[![Model Card](https://img.shields.io/badge/Model_Card-DECIMER-9cf.svg?style=for-the-badge)](https://zenodo.org/records/8300489)
 [![DOI](https://zenodo.org/badge/293572361.svg)](https://zenodo.org/badge/latestdoi/293572361)
 [![Documentation Status](https://readthedocs.org/projects/decimer-image-transformer/badge/?version=latest&style=for-the-badge)](https://decimer-image-transformer.readthedocs.io/en/latest/?badge=latest)
 [![GitHub release](https://img.shields.io/github/release/Kohulan/DECIMER-Image_Transformer.svg?style=for-the-badge)](https://GitHub.com/Kohulan/DECIMER-Image_Transformer/releases/)
@@ -24,40 +25,40 @@
 
 ## 📚 Table of Contents
 
-- [Abstract](#-abstract)
-- [Method and Model Changes](#-method-and-model-changes)
-- [Installation](#-installation)
-- [Usage](#-usage)
-- [Hand-drawn Model](#-decimer---hand-drawn-model)
-- [Citation](#-citation)
-- [Acknowledgements](#-acknowledgements)
-- [Author](#-author-kohulan)
-- [Project Website](#-project-website)
-- [Research Group](#-research-group)
+- [📝 Abstract](#-abstract)
+- [💡 Method and Model Changes](#-method-and-model-changes)
+- [⚙️ Installation](#️-installation)
+- [🚀 Usage](#-usage)
+- [✍️ Hand-drawn Model](#️-decimer---hand-drawn-model)
+- [📄 Citation](#-citation)
+- [🙏 Acknowledgements](#-acknowledgements)
+- [👨‍🔬 Author](#-author-kohulan)
+- [🌐 Project Website](#-project-website)
+- [🏛️ Research Group](#️-research-group)
 
 ---
 
-## 🔬 Abstract
+## 📝 Abstract
 
-<div style="background-color: #f0f0f0; padding: 15px; border-radius: 10px;">
-
-The DECIMER 2.2 project tackles the OCSR (Optical Chemical Structure Recognition) challenge using cutting-edge computational intelligence methods. Our goal? To provide an automated, open-source software solution for chemical image recognition.
-
-We've supercharged DECIMER with Google's TPU (Tensor Processing Unit) to handle datasets of over 1 million images with lightning speed!
-
+<div align="center">
+  <img src="https://github.com/Kohulan/DECIMER-Image-to-SMILES/raw/master/assets/DECIMER.gif" width="350" align="right">
 </div>
 
+> The DECIMER 2.2 project tackles the OCSR (Optical Chemical Structure Recognition) challenge using cutting-edge computational intelligence methods. Our goal? To provide an automated, open-source software solution for chemical image recognition.
+> 
+> We've supercharged DECIMER with Google's TPU (Tensor Processing Unit) to handle datasets of over 1 million images with lightning speed!
+
 ---
 
-## 🧠 Method and Model Changes
+## 💡 Method and Model Changes
 
 <table>
   <tr>
-    <td width="50%">
+    <td width="50%" align="center">
       <h3>🖼️ Image Feature Extraction</h3>
       <p>Now utilizing EfficientNet-V2 for superior image analysis</p>
     </td>
-    <td width="50%">
+    <td width="50%" align="center">
       <h3>🔮 SMILES Prediction</h3>
       <p>Employing a state-of-the-art transformer model</p>
     </td>
@@ -66,14 +67,14 @@ We've supercharged DECIMER with Google's TPU (Tensor Processing Unit) to handle 
 
 ### 🚀 Training Enhancements
 
-1. **TFRecord Files**: Lightning-fast data reading
-2. **Google Cloud Buckets**: Efficient cloud storage solution
-3. **TensorFlow Data Pipeline**: Optimized data loading
-4. **TPU Strategy**: Harnessing the power of Google's TPUs
+1. **📦 TFRecord Files** - Lightning-fast data reading
+2. **☁️ Google Cloud Buckets** - Efficient cloud storage solution
+3. **🔄 TensorFlow Data Pipeline** - Optimized data loading
+4. **⚡ TPU Strategy** - Harnessing the power of Google's TPUs
 
 ---
 
-## 💻 Installation
+## ⚙️ Installation
 
 ```bash
 # Create a conda wonderland
@@ -86,7 +87,7 @@ pip install decimer
 
 ---
 
-## 🎮 Usage
+## 🚀 Usage
 
 ```python
 from DECIMER import predict_SMILES
@@ -101,29 +102,21 @@ print(f"🎉 Decoded SMILES: {SMILES}")
 
 ## ✍️ DECIMER - Hand-drawn Model
 
-<div style="background-color: #e6f7ff; padding: 15px; border-radius: 10px;">
-
-🌟 **New Feature Alert!** 🌟
-
-Our latest model brings the magic of AI to hand-drawn chemical structures!
-
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10781330.svg)](https://doi.org/10.5281/zenodo.10781330)
-
-</div>
+> 🌟 **New Feature Alert!** 🌟
+> 
+> Our latest model brings the magic of AI to hand-drawn chemical structures!
+> 
+> [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10781330.svg)](https://doi.org/10.5281/zenodo.10781330)
 
 ---
 
-## 📜 Citation
-
-<div style="background-color: #f9f9f9; padding: 15px; border-radius: 10px;">
+## 📄 Citation
 
 If DECIMER helps your research, please cite:
 
 1. Rajan K, et al. "DECIMER.ai - An open platform for automated optical chemical structure identification, segmentation and recognition in scientific publications." *Nat. Commun.* 14, 5045 (2023).
 2. Rajan, K., et al. "DECIMER 1.0: deep learning for chemical image recognition using transformers." *J Cheminform* 13, 61 (2021).
 3. Rajan, K., et al. "Advancements in hand-drawn chemical structure recognition through an enhanced DECIMER architecture," *J Cheminform* 16, 78 (2024).
-
-</div>
 
 ---
 
@@ -140,10 +133,6 @@ If DECIMER helps your research, please cite:
 
 ## 👨‍🔬 Author: [Kohulan](https://kohulanr.com)
 
-<p align="center">
-  <img src="https://github.com/Kohulan/DECIMER-Image-to-SMILES/raw/master/assets/DECIMER.gif" width="300">
-</p>
-
 ---
 
 ## 🌐 Project Website
@@ -152,7 +141,7 @@ Experience DECIMER in action at [decimer.ai](https://decimer.ai), brilliantly im
 
 ---
 
-## 🏫 Research Group
+## 🏛️ Research Group
 
 <p align="center">
   <a href="https://cheminf.uni-jena.de">
