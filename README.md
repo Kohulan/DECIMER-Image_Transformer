@@ -152,13 +152,26 @@ Experience DECIMER in action at [decimer.ai](https://decimer.ai), brilliantly im
 
 ---
 
-## 🏫 Research Group
+<div align="center">
 
-<p align="center">
-  <a href="https://cheminf.uni-jena.de">
-    <img src="https://github.com/Kohulan/DECIMER-Image-to-SMILES/blob/master/assets/CheminfGit.png" width="300">
-  </a>
-</p>
+### 🎓 Maintained by the [Kohulan](https://www.kohulanr.com/#) @ Steinbeck Group
+
+<a href="https://cheminf.uni-jena.de">
+<img src="https://github.com/Kohulan/DECIMER-Image-to-SMILES/blob/master/assets/CheminfGit.png" width="400" alt="Cheminformatics Group"/>
+</a>
+
+**[Natural Products Cheminformatics Research Group](https://cheminf.uni-jena.de)**  
+Institute for Inorganic and Analytical Chemistry  
+Friedrich Schiller University Jena, Germany
+
+---
+## ⭐ Star History
+
+<div align="center">
+
+[![Star History Chart](https://api.star-history.com/svg?repos=Kohulan/DECIMER-Image_Transformer&type=Date)](https://star-history.com/#Kohulan/DECIMER-Image_Transformer&Date)
+
+</div>
 
 ---
 
@@ -169,3 +182,10 @@ Experience DECIMER in action at [decimer.ai](https://decimer.ai), brilliantly im
 ![Repobeats](https://repobeats.axiom.co/api/embed/bf532b7ac0d34137bdea8fbb82986828f86de065.svg "Repobeats analytics image")
 
 </div>
+
+<div align="center">
+  
+**Made with ❤️ and ☕ for the global chemistry community**
+
+**© 2025 Kohulan @ Steinbeck Lab, Friedrich Schiller University Jena**
+---
