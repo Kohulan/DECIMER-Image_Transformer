@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.7.2](https://github.com/Kohulan/DECIMER-Image_Transformer/compare/v2.7.1...v2.7.2) (2025-10-01)
+
+
+### Bug Fixes
+
+* Update README with research group and project details ([12e0850](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/12e0850dfa6982f40e7d81f85fab94f8f4c76f6b))
+
 ## [2.7.1](https://github.com/Kohulan/DECIMER-Image_Transformer/compare/v2.7.0...v2.7.1) (2024-09-10)
 
 
