@@ -1,5 +1,24 @@
 # Changelog
 
+## [2.8.0](https://github.com/Kohulan/DECIMER-Image_Transformer/compare/v2.7.1...v2.8.0) (2025-12-02)
+
+
+### Features
+
+* Update for Keras 3 compatibility, python 3.12 compatibility and improve model download logic ([7cde9ae](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/7cde9ae1c593aad508f012a8cfd10ff4c7a2c7b1))
+
+
+### Bug Fixes
+
+* Add pyproject.toml with build-system requirements ([e98884c](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/e98884ccc9969383dd6dd804055916765b63939c))
+* Add setuptools to tox conda_deps for build ([9655712](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/96557123a3a54c72272b28762c480374108841eb))
+* Fix uint8 overflow in increase_contrast for NumPy 2.x compatibility ([9f01ec5](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/9f01ec5104e270e8959ffdde4656a4655131a137))
+* include model card README.md ([ad5ebeb](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/ad5ebeb6507fa7c90d0b256a88b1df5fb4ac5e87))
+* Modernize CI to use tox 4 with isolated builds ([4be4c37](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/4be4c37d50cda22c9fee863d1c080f72a47d603c))
+* removed an unused import ([d1f660d](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/d1f660d3fcd46bc0d0dd51894eaf71e06edeeda5))
+* tests to work with python 3.12 ([41a5dc7](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/41a5dc73afd72c8a2eb16d20b9633c45ba5d3c31))
+* Update README with research group and project details ([12e0850](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/12e0850dfa6982f40e7d81f85fab94f8f4c76f6b))
+
 ## [2.7.1](https://github.com/Kohulan/DECIMER-Image_Transformer/compare/v2.7.0...v2.7.1) (2024-09-10)
 
 
