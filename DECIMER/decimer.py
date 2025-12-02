@@ -9,7 +9,7 @@ import numpy as np
 import pystow
 import tensorflow as tf
 
-import DECIMER.config as config
+import DECIMER.pre_process as pre_process
 import DECIMER.utils as utils
 
 # Silence tensorflow model loading warnings.
@@ -17,6 +17,46 @@ logging.getLogger("absl").setLevel("ERROR")
 
 # Silence tensorflow errors - not recommended if your model is not working properly.
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
+
+
+# ============================================================================
+# Keras 2 to Keras 3 Compatibility Layer
+# ============================================================================
+class KerasCompatibilityUnpickler(pickle.Unpickler):
+    """Custom unpickler to handle Keras 2.x tokenizers in Keras 3 environment.
+
+    This handles the module path changes between Keras 2 and Keras 3:
+    - keras.preprocessing.text -> tensorflow.keras.preprocessing.text
+    """
+
+    def find_class(self, module, name):
+        # Redirect old Keras 2.x imports to TensorFlow Keras
+        if module.startswith("keras."):
+            module = module.replace("keras.", "tensorflow.keras.")
+        return super().find_class(module, name)
+
+
+def load_tokenizer(tokenizer_path: str) -> object:
+    """Load tokenizer with Keras 2/3 compatibility.
+
+    Args:
+        tokenizer_path (str): Path to the pickled tokenizer file
+
+    Returns:
+        tokenizer: Loaded tokenizer object
+    """
+    try:
+        # Try standard pickle load first (for Keras 3 tokenizers)
+        with open(tokenizer_path, "rb") as f:
+            return pickle.load(f)
+    except ModuleNotFoundError as e:
+        if "keras.preprocessing" in str(e):
+            # Use compatibility unpickler for Keras 2.x tokenizers
+            with open(tokenizer_path, "rb") as f:
+                return KerasCompatibilityUnpickler(f).load()
+        else:
+            raise
+
 
 # Set the absolute path
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -59,7 +99,7 @@ def get_models(model_urls: dict):
     tokenizer_path = os.path.join(
         model_paths["DECIMER"], "assets", "tokenizer_SMILES.pkl"
     )
-    tokenizer = pickle.load(open(tokenizer_path, "rb"))
+    tokenizer = load_tokenizer(tokenizer_path)
 
     # Load DECIMER models
     DECIMER_V2 = tf.saved_model.load(model_paths["DECIMER"])
@@ -123,7 +163,7 @@ def detokenize_output_add_confidence(
 
 
 def predict_SMILES(
-        image_input: [str, np.ndarray], confidence: bool = False, hand_drawn: bool = False
+    image_input: [str, np.ndarray], confidence: bool = False, hand_drawn: bool = False
 ) -> str:
     """Predicts SMILES representation of a molecule depicted in the given image.
 
@@ -135,7 +175,7 @@ def predict_SMILES(
     Returns:
         str: SMILES representation of the molecule in the input image, optionally with confidence values.
     """
-    chemical_structure = config.decode_image(image_input)
+    chemical_structure = pre_process.decode_image(image_input)
 
     model = DECIMER_Hand_drawn if hand_drawn else DECIMER_V2
     predicted_tokens, confidence_values = model(tf.constant(chemical_structure))
