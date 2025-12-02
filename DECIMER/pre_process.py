@@ -174,14 +174,14 @@ def increase_contrast(image):
     Returns: PIL.Image
     """
 
-    # Get brightness range
-    min = np.min(image)
-    max = np.max(image)
+    # Get brightness range - cast to int to avoid uint8 overflow
+    min_val = int(np.min(image))
+    max_val = int(np.max(image))
 
     # Use LUT to convert image values
     LUT = np.zeros(256, dtype=np.uint8)
-    LUT[min : max + 1] = np.linspace(
-        start=0, stop=255, num=(max - min) + 1, endpoint=True, dtype=np.uint8
+    LUT[min_val : max_val + 1] = np.linspace(
+        start=0, stop=255, num=(max_val - min_val) + 1, endpoint=True, dtype=np.uint8
     )
 
     # Apply LUT and return image
