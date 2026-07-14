@@ -24,8 +24,9 @@ please raise an issue on the GitHub repository.
 __version__ = "2.7.2"
 
 __all__ = [
-    "DECIMER",
+    "predict_SMILES",
+    "predict_SMILES_batch",
 ]
 
 
-from .decimer import predict_SMILES
+from .decimer import predict_SMILES, predict_SMILES_batch

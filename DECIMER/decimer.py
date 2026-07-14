@@ -2,8 +2,10 @@ import logging
 import os
 import pickle
 import sys
+from typing import Iterable
 from typing import List
 from typing import Tuple
+from typing import Union
 
 import numpy as np
 import pystow
@@ -189,6 +191,31 @@ def predict_SMILES(
         return predicted_SMILES, predicted_SMILES_with_confidence
 
     return predicted_SMILES
+
+
+def predict_SMILES_batch(
+    image_inputs: Iterable[Union[str, np.ndarray]],
+    confidence: bool = False,
+    hand_drawn: bool = False,
+) -> List:
+    """Predicts SMILES strings for multiple chemical structure images.
+
+    Args:
+        image_inputs (Iterable[str or np.ndarray]): Paths or numpy arrays representing chemical structure images.
+        confidence (bool): Flag to return confidence values along with each SMILES prediction.
+        hand_drawn (bool): Flag to indicate whether the molecules are hand-drawn.
+
+    Returns:
+        list: SMILES predictions in the same order as the input images.
+    """
+    return [
+        predict_SMILES(
+            image_input,
+            confidence=confidence,
+            hand_drawn=hand_drawn,
+        )
+        for image_input in image_inputs
+    ]
 
 
 def main():

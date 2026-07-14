@@ -98,6 +98,20 @@ SMILES = predict_SMILES(image_path)
 print(f"🎉 Decoded SMILES: {SMILES}")
 ```
 
+For multiple images, pass the image paths or numpy arrays to `predict_SMILES_batch`.
+The returned predictions follow the same order as the inputs.
+
+```python
+from DECIMER import predict_SMILES_batch
+
+image_paths = [
+    "path/to/chemical_1.png",
+    "path/to/chemical_2.png",
+]
+SMILES = predict_SMILES_batch(image_paths)
+print(SMILES)
+```
+
 ---
 
 ## ✍️ DECIMER - Hand-drawn Model
