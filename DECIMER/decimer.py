@@ -2,6 +2,7 @@ import logging
 import os
 import pickle
 import sys
+import threading
 from typing import List
 from typing import Tuple
 
@@ -68,20 +69,34 @@ gpus = tf.config.experimental.list_physical_devices("GPU")
 for gpu in gpus:
     tf.config.experimental.set_memory_growth(gpu, True)
 
-# Set path
-default_path = pystow.join("DECIMER-V2")
-
+# The models are NOT downloaded or loaded when this module is imported. They are
+# downloaded (if missing) and loaded the first time they are needed, either by the
+# first predict_SMILES() call or by an explicit load_models(), and cached afterwards.
+# They live in $PYSTOW_HOME/DECIMER-V2/ (PYSTOW_HOME defaults to ~/.data), read when
+# the models are first needed. A directory that already holds them is used as it is,
+# without any network access.
 model_urls = {
     "DECIMER": "https://zenodo.org/record/8300489/files/models.zip",
     "DECIMER_HandDrawn": "https://zenodo.org/records/10781330/files/DECIMER_HandDrawn_model.zip",
 }
 
 
+def _get_default_path():
+    """Directory that holds (or will hold) the downloaded models.
+
+    Looked up when the models are first needed, so that PYSTOW_HOME can still be set
+    after DECIMER was imported. Nothing is created here.
+    """
+    return pystow.join("DECIMER-V2", ensure_exists=False)
+
+
 def get_models(model_urls: dict):
     """Download and load models from the provided URLs.
 
     This function downloads models from the provided URLs to a default location,
-    then loads tokenizers and TensorFlow saved models.
+    then loads tokenizers and TensorFlow saved models. It loads everything at once
+    and does not touch the cached models of predict_SMILES(); most callers want
+    load_models() instead.
 
     Args:
         model_urls (dict): A dictionary containing model names as keys and their corresponding URLs as values.
@@ -93,7 +108,9 @@ def get_models(model_urls: dict):
             - DECIMER_Hand_drawn (tf.saved_model): TensorFlow saved model for DECIMER HandDrawn.
     """
     # Download models to a default location
-    model_paths = utils.ensure_models(default_path=default_path, model_urls=model_urls)
+    model_paths = utils.ensure_models(
+        default_path=_get_default_path(), model_urls=model_urls
+    )
 
     # Load tokenizers
     tokenizer_path = os.path.join(
@@ -108,7 +125,86 @@ def get_models(model_urls: dict):
     return tokenizer, DECIMER_V2, DECIMER_Hand_drawn
 
 
-tokenizer, DECIMER_V2, DECIMER_Hand_drawn = get_models(model_urls)
+def _load_tokenizer():
+    """Ensure the printed-structure model files are present and load its tokenizer.
+
+    The tokenizer of the printed-structure model decodes the output of both models.
+    """
+    model_paths = utils.ensure_models(
+        default_path=_get_default_path(),
+        model_urls={"DECIMER": model_urls["DECIMER"]},
+    )
+    return load_tokenizer(
+        os.path.join(model_paths["DECIMER"], "assets", "tokenizer_SMILES.pkl")
+    )
+
+
+def _load_saved_model(model_name: str):
+    """Ensure the files of one model are present, then load its SavedModel."""
+    model_paths = utils.ensure_models(
+        default_path=_get_default_path(),
+        model_urls={model_name: model_urls[model_name]},
+    )
+    return tf.saved_model.load(model_paths[model_name])
+
+
+# Module-level names that are filled on first use. Once loaded, an object is stored
+# in this module's globals under the same name that decimer 2.8.0 and older bound at
+# import, so `from DECIMER.decimer import tokenizer, DECIMER_V2` keeps working.
+_lazy_loaders = {
+    "tokenizer": _load_tokenizer,
+    "DECIMER_V2": lambda: _load_saved_model("DECIMER"),
+    "DECIMER_Hand_drawn": lambda: _load_saved_model("DECIMER_HandDrawn"),
+}
+_load_lock = threading.RLock()
+
+
+def _lazy(name: str):
+    """Return tokenizer, DECIMER_V2 or DECIMER_Hand_drawn, loading it on first use.
+
+    Downloads the files first if they are missing. The lock makes concurrent first
+    calls download and load once. A failed download or load is not cached, so the
+    next call tries again.
+    """
+    try:
+        return globals()[name]
+    except KeyError:
+        pass
+    with _load_lock:
+        if name not in globals():
+            globals()[name] = _lazy_loaders[name]()
+        return globals()[name]
+
+
+def __getattr__(name: str):
+    """Load tokenizer, DECIMER_V2 and DECIMER_Hand_drawn on first attribute access."""
+    if name == "default_path":
+        return _get_default_path()
+    if name in _lazy_loaders:
+        return _lazy(name)
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+
+
+def load_models(printed: bool = True, hand_drawn: bool = False) -> None:
+    """Download (if missing) and load the models now, instead of at the first prediction.
+
+    Call this once at start-up if the first predict_SMILES() call should not pay for
+    the download and the loading, for example in a server or when building an image.
+    Models that are already loaded are not loaded again. The tokenizer, which both
+    models need, is always loaded.
+
+    Args:
+        printed (bool): Load the model for printed chemical structures (the default
+            model of predict_SMILES).
+        hand_drawn (bool): Also load the hand-drawn model. load_models(hand_drawn=True)
+            loads everything that decimer 2.8.0 and older loaded on import.
+    """
+    with _load_lock:
+        _lazy("tokenizer")
+        if printed:
+            _lazy("DECIMER_V2")
+        if hand_drawn:
+            _lazy("DECIMER_Hand_drawn")
 
 
 def detokenize_output(predicted_array: int) -> str:
@@ -121,7 +217,8 @@ def detokenize_output(predicted_array: int) -> str:
     Returns:
         (str): SMILES representation of the molecule
     """
-    outputs = [tokenizer.index_word[i] for i in predicted_array[0].numpy()]
+    index_word = _lazy("tokenizer").index_word
+    outputs = [index_word[i] for i in predicted_array[0].numpy()]
     prediction = (
         "".join([str(elem) for elem in outputs])
         .replace("<start>", "")
@@ -145,9 +242,10 @@ def detokenize_output_add_confidence(
     Returns:
         str: SMILES string
     """
+    index_word = _lazy("tokenizer").index_word
     prediction_with_confidence = [
         (
-            tokenizer.index_word[predicted_array[0].numpy()[i]],
+            index_word[predicted_array[0].numpy()[i]],
             confidence_array[i].numpy(),
         )
         for i in range(len(confidence_array))
@@ -177,7 +275,10 @@ def predict_SMILES(
     """
     chemical_structure = pre_process.decode_image(image_input)
 
-    model = DECIMER_Hand_drawn if hand_drawn else DECIMER_V2
+    # The first call downloads the models that are missing and loads the ones it needs
+    # (the tokenizer, and the printed or the hand-drawn model); later calls reuse them.
+    _lazy("tokenizer")
+    model = _lazy("DECIMER_Hand_drawn" if hand_drawn else "DECIMER_V2")
     predicted_tokens, confidence_values = model(tf.constant(chemical_structure))
 
     predicted_SMILES = utils.decoder(detokenize_output(predicted_tokens))

@@ -98,6 +98,34 @@ SMILES = predict_SMILES(image_path)
 print(f"🎉 Decoded SMILES: {SMILES}")
 ```
 
+### 📥 Models: downloaded on first use
+
+`import DECIMER` does not download or load anything. The model weights are not part of the pip package; they are
+downloaded from Zenodo the first time they are needed and cached afterwards:
+
+- The first `predict_SMILES(...)` call downloads the printed-structure model (about 300 MB) if it is missing, loads
+  it, and keeps it in memory. Later calls reuse it.
+- The hand-drawn model is only downloaded and loaded by the first `predict_SMILES(..., hand_drawn=True)` call.
+  (Up to version 2.8.0 both models were downloaded and loaded when DECIMER was imported.)
+- To pay for the download and the loading at a time of your choosing (at the start of a server, or when building an
+  image), call `load_models()` once. `load_models(hand_drawn=True)` loads both models, as `import DECIMER` did before.
+
+```python
+import DECIMER
+
+DECIMER.load_models()  # optional: download if missing and load now
+SMILES = DECIMER.predict_SMILES("path/to/your/chemical/masterpiece.jpg")
+```
+
+The models are stored in `$PYSTOW_HOME/DECIMER-V2/` (`~/.data/DECIMER-V2/` by default), where `PYSTOW_HOME` is
+read when the models are first needed. A directory that already holds `DECIMER_model/` (and, for hand-drawn
+structures, `DECIMER_HandDrawn_model/`) is used as it is, without any network access, so an image with
+pre-installed models works offline:
+
+```bash
+export PYSTOW_HOME=/opt/decimer-models   # contains DECIMER-V2/DECIMER_model/saved_model.pb, ...
+```
+
 ---
 
 ## ✍️ DECIMER - Hand-drawn Model
