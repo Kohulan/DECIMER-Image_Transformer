@@ -27,7 +27,7 @@ For comments, bug reports, or feature ideas,
 please raise an issue on the GitHub repository.
 """
 
-__version__ = "2.7.2"
+__version__ = "2.8.1"
 
 __all__ = [
     "DECIMER",
