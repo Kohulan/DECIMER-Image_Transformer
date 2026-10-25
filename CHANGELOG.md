@@ -1,12 +1,5 @@
 # Changelog
 
-## [2.7.3](https://github.com/Kohulan/DECIMER-Image_Transformer/compare/v2.7.2...v2.7.3) (2026-10-25)
-
-
-### Bug Fixes
-
-* download and load the models on first use, not on import ([906c29c](https://github.com/Kohulan/DECIMER-Image_Transformer/commit/906c29cfbec7754fc41dbdf4b54036622a080cc8))
-
 ## [2.8.0](https://github.com/Kohulan/DECIMER-Image_Transformer/compare/v2.7.1...v2.8.0) (2025-12-02)
 
 
